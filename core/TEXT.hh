@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -121,6 +121,7 @@ extern const TTCN_TEXTdescriptor_t CHARSTRING_text_;
 extern const TTCN_TEXTdescriptor_t BITSTRING_text_;
 extern const TTCN_TEXTdescriptor_t HEXSTRING_text_;
 extern const TTCN_TEXTdescriptor_t OCTETSTRING_text_;
+extern const TTCN_TEXTdescriptor_t UNIVERSAL_CHARSTRING_text_;
 
 /** @} end of TEXT group */
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -323,16 +323,28 @@ IPV6 [0-9A-Fa-f:.]+(%[0-9A-Za-z]+)?
   /* SC_cstring */
 
 
+<SC_PROFILER>{HEX}+ {
+  /* numeric statistics filter (check this before checking NUMBERs) */
+  RETURN(ProfilerStatsFlag);
+}
+
+
 	/* Values */
 
 {NUMBER} {
 	yylval.int_val = NULL;
   BN_dec2bn(&yylval.int_val, *yytext == '+' ? yytext + 1 : yytext);
+  if (YY_START == SC_MODULE_PARAMETERS) {
+    RETURN(MPNumber);
+  }
 	RETURN(Number);
 }
 
 {FLOAT}	{
 	yylval.float_val = atof(yytext);
+  if (YY_START == SC_MODULE_PARAMETERS) {
+    RETURN(MPFloat);
+  }
 	RETURN(Float);
 }
 
@@ -369,6 +381,9 @@ IPV6 [0-9A-Fa-f:.]+(%[0-9A-Za-z]+)?
 
 {CHARSTRING}	{
   yylval.str_val = mcopystrn(yytext, yyleng);
+  if (YY_START == SC_MODULE_PARAMETERS) {
+    RETURN(MPCstring);
+  }
   RETURN(Cstring);
 }
 
@@ -471,8 +486,10 @@ LOG_ALL RETURN(LoggingBitCollection);
 
 ACTION_UNQUALIFIED |
 DEBUG_ENCDEC |
+DEBUG_FRAMEWORK |
 DEBUG_TESTPORT |
 DEBUG_UNQUALIFIED |
+DEBUG_USER |
 DEFAULTOP_ACTIVATE |
 DEFAULTOP_DEACTIVATE |
 DEFAULTOP_EXIT |
@@ -560,12 +577,56 @@ WARNING_UNQUALIFIED RETURN(LoggingBit);
 
 <SC_PROFILER>
 {
-[Dd]isable[Pp]rofiler   return DisableProfilerKeyword;
-[Dd]isable[Cc]overage   return DisableCoverageKeyword;
-[Dd]ata[Bb]ase[Ff]ile   return DatabaseFileKeyword;
-[Aa]ggregate[Dd]ata     return AggregateDataKeyword;
-[Ss]tatistics[Ff]ile    return StatisticsFileKeyword;
-[Dd]isable[Ss]tatistics return DisableStatisticsKeyword;
+  [Dd]isable[Pp]rofiler     RETURN(DisableProfilerKeyword);
+  [Dd]isable[Cc]overage     RETURN(DisableCoverageKeyword);
+  [Dd]ata[Bb]ase[Ff]ile     RETURN(DatabaseFileKeyword);
+  [Aa]ggregate[Dd]ata       RETURN(AggregateDataKeyword);
+  [Ss]tatistics[Ff]ile      RETURN(StatisticsFileKeyword);
+  [Dd]isable[Ss]tatistics   RETURN(DisableStatisticsKeyword);
+  [Ss]tatistics[Ff]ilter    RETURN(StatisticsFilterKeyword);
+  [Ss]tart[Aa]utomatically  RETURN(StartAutomaticallyKeyword);
+  [Nn]et[Ll]ine[Tt]imes     RETURN(NetLineTimesKeyword);
+  [Nn]et[Ff]unction[Tt]imes RETURN(NetFunctionTimesKeyword);
+  
+  /* statistics filters */
+  [Nn]umber[Oo]f[Ll]ines |
+  [Ll]ine[Dd]ata[Rr]aw |
+  [Ff]unc[Dd]ata[Rr]aw |
+  [Ll]ine[Aa]vg[Rr]aw |
+  [Ff]unc[Aa]vg[Rr]aw |
+  [Ll]ine[Tt]imes[Ss]orted[Bb]y[Mm]od |
+  [Ff]unc[Tt]imes[Ss]orted[Bb]y[Mm]od |
+  [Ll]ine[Tt]imes[Ss]orted[Tt]otal |
+  [Ff]unc[Tt]imes[Ss]orted[Tt]otal |
+  [Ll]ine[Cc]ount[Ss]orted[Bb]y[Mm]od |
+  [Ff]unc[Cc]ount[Ss]orted[Bb]y[Mm]od |
+  [Ll]ine[Cc]ount[Ss]orted[Tt]otal |
+  [Ff]unc[Cc]ount[Ss]orted[Tt]otal |
+  [Ll]ine[Aa]vg[Ss]orted[Bb]y[Mm]od |
+  [Ff]unc[Aa]vg[Ss]orted[Bb]y[Mm]od |
+  [Ll]ine[Aa]vg[Ss]orted[Tt]otal |
+  [Ff]unc[Aa]vg[Ss]orted[Tt]otal |
+  [Tt]op10[Ll]ine[Tt]imes |
+  [Tt]op10[Ff]unc[Tt]imes |
+  [Tt]op10[Ll]ine[Cc]ount |
+  [Tt]op10[Ff]unc[Cc]ount |
+  [Tt]op10[Ll]ine[Aa]vg |
+  [Tt]op10[Ff]unc[Aa]vg |
+  [Uu]nused[Ll]ines |
+  [Uu]nused[Ff]unc |
+  [Aa]ll[Rr]aw[Dd]ata |
+  [Ll]ine[Dd]ata[Ss]orted[Bb]y[Mm]od |
+  [Ff]unc[Dd]ata[Ss]orted[Bb]y[Mm]od |
+  [Ll]ine[Dd]ata[Ss]orted[Tt]otal |
+  [Ff]unc[Dd]ata[Ss]orted[Tt]otal |
+  [Ll]ine[Dd]ata[Ss]orted |
+  [Ff]unc[Dd]ata[Ss]orted |
+  [Aa]ll[Dd]ata[Ss]orted |
+  [Tt]op10[Ll]ine[Dd]ata |
+  [Tt]op10[Ff]unc[Dd]ata |
+  [Tt]op10[Aa]ll[Dd]ata |
+  [Uu]nused[Dd]ata |
+  [Aa]ll RETURN(ProfilerStatsFlag);
 }
 
 <SC_EXECUTE>control		RETURN(ControlKeyword);
@@ -606,7 +667,7 @@ WARNING_UNQUALIFIED RETURN(LoggingBit);
 
 <SC_MODULE_PARAMETERS>{ASN1LOWERIDENTIFIER} {
   char *ttcn3_id = (char*)Malloc(yyleng + 1);
-  for (int i = 0; i < yyleng; i++) {
+  for (size_t i = 0; i < yyleng; i++) {
     if (yytext[i] == '-') ttcn3_id[i] = '_';
     else ttcn3_id[i] = yytext[i];
   }
@@ -620,7 +681,7 @@ WARNING_UNQUALIFIED RETURN(LoggingBit);
 
 <SC_GROUPS,SC_COMPONENTS,SC_MAIN_CONTROLLER>{DNSNAME}|{IPV6} {
   yylval.str_val = (char*)Malloc(yyleng + 1);
-  for (int i = 0; i < yyleng; i++) yylval.str_val[i] = tolower(yytext[i]);
+  for (size_t i = 0; i < yyleng; i++) yylval.str_val[i] = tolower(yytext[i]);
   yylval.str_val[yyleng] = '\0';
   RETURN(DNSName);
 }
@@ -678,6 +739,9 @@ WARNING_UNQUALIFIED RETURN(LoggingBit);
   if (whether_update_buffer())
     cfg->config_read_buffer = mputprintf(cfg->config_read_buffer, "%s ", int_val_str);
   OPENSSL_free(int_val_str);
+  if (YY_START == SC_MODULE_PARAMETERS) {
+    return MPNumber;
+  }
   return Number;
 }
 
@@ -702,6 +766,9 @@ WARNING_UNQUALIFIED RETURN(LoggingBit);
   Free(macroname);
   if (whether_update_buffer()) cfg->config_read_buffer =
     mputprintf(cfg->config_read_buffer, "%f ", yylval.float_val);
+  if (YY_START == SC_MODULE_PARAMETERS) {
+    return MPFloat;
+  }
   return Float;
 }
 
@@ -750,6 +817,9 @@ WARNING_UNQUALIFIED RETURN(LoggingBit);
         "name `%s'", macroname);
     yylval.str_val = memptystr();
     Free(macroname);
+    if (YY_START == SC_MODULE_PARAMETERS) {
+      return MPCstring;
+    }
     return Cstring;
   }
 
@@ -780,6 +850,9 @@ WARNING_UNQUALIFIED RETURN(LoggingBit);
     }
     Free(macroname);
     yylval.str_val = mcopystr(macrovalue);
+    if (YY_START == SC_MODULE_PARAMETERS) {
+      return MPCstring;
+    }
     return Cstring;
   }
 }
@@ -935,6 +1008,7 @@ static boolean whether_update_buffer()
   case SC_LOGGING:
   case SC_TESTPORT_PARAMETERS:
   case SC_EXTERNAL_COMMANDS:
+  case SC_PROFILER:
     return TRUE;
   default:
     return FALSE;

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -53,8 +53,10 @@
 
 #ifdef TITAN_RUNTIME_2
 #include "RT2/TitanLoggerApiSimple.hh"
+#include "RT2/PreGenRecordOf.hh"
 #else
 #include "RT1/TitanLoggerApiSimple.hh"
+#include "RT1/PreGenRecordOf.hh"
 #endif
 
 #include "Module_list.hh"
@@ -70,5 +72,6 @@
 #include "JSON.hh"
 #include "Error.hh"
 #include "XmlReader.hh"
+#include "Profiler.hh"
 
 #endif

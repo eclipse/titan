@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -235,7 +235,12 @@ namespace Ttcn {
       /* control statement */
       S_TESTCASE_INSTANCE, // testcase_inst
       S_TESTCASE_INSTANCE_REFD, //execute_refd
-      S_STRING2TTCN // str2ttcn
+      /* TTCN-3 Profiler statements */
+      S_START_PROFILER,
+      S_STOP_PROFILER,
+      /* Conversion statements */
+      S_STRING2TTCN, // convert_op
+      S_INT2ENUM // convert_op
     };
 
     enum component_t {
@@ -430,15 +435,15 @@ namespace Ttcn {
       struct { // S_STRING2TTCN
         Value* val;
         Reference* ref;
-      } str2ttcn;
+      } convert_op;
     };
 
     Statement(const Statement& p); ///< copy disabled
     Statement& operator=(const Statement& p); ///< assignment disabled
     void clean_up();
   public:
-    /** Constructor used by S_ERROR, S_STOP_EXEC and S_REPEAT, S_BREAK and
-     *  S_CONTINUE */
+    /** Constructor used by S_ERROR, S_STOP_EXEC and S_REPEAT, S_BREAK,
+     *  S_CONTINUE, S_START_PROFILER and S_STOP_PROFILER */
     Statement(statementtype_t p_st);
     /** Constructor used by S_START_UNDEF and S_STOP_UNDEF */
     Statement(statementtype_t p_st, Ref_base *p_ref, Value *p_val);
@@ -540,7 +545,7 @@ namespace Ttcn {
     /** Constructor used by S_ACTIVATE_REFD */
     Statement(statementtype_t p_st, Value *p_derefered_value,
                TemplateInstances *p_ap_list, Value *p_val);
-    /** Constructor used by S_STRING2TTCN */
+    /** Constructor used by S_STRING2TTCN, S_INT2ENUM */
     Statement(statementtype_t p_st, Value* p_val, Reference* p_ref);
     virtual ~Statement();
     virtual Statement* clone() const;
@@ -712,6 +717,7 @@ namespace Ttcn {
     Type *chk_conn_endpoint(Value *p_compref, Reference *p_portref,
                             bool allow_system);
     void chk_string2ttcn();
+    void chk_int2enum();
   public:
     /** Sets the code section selector of all embedded values and
      *  templates to \a p_code_section. */
@@ -799,6 +805,7 @@ namespace Ttcn {
      *  component reference. */
     static void generate_code_portref(expression_struct *expr,
       Reference *p_ref);
+    char* generate_code_int2enum(char* str);
   };
 
   /**

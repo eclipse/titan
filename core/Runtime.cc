@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -41,6 +41,7 @@
 #include "Charstring.hh"
 #include "Fd_And_Timeout_User.hh"
 #include <TitanLoggerApi.hh>
+#include "Profiler.hh"
 
 namespace API = TitanLoggerApi;
 
@@ -277,7 +278,7 @@ CHARSTRING TTCN_Runtime::get_testcase_id_macro()
 
 CHARSTRING TTCN_Runtime::get_testcasename()
 {
-  if (in_controlpart()) return CHARSTRING("");  // No error here.
+  if (in_controlpart() || is_hc()) return CHARSTRING("");  // No error here.
 
   if (!testcase_name.definition_name || testcase_name.definition_name[0] == 0)
     TTCN_error("Internal error: Evaluating predefined function testcasename()"
@@ -403,6 +404,7 @@ int TTCN_Runtime::hc_main(const char *local_addr, const char *MC_addr,
       TTCN_Communication::set_local_address(local_addr);
     TTCN_Communication::set_mc_address(MC_addr, MC_port);
     TTCN_Communication::connect_mc();
+    Module_List::send_versions();
     executor_state = HC_IDLE;
     TTCN_Communication::send_version();
     initialize_component_process_tables();
@@ -2258,6 +2260,9 @@ void TTCN_Runtime::process_create_mtc()
       "state.");
     return;
   }
+  
+  // let the HC's TTCN-3 Profiler know of the MTC
+  ttcn3_prof.add_component(MTC_COMPREF);
 
   // clean Emergency log buffer before fork, to avoid duplication
   TTCN_Logger::ring_buffer_dump(false);
@@ -2303,6 +2308,9 @@ void TTCN_Runtime::process_create_ptc(component component_reference,
       "state.");
     return;
   }
+  
+  // let the HC's TTCN-3 Profiler know of this new PTC
+  ttcn3_prof.add_component(component_reference);
 
   // clean Emergency log buffer before fork, to avoid duplication
   TTCN_Logger::ring_buffer_dump(false);
@@ -2451,8 +2459,11 @@ void TTCN_Runtime::process_ptc_verdict(Text_Buf& text_buf)
         TTCN_error("Internal error: Invalid PTC verdict was "
           "received from MC: %d.", ptc_verdict);
       }
-      verdicttype new_verdict =
-        local_verdict < ptc_verdict ? ptc_verdict : local_verdict;
+      verdicttype new_verdict = local_verdict;
+      if (ptc_verdict > local_verdict) {
+        new_verdict = ptc_verdict;
+        verdict_reason = CHARSTRING(ptc_verdict_reason);
+      }
       TTCN_Logger::log_final_verdict(true, ptc_verdict, local_verdict,
         new_verdict, ptc_verdict_reason, -1, ptc_compref, ptc_name);
       delete [] ptc_name;

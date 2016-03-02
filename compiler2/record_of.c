@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -39,11 +39,11 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
   char *def = NULL, *src = NULL;
   const char *name = sdef->name, *dispname = sdef->dispname;
   const char *type = sdef->type;
-  boolean ber_needed = sdef->isASN1 && enable_ber();
-  boolean raw_needed = sdef->hasRaw && enable_raw();
-  boolean text_needed = sdef->hasText && enable_text();
-  boolean xer_needed = sdef->hasXer && enable_xer();
-  boolean json_needed = sdef->hasJson && enable_json();
+  boolean ber_needed = force_gen_seof || (sdef->isASN1 && enable_ber());
+  boolean raw_needed = force_gen_seof || (sdef->hasRaw && enable_raw());
+  boolean text_needed = force_gen_seof || (sdef->hasText && enable_text());
+  boolean xer_needed = force_gen_seof || (sdef->hasXer && enable_xer());
+  boolean json_needed = force_gen_seof || (sdef->hasJson && enable_json());
 
   /* Class definition and private data members */
   def = mputprintf(def,
@@ -603,25 +603,29 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
     "    return;\n"
     "  }\n"
     "  param.basic_check(Module_Param::BC_VALUE|Module_Param::BC_LIST, \"%s value\");\n"
+    "  Module_Param_Ptr mp = &param;\n"
+    "  if (param.get_type() == Module_Param::MP_Reference) {\n"
+    "    mp = param.get_referenced_param();\n"
+    "  }\n"
     "  switch (param.get_operation_type()) {\n"
     "  case Module_Param::OT_ASSIGN:\n"
-    "    if (param.get_type()==Module_Param::MP_Value_List && param.get_size()==0) {\n"
+    "    if (mp->get_type()==Module_Param::MP_Value_List && mp->get_size()==0) {\n"
     "      *this = NULL_VALUE;\n"
     "      return;\n"
     "    }\n"
-    "    switch (param.get_type()) {\n"
+    "    switch (mp->get_type()) {\n"
     "    case Module_Param::MP_Value_List:\n"
-    "      set_size(param.get_size());\n"
-    "      for (size_t i=0; i<param.get_size(); ++i) {\n"
-    "        Module_Param* const curr = param.get_elem(i);\n"
+    "      set_size(mp->get_size());\n"
+    "      for (size_t i=0; i<mp->get_size(); ++i) {\n"
+    "        Module_Param* const curr = mp->get_elem(i);\n"
     "        if (curr->get_type()!=Module_Param::MP_NotUsed) {\n"
     "          (*this)[i].set_param(*curr);\n"
     "        }\n"
     "      }\n"
     "      break;\n"
     "    case Module_Param::MP_Indexed_List:\n"
-    "      for (size_t i=0; i<param.get_size(); ++i) {\n"
-    "        Module_Param* const curr = param.get_elem(i);\n"
+    "      for (size_t i=0; i<mp->get_size(); ++i) {\n"
+    "        Module_Param* const curr = mp->get_elem(i);\n"
     "        (*this)[curr->get_id()->get_index()].set_param(*curr);\n"
     "      }\n"
     "      break;\n"
@@ -630,12 +634,12 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
     "    }\n"
     "    break;\n"
     "  case Module_Param::OT_CONCAT:\n"
-    "    switch (param.get_type()) {\n"
+    "    switch (mp->get_type()) {\n"
     "    case Module_Param::MP_Value_List: {\n"
     "      if (!is_bound()) *this = NULL_VALUE;\n"
     "      int start_idx = lengthof();\n"
-    "      for (size_t i=0; i<param.get_size(); ++i) {\n"
-    "        Module_Param* const curr = param.get_elem(i);\n"
+    "      for (size_t i=0; i<mp->get_size(); ++i) {\n"
+    "        Module_Param* const curr = mp->get_elem(i);\n"
     "        if ((curr->get_type()!=Module_Param::MP_NotUsed)) {\n"
     "          (*this)[start_idx+(int)i].set_param(*curr);\n"
     "        }\n"
@@ -651,10 +655,41 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
     "  default:\n"
     "    TTCN_error(\"Internal error: Unknown operation type.\");\n"
     "  }\n"
-    "}\n", name, sdef->kind == RECORD_OF ? "record of" : "set of",
+    "}\n\n", name, sdef->kind == RECORD_OF ? "record of" : "set of",
     dispname, sdef->kind == RECORD_OF ? "record of" : "set of",
     sdef->kind == RECORD_OF ? "record of" : "set of", dispname,
     sdef->kind == RECORD_OF ? "record of" : "set of", dispname);
+  
+  /* get param function */
+  def = mputstr(def, "Module_Param* get_param(Module_Param_Name& param_name) const;\n");
+  src = mputprintf
+    (src,
+    "Module_Param* %s::get_param(Module_Param_Name& param_name) const\n"
+    "{\n"
+    "  if (!is_bound()) {\n"
+    "    return new Module_Param_Unbound();\n"
+    "  }\n"
+    "  if (param_name.next_name()) {\n"
+    // Haven't reached the end of the module parameter name
+    // => the name refers to one of the elements, not to the whole record of
+    "    char* param_field = param_name.get_current_name();\n"
+    "    if (param_field[0] < '0' || param_field[0] > '9') {\n"
+    "      TTCN_error(\"Unexpected record field name in module parameter reference, \"\n"
+    "        \"expected a valid index for %s type `%s'\");\n"
+    "    }\n"
+    "    int param_index = -1;\n"
+    "    sscanf(param_field, \"%%d\", &param_index);\n"
+    "    return (*this)[param_index].get_param(param_name);\n"
+    "  }\n"
+    "  Vector<Module_Param*> values;\n"
+    "  for (int i = 0; i < val_ptr->n_elements; ++i) {\n"
+    "    values.push_back((*this)[i].get_param(param_name));\n"
+    "  }\n"
+    "  Module_Param_Value_List* mp = new Module_Param_Value_List();\n"
+    "  mp->add_list_with_implicit_ids(&values);\n"
+    "  values.clear();\n"
+    "  return mp;\n"
+    "}\n\n", name, sdef->kind == RECORD_OF ? "record of" : "set of", dispname);
 
   /* set implicit omit function, recursive */
   def = mputstr(def, "  void set_implicit_omit();\n");
@@ -723,7 +758,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "    p_buf.put_cs(*p_td.text->separator_encode);\n"
       "    encoded_length+=p_td.text->separator_encode->lengthof();\n"
       "   }\n"
-      "   encoded_length+=(*this)[a].TEXT_encode(%s_descr_,p_buf);\n"
+      "   encoded_length+=(*this)[a].TEXT_encode(*p_td.oftype_descr,p_buf);\n"
       "  }\n"
       "  if(p_td.text->end_encode){\n"
       "    p_buf.put_cs(*p_td.text->end_encode);\n"
@@ -731,7 +766,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "  }\n"
       "  return encoded_length;\n"
       "}\n"
-      ,name,sdef->oftypedescrname
+      ,name
       );
     src = mputprintf(src,
       "int %s::TEXT_decode(const TTCN_Typedescriptor_t& p_td,"
@@ -774,7 +809,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "  while(TRUE){\n"
       "    %s *val=new %s;\n"
       "    pos=p_buf.get_pos();\n"
-      "    int len=val->TEXT_decode(%s_descr_,p_buf,limit,TRUE);\n"
+      "    int len=val->TEXT_decode(*p_td.oftype_descr,p_buf,limit,TRUE);\n"
       "    if(len==-1 || (len==0 && !limit.has_token())){\n"
       "      p_buf.set_pos(pos);\n"
       "      delete val;\n"
@@ -816,7 +851,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "      }\n"
       "    }\n"
       "  }\n"
-      ,name,type,type,sdef->oftypedescrname,type
+      ,name,type,type,type
      );
     src = mputstr(src,
       "   limit.remove_tokens(ml);\n"
@@ -871,7 +906,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
        "    for(int elem_i=0; elem_i<val_ptr->n_elements; elem_i++) {\n"
        "      ec.set_msg(\"Component #%%d: \", elem_i);\n"
        "      new_tlv->add_TLV((*this)[elem_i].BER_encode_TLV"
-       "(%s_descr_, p_coding));\n"
+       "(*p_td.oftype_descr, p_coding));\n"
        "    }\n"
        "%s"
        "  }\n"
@@ -905,16 +940,16 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
        "val_ptr->n_elements + 1);\n"
        "    val_ptr->n_elements++;\n"
        "    val_ptr->value_elements[val_ptr->n_elements - 1] = new %s;\n"
-       "    val_ptr->value_elements[val_ptr->n_elements - 1]->BER_decode_TLV(%s_descr_, tmp_tlv, "
+       "    val_ptr->value_elements[val_ptr->n_elements - 1]->BER_decode_TLV(*p_td.oftype_descr, tmp_tlv, "
        "L_form);\n"
        "    ec_2.set_msg(\"%%d: \", val_ptr->n_elements);\n"
        "  }\n"
        "  return TRUE;\n"
        "}\n"
        "\n"
-       , name, sdef->oftypedescrname
+       , name
        , sdef->kind==SET_OF?"    new_tlv->sort_tlvs();\n":""
-       , name, type, type, sdef->oftypedescrname
+       , name, type, type
        );
 
     if(sdef->has_opentypes) {
@@ -966,7 +1001,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
     "    int a=0;\n"
     "    if(sel_field==-1) sel_field=p_td.raw->fieldlength;\n"
     "    for(a=0;a<sel_field;a++){\n"
-    "      decoded_field_length=(*this)[a+start_field].RAW_decode(%s_descr_,"
+    "      decoded_field_length=(*this)[a+start_field].RAW_decode(*p_td.oftype_descr,"
     "p_buf,limit,top_bit_ord,TRUE);\n"
     "      if(decoded_field_length < 0) return decoded_field_length;\n"
     "      decoded_length+=decoded_field_length;\n"
@@ -983,7 +1018,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
     "    }\n"
     "    while(limit>0){\n"
     "      start_of_field=p_buf.get_pos_bit();\n"
-    "      decoded_field_length=(*this)[a].RAW_decode(%s_descr_,p_buf,limit,"
+    "      decoded_field_length=(*this)[a].RAW_decode(*p_td.oftype_descr,p_buf,limit,"
     "top_bit_ord,TRUE);\n"
     "      if(decoded_field_length < 0){\n"
     "        delete &(*this)[a];\n"
@@ -997,13 +1032,16 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
     "      decoded_length+=decoded_field_length;\n"
     "      limit-=decoded_field_length;\n"
     "      a++;\n"
-    ,name,sdef->oftypedescrname,sdef->oftypedescrname
+    ,name
     );
-    if(sdef->raw.extension_bit!=XDEFNO && sdef->raw.extension_bit!=XDEFDEFAULT){
+    if (force_gen_seof || (sdef->raw.extension_bit!=XDEFNO && sdef->raw.extension_bit!=XDEFDEFAULT)){
       src=mputprintf(src,
-    "      if (%sp_buf.get_last_bit())\n"
+    "      if (%s%sp_buf.get_last_bit()%s)\n"
     "        return decoded_length+p_buf.increase_pos_padd(p_td.raw->padding)"
-    "+prepaddlength;\n", sdef->raw.extension_bit == XDEFYES ? "" : "!");
+    "+prepaddlength;\n"
+    , force_gen_seof ? "EXT_BIT_NO != p_td.raw->extension_bit && ((EXT_BIT_YES != p_td.raw->extension_bit) ^ " : ""
+    , (force_gen_seof || sdef->raw.extension_bit == XDEFYES) ? "" : "!"
+    , force_gen_seof ? ")" : "");
     }
       src=mputprintf(src,
     "    }\n"
@@ -1023,12 +1061,12 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
     "  myleaf.body.node.nodes=init_nodes_of_enc_tree(encoded_num_of_records);\n"
     "  for(int a=0;a<encoded_num_of_records;a++){\n"
     "    myleaf.body.node.nodes[a]=new RAW_enc_tree(TRUE,&myleaf,"
-    "&(myleaf.curr_pos),a,%s_descr_.raw);\n"
-    "    encoded_length+=(*this)[a].RAW_encode(%s_descr_,"
+    "&(myleaf.curr_pos),a,p_td.oftype_descr->raw);\n"
+    "    encoded_length+=(*this)[a].RAW_encode(*p_td.oftype_descr,"
     "*myleaf.body.node.nodes[a]);\n"
     "  }\n"
     " return myleaf.length=encoded_length;\n}\n\n"
-    , name, sdef->oftypedescrname, sdef->oftypedescrname
+    , name
     );
   }
 
@@ -1042,10 +1080,12 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "boolean %s::can_start(const char *name, const char *uri, "
       "XERdescriptor_t const& xd, unsigned int flavor) {\n"
       "  boolean e_xer = is_exer(flavor);\n"
-      "  if (e_xer && (xd.xer_bits & ANY_ELEMENT)) "
+      "  if ((!e_xer || !(xd.xer_bits & UNTAGGED)) && !(flavor & XER_RECOF)) return "
+      "check_name(name, xd, e_xer) && (!e_xer || check_namespace(uri, xd));\n"
+      "  if (e_xer && (xd.oftype_descr->xer_bits & ANY_ELEMENT)) "
       , name
       );
-    if (sdef->nFollowers) {
+    if (!force_gen_seof && sdef->nFollowers) {
       /* If there are optional fields following the record-of, then seeing
        * {any XML tag that belongs to those fields} where the record-of may be
        * means that the record-of is empty. */
@@ -1065,12 +1105,9 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
     else src = mputstr(src, "return TRUE;\n");
 
     src = mputprintf(src,
-      "  if ((!e_xer || !(xd.xer_bits & UNTAGGED)) && !(flavor & XER_RECOF)) return "
-      "check_name(name, xd, e_xer) && (!e_xer || check_namespace(uri, xd));\n"
-      "  else return %s::can_start(name, uri, %s_xer_, flavor | XER_RECOF);\n"
+      "  return %s::can_start(name, uri, *xd.oftype_descr, flavor | XER_RECOF);\n"
       "}\n\n"
       , sdef->type
-      , sdef->oftypedescrname
       );
 
     src = mputprintf(src,
@@ -1083,7 +1120,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "    size_t num_new;\n"
       "    for (int i = 0; i < val_ptr->n_elements; ++i) {\n"
       "      bool def_ns_1 = false;"
-      "      new_ns = (*this)[i].collect_ns(%s_xer_, num_new, def_ns_1);\n"
+      "      new_ns = (*this)[i].collect_ns(*p_td.oftype_descr, num_new, def_ns_1);\n"
       "      merge_ns(collected_ns, num_collected, new_ns, num_new);\n"
       "      def_ns = def_ns || def_ns_1;\n" /* alas, no ||= */
       "    }\n"
@@ -1098,7 +1135,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "  num = num_collected;\n"
       "  return collected_ns;\n"
       "}\n\n"
-      , name, sdef->oftypedescrname);
+      , name);
 
     src=mputprintf(src,
       "int %s::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf, "
@@ -1112,16 +1149,18 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "%s" /* Factor out p_indent if not attribute */
       "  if (val_ptr->n_elements==0) {\n" /* Empty record of */
       , name
-      , sdef->xerAttribute ? "" : "  if (indenting) do_indent(p_buf, p_indent);\n"
+      , force_gen_seof ? "  if (indenting && !(p_td.xer_bits & XER_ATTRIBUTE)) do_indent(p_buf, p_indent);\n"
+      : (sdef->xerAttribute ? "" : "  if (indenting) do_indent(p_buf, p_indent);\n")
       );
-    if (sdef->xerAttribute) {
-      src=mputstr(src,
-        "    if (e_xer) {\n" /* Empty attribute. */
+    if (force_gen_seof || sdef->xerAttribute) {
+      src=mputprintf(src,
+        "    if (e_xer%s) {\n" /* Empty attribute. */
         "      begin_attribute(p_td, p_buf);\n"
         "      p_buf.put_c('\\'');\n"
-        "    } else\n");
+        "    } else\n"
+        , force_gen_seof ? " && (p_td.xer_bits & XER_ATTRIBUTE)" : "");
     }
-    else {
+    if (force_gen_seof || !sdef->xerAttribute) {
       src = mputstr(src,
         "    if (own_tag)");
     }
@@ -1149,7 +1188,8 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "    }\n"
       "  }\n"
       "  else {\n" /* Not empty record of. Start tag or attribute */
-      , sdef->xerAttribute ? "      if (indenting) do_indent(p_buf, p_indent);\n" : ""
+      , force_gen_seof ? "      if (indenting && (p_td.xer_bits & XER_ATTRIBUTE)) do_indent(p_buf, p_indent);\n"
+      : (sdef->xerAttribute ? "      if (indenting) do_indent(p_buf, p_indent);\n" : "")
       );
     if (sdef->xerAnyAttrElem) {
       src = mputstr(src,
@@ -1236,11 +1276,12 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
         "      p_buf.put_s(shorter, saved);\n" /* restore the '>' and anything after */
         "    } else {\n");
     }
-    if (sdef->xerAttribute) {
-      src=mputstr(src,
-        "    if (e_xer) {\n"
+    if (force_gen_seof || sdef->xerAttribute) {
+      src=mputprintf(src,
+        "    if (e_xer%s) {\n"
         "      begin_attribute(p_td, p_buf);\n"
-        "    } else\n");
+        "    } else\n"
+        , force_gen_seof ? " && (p_td.xer_bits & XER_ATTRIBUTE)" : "");
     }
     src=mputprintf(src,
       "    if (own_tag) {\n"
@@ -1266,7 +1307,8 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "        Free(collected_ns);\n"
       "        p_buf.put_s(1 + keep_newline, (cbyte*)\">\\n\");\n"
       "      }\n"
-      , sdef->xerAttribute ? "      if (indenting) do_indent(p_buf, p_indent);\n" : ""
+      , force_gen_seof ? "      if (indenting && (p_td.xer_bits & XER_ATTRIBUTE)) do_indent(p_buf, p_indent);\n"
+      : (sdef->xerAttribute ? "      if (indenting) do_indent(p_buf, p_indent);\n" : "")
       );
     if (sdef->xmlValueList) {
       src=mputstr(src, "      if (indenting && !e_xer) do_indent(p_buf, p_indent+1);\n"); /* !e_xer or GDMO */
@@ -1277,20 +1319,26 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "    TTCN_EncDec_ErrorContext ec_0(\"Index \");\n"
       "    TTCN_EncDec_ErrorContext ec_1;\n"
       );
-    src=mputprintf(src,
+    src=mputstr(src,
       "    for (int i = 0; i < val_ptr->n_elements; ++i) {\n"
-      /*"      if (i > 0 && !own_tag && 0 != emb_val &&\n"
-      "          emb_val->embval_index < emb_val->embval_size) {\n"
-      "        emb_val->embval_array->get_embedded_value(emb_val->embval_index).XER_encode(\n"
-      "          UNIVERSAL_CHARSTRING_xer_, p_buf, p_flavor | EMBED_VALUES, p_indent+1, 0);\n"
+      "      if (i > 0 && !own_tag && 0 != emb_val &&\n"
+      "          emb_val->embval_index < (0 != emb_val->embval_array_reg ?\n"
+      "          emb_val->embval_array_reg->size_of() : emb_val->embval_array_opt->size_of())) {\n"
+      "        if (0 != emb_val->embval_array_reg) {\n"
+      "          (*emb_val->embval_array_reg)[emb_val->embval_index].XER_encode(\n"
+      "            UNIVERSAL_CHARSTRING_xer_, p_buf, p_flavor | EMBED_VALUES, p_indent+1, 0);\n"
+      "        }\n"
+      "        else {\n"
+      "          (*emb_val->embval_array_opt)[emb_val->embval_index].XER_encode(\n"
+      "            UNIVERSAL_CHARSTRING_xer_, p_buf, p_flavor | EMBED_VALUES, p_indent+1, 0);\n"
+      "        }\n"
       "        ++emb_val->embval_index;\n"
-      "      }\n" - temporarily removed in RT1 */
-      "      ec_1.set_msg(\"%%d: \", i);\n"
+      "      }\n"
+      "      ec_1.set_msg(\"%d: \", i);\n"
       "      if (e_xer && (p_td.xer_bits & XER_LIST) && i>0) p_buf.put_c(' ');\n"
-      "      (*this)[i].XER_encode(%s_xer_, p_buf, p_flavor, p_indent+own_tag, emb_val);\n"
+      "      (*this)[i].XER_encode(*p_td.oftype_descr, p_buf, p_flavor, p_indent+own_tag, emb_val);\n"
       "    }\n"
-      "    if (indenting && !is_exerlist(p_flavor)) {\n",
-      sdef->oftypedescrname
+      "    if (indenting && !is_exerlist(p_flavor)) {\n"
     );
     if (sdef->xmlValueList) {
       src=mputstr(src, "      if (!e_xer) p_buf.put_c('\\n');\n"); /* !e_xer or GDMO */
@@ -1298,10 +1346,11 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
     src=mputstr(src,
       "      do_indent(p_buf, p_indent);\n"
       "    }\n");
-    if (sdef->xerAttribute) {
-      src=mputstr(src,
-        "    if (e_xer) p_buf.put_c('\\'');\n"
-        "    else\n");
+    if (force_gen_seof || sdef->xerAttribute) {
+      src=mputprintf(src,
+        "    if (e_xer%s) p_buf.put_c('\\'');\n"
+        "    else\n"
+        , force_gen_seof ? " && (p_td.xer_bits & XER_ATTRIBUTE)" : "");
     }
     src=mputstr(src,
       "    if (own_tag){\n"
@@ -1341,7 +1390,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "      if ((XML_READER_TYPE_ELEMENT   == type && p_reader.MoveToFirstAttribute() == 1)\n"
       "        || XML_READER_TYPE_ATTRIBUTE == type) {\n"
       "        verify_name(p_reader, p_td, e_xer);\n"
-      "        break;"
+      "        break;\n"
       "      }\n"
       "    }\n"
       "    if (e_xer && (p_td.xer_bits & XER_LIST)) {\n"
@@ -1357,13 +1406,15 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "  }\n" /* next read */
       "  else xml_depth = p_reader.Depth();\n"
       "  p_flavor |= XER_RECOF;\n"
+      "  TTCN_EncDec_ErrorContext ec_0(\"Index \");\n"
+      "  TTCN_EncDec_ErrorContext ec_1;\n"
 #ifndef NDEBUG
       , __FUNCTION__, __LINE__
 #endif
       , name
       );
 
-    src = mputprintf(src,
+    src = mputstr(src,
       "  if (e_xer && (p_td.xer_bits & XER_LIST)) {\n" /* LIST decoding*/
       "    char *x_val = (char*)p_reader.NewValue();\n" /* we own it */
       "    size_t x_pos = 0;\n"
@@ -1377,13 +1428,13 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "      x_pos += strlen(str) + 1;\n"
       "      TTCN_Buffer buf_2;\n"
       "      buf_2.put_c('<');\n"
-      "      write_ns_prefix(%s_xer_, buf_2);\n"
-      "      const char * const exer_name = %s_xer_.names[1];\n"
-      "      boolean i_can_has_ns = %s_xer_.my_module != 0 && %s_xer_.ns_index != -1;\n"
+      "      write_ns_prefix(*p_td.oftype_descr, buf_2);\n"
+      "      const char * const exer_name = p_td.oftype_descr->names[1];\n"
+      "      boolean i_can_has_ns = p_td.oftype_descr->my_module != 0 && p_td.oftype_descr->ns_index != -1;\n"
       /* If it has a namespace, chop off the '>' from the end */
-      "      buf_2.put_s((size_t)%s_xer_.namelens[1]-1-i_can_has_ns, (cbyte*)exer_name);\n"
+      "      buf_2.put_s((size_t)p_td.oftype_descr->namelens[1]-1-i_can_has_ns, (cbyte*)exer_name);\n"
       "      if (i_can_has_ns) {\n"
-      "        const namespace_t * const pns = %s_xer_.my_module->get_ns(%s_xer_.ns_index);\n"
+      "        const namespace_t * const pns = p_td.oftype_descr->my_module->get_ns(p_td.oftype_descr->ns_index);\n"
       "        buf_2.put_s(7 - (*pns->px == 0), (cbyte*)\" xmlns:\");\n"
       "        buf_2.put_s(strlen(pns->px), (cbyte*)pns->px);\n"
       "        buf_2.put_s(2, (cbyte*)\"='\");\n"
@@ -1394,14 +1445,15 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "      buf_2.put_s(strlen(str), (cbyte*)str);\n"
       "      buf_2.put_c('<');\n"
       "      buf_2.put_c('/');\n"
-      "      write_ns_prefix(%s_xer_, buf_2);\n"
-      "      buf_2.put_s((size_t)%s_xer_.namelens[1], (cbyte*)exer_name);\n"
+      "      write_ns_prefix(*p_td.oftype_descr, buf_2);\n"
+      "      buf_2.put_s((size_t)p_td.oftype_descr->namelens[1], (cbyte*)exer_name);\n"
       "      XmlReaderWrap reader_2(buf_2);\n"
       "      rd_ok = reader_2.Read();\n" /* Move to the start element. */
+      "      ec_1.set_msg(\"%d: \", val_ptr->n_elements);\n"
       /* Don't move to the #text, that's the callee's responsibility. */
       /* The call to the non-const operator[] creates a new element object,
        * then we call its XER_decode with the temporary XML reader. */
-      "      (*this)[val_ptr->n_elements].XER_decode(%s_xer_, reader_2, p_flavor, 0);\n"
+      "      (*this)[val_ptr->n_elements].XER_decode(*p_td.oftype_descr, reader_2, p_flavor, 0);\n"
       "      if (p_flavor & EXIT_ON_ERROR && !(*this)[val_ptr->n_elements - 1].is_bound()) {\n"
       "        if (1 == val_ptr->n_elements) {\n"
       // Failed to decode even the first element
@@ -1423,11 +1475,6 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "      p_reader.Read();\n" /* past it */
       "    }\n"
       "  }\n"
-      , sdef->oftypedescrname, sdef->oftypedescrname
-      , sdef->oftypedescrname, sdef->oftypedescrname
-      , sdef->oftypedescrname, sdef->oftypedescrname
-      , sdef->oftypedescrname, sdef->oftypedescrname
-      , sdef->oftypedescrname, sdef->oftypedescrname
     );
 
     src = mputprintf(src,
@@ -1457,17 +1504,18 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
         "            if (p_reader.NodeType() != XML_READER_TYPE_ELEMENT) rd_ok = p_reader.Read();\n"
         "          } else");
     }
-    src = mputprintf(src,
+    src = mputstr(src,
       "          {\n"
       /* An untagged record-of ends if it encounters an element with a name
        * that doesn't match its component */
       "            if (!own_tag && !can_start((const char*)p_reader.LocalName(), "
-      "(const char*)p_reader.NamespaceUri(), %s_xer_, p_flavor)) {\n"
+      "(const char*)p_reader.NamespaceUri(), p_td, p_flavor)) {\n"
       "              for (; rd_ok == 1 && p_reader.Depth() > xml_depth; rd_ok = p_reader.Read()) ;\n"
       "              break;\n"
       "            }\n"
+      "            ec_1.set_msg(\"%d: \", val_ptr->n_elements);\n"
       /* The call to the non-const operator[] creates the element */
-      "            (*this)[val_ptr->n_elements].XER_decode(%s_xer_, p_reader, p_flavor, emb_val);\n"
+      "            (*this)[val_ptr->n_elements].XER_decode(*p_td.oftype_descr, p_reader, p_flavor, emb_val);\n"
       "            if (0 != emb_val && !own_tag && val_ptr->n_elements > 1) {\n"
       "              ++emb_val->embval_index;\n"
       "            }\n"      
@@ -1481,26 +1529,33 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "          }\n"
       "          break;\n"
       "        }\n"
-      /*"        else if (XML_READER_TYPE_TEXT == type && 0 != emb_val && !own_tag && get_nof_elements() > 0) {\n"
+      "        else if (XML_READER_TYPE_TEXT == type && 0 != emb_val && !own_tag && val_ptr->n_elements > 0) {\n"
       "          UNIVERSAL_CHARSTRING emb_ustr((const char*)p_reader.Value());\n"
-      "          emb_val->embval_array->set_embedded_value(emb_val->embval_index, emb_ustr);\n"
+      "          if (0 != emb_val->embval_array_reg) {\n"
+      "            (*emb_val->embval_array_reg)[emb_val->embval_index] = emb_ustr;\n"
+      "          }\n"
+      "          else {\n"
+      "            (*emb_val->embval_array_opt)[emb_val->embval_index] = emb_ustr;\n"
+      "          }\n"
       "          rd_ok = p_reader.Read();\n"
-      "        }\n" - temporarily removed in RT1 */
+      "        }\n"
       "        else {\n"
       "          rd_ok = p_reader.Read();\n"
       "        }\n"
       "      }\n" /* next read */
       "    }\n" /* if not empty element */
       "  }\n" /* if not LIST */
+      "  if (!own_tag && e_xer && (p_td.xer_bits & XER_OPTIONAL) && val_ptr->n_elements == 0) {\n"
+      "    clean_up();\n" /* set it to unbound, so the OPTIONAL class sets it to omit */
+      "  }\n"
       "  return 1;\n"
       "}\n\n"
-      , sdef->oftypedescrname, sdef->oftypedescrname
     );
   }
   if (json_needed) {
     // JSON encode, RT1
     src = mputprintf(src,
-      "int %s::JSON_encode(const TTCN_Typedescriptor_t&, JSON_Tokenizer& p_tok) const\n"
+      "int %s::JSON_encode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& p_tok) const\n"
       "{\n"
       "  if (!is_bound()) {\n"
       "    TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_UNBOUND,\n"
@@ -1509,18 +1564,18 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "  }\n\n"
       "  int enc_len = p_tok.put_next_token(JSON_TOKEN_ARRAY_START, NULL);\n"
       "  for(int i = 0; i < val_ptr->n_elements; ++i) {\n"
-      "    int ret_val = (*this)[i].JSON_encode(%s_descr_, p_tok);\n"
+      "    int ret_val = (*this)[i].JSON_encode(*p_td.oftype_descr, p_tok);\n"
       "    if (0 > ret_val) break;\n"
       "    enc_len += ret_val;\n"
       "  }\n"
       "  enc_len += p_tok.put_next_token(JSON_TOKEN_ARRAY_END, NULL);\n"
       "  return enc_len;\n"
       "}\n\n"
-      , name, dispname, sdef->oftypedescrname);
+      , name, dispname);
     
     // JSON decode, RT1
     src = mputprintf(src,
-      "int %s::JSON_decode(const TTCN_Typedescriptor_t&, JSON_Tokenizer& p_tok, boolean p_silent)\n"
+      "int %s::JSON_decode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& p_tok, boolean p_silent)\n"
       "{\n"
       "  json_token_t token = JSON_TOKEN_NONE;\n"
       "  int dec_len = p_tok.get_next_token(&token, NULL, NULL);\n"
@@ -1535,7 +1590,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "  while (true) {\n"
       "    size_t buf_pos = p_tok.get_buf_pos();\n"
       "    %s* val = new %s;\n"
-      "    int ret_val = val->JSON_decode(%s_descr_, p_tok, p_silent);\n"
+      "    int ret_val = val->JSON_decode(*p_td.oftype_descr, p_tok, p_silent);\n"
       "    if (JSON_ERROR_INVALID_TOKEN == ret_val) {\n"
       "      p_tok.set_buf_pos(buf_pos);\n"
       "      delete val;\n"
@@ -1564,7 +1619,7 @@ void defRecordOfClass1(const struct_of_def *sdef, output_struct *output)
       "  }\n\n"
       "  return dec_len;\n"
       "}\n\n"
-      , name, type, type, sdef->oftypedescrname, type);
+      , name, type, type, type);
   }
   /* end of class */
   def = mputstr(def, "};\n\n");
@@ -1604,11 +1659,11 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
   char *def = NULL, *src = NULL;
   const char *name = sdef->name, *dispname = sdef->dispname;
   const char *type = sdef->type;
-  boolean ber_needed = sdef->isASN1 && enable_ber();
-  boolean raw_needed = sdef->hasRaw && enable_raw();
-  boolean text_needed = sdef->hasText && enable_text();
-  boolean xer_needed = sdef->hasXer && enable_xer();
-  boolean json_needed = sdef->hasJson && enable_json();
+  boolean ber_needed = force_gen_seof || (sdef->isASN1 && enable_ber());
+  boolean raw_needed = force_gen_seof || (sdef->hasRaw && enable_raw());
+  boolean text_needed = force_gen_seof || (sdef->hasText && enable_text());
+  boolean xer_needed = force_gen_seof || (sdef->hasXer && enable_xer());
+  boolean json_needed = force_gen_seof || (sdef->hasJson && enable_json());
 
   /* Class definition and private data members */
   def = mputprintf(def,
@@ -1684,7 +1739,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
   /* constructors */
   def = mputprintf(def, "%s(): n_elements(-1), value_elements(NULL) {}\n", name);
 
-  def = mputprintf(def, "%s(null_type other_value): n_elements(0), value_elements(NULL) {}\n", name);
+  def = mputprintf(def, "%s(null_type): n_elements(0), value_elements(NULL) {}\n", name);
 
   /* copy constructor */
   def = mputprintf(def, "%s(const %s& other_value) { copy_value(other_value); }\n", name, name);
@@ -2066,25 +2121,29 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
     "    return;\n"
     "  }\n"
     "  param.basic_check(Module_Param::BC_VALUE|Module_Param::BC_LIST, \"%s value\");\n"
+    "  Module_Param_Ptr mp = &param;\n"
+    "  if (param.get_type() == Module_Param::MP_Reference) {\n"
+    "    mp = param.get_referenced_param();\n"
+    "  }\n"
     "  switch (param.get_operation_type()) {\n"
     "  case Module_Param::OT_ASSIGN:\n"
-    "    if (param.get_type()==Module_Param::MP_Value_List && param.get_size()==0) {\n"
+    "    if (mp->get_type()==Module_Param::MP_Value_List && mp->get_size()==0) {\n"
     "      *this = NULL_VALUE;\n"
     "      return;\n"
     "    }\n"
-    "    switch (param.get_type()) {\n"
+    "    switch (mp->get_type()) {\n"
     "    case Module_Param::MP_Value_List:\n"
-    "      set_size(param.get_size());\n"
-    "      for (size_t i=0; i<param.get_size(); ++i) {\n"
-    "        Module_Param* const curr = param.get_elem(i);\n"
+    "      set_size(mp->get_size());\n"
+    "      for (size_t i=0; i<mp->get_size(); ++i) {\n"
+    "        Module_Param* const curr = mp->get_elem(i);\n"
     "        if (curr->get_type()!=Module_Param::MP_NotUsed) {\n"
     "          (*this)[i].set_param(*curr);\n"
     "        }\n"
     "      }\n"
     "      break;\n"
     "    case Module_Param::MP_Indexed_List:\n"
-    "      for (size_t i=0; i<param.get_size(); ++i) {\n"
-    "        Module_Param* const curr = param.get_elem(i);\n"
+    "      for (size_t i=0; i<mp->get_size(); ++i) {\n"
+    "        Module_Param* const curr = mp->get_elem(i);\n"
     "        (*this)[curr->get_id()->get_index()].set_param(*curr);\n"
     "      }\n"
     "      break;\n"
@@ -2093,12 +2152,12 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
     "    }\n"
     "    break;\n"
     "  case Module_Param::OT_CONCAT:\n"
-    "    switch (param.get_type()) {\n"
+    "    switch (mp->get_type()) {\n"
     "    case Module_Param::MP_Value_List: {\n"
     "      if (!is_bound()) *this = NULL_VALUE;\n"
     "      int start_idx = lengthof();\n"
-    "      for (size_t i=0; i<param.get_size(); ++i) {\n"
-    "        Module_Param* const curr = param.get_elem(i);\n"
+    "      for (size_t i=0; i<mp->get_size(); ++i) {\n"
+    "        Module_Param* const curr = mp->get_elem(i);\n"
     "        if ((curr->get_type()!=Module_Param::MP_NotUsed)) {\n"
     "          (*this)[start_idx+(int)i].set_param(*curr);\n"
     "        }\n"
@@ -2118,6 +2177,37 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
     sdef->kind == RECORD_OF ? "record of" : "set of",
     sdef->kind == RECORD_OF ? "record of" : "set of", dispname,
     sdef->kind == RECORD_OF ? "record of" : "set of", dispname);
+  
+  /* get param function */
+  def = mputstr(def, "Module_Param* get_param(Module_Param_Name& param_name) const;\n");
+  src = mputprintf
+    (src,
+    "Module_Param* %s::get_param(Module_Param_Name& param_name) const\n"
+    "{\n"
+    "  if (!is_bound()) {\n"
+    "    return new Module_Param_Unbound();\n"
+    "  }\n"
+    "  if (param_name.next_name()) {\n"
+    // Haven't reached the end of the module parameter name
+    // => the name refers to one of the elements, not to the whole record of
+    "    char* param_field = param_name.get_current_name();\n"
+    "    if (param_field[0] < '0' || param_field[0] > '9') {\n"
+    "      TTCN_error(\"Unexpected record field name in module parameter reference, \"\n"
+    "        \"expected a valid index for %s type `%s'\");\n"
+    "    }\n"
+    "    int param_index = -1;\n"
+    "    sscanf(param_field, \"%%d\", &param_index);\n"
+    "    return (*this)[param_index].get_param(param_name);\n"
+    "  }\n"
+    "  Vector<Module_Param*> values;\n"
+    "  for (int i = 0; i < n_elements; ++i) {\n"
+    "    values.push_back((*this)[i].get_param(param_name));\n"
+    "  }\n"
+    "  Module_Param_Value_List* mp = new Module_Param_Value_List();\n"
+    "  mp->add_list_with_implicit_ids(&values);\n"
+    "  values.clear();\n"
+    "  return mp;\n"
+    "}\n\n", name, sdef->kind == RECORD_OF ? "record of" : "set of", dispname);
 
   /* encoding / decoding functions */
   def = mputstr(def, "void encode_text(Text_Buf& text_buf) const;\n");
@@ -2176,7 +2266,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "    p_buf.put_cs(*p_td.text->separator_encode);\n"
       "    encoded_length+=p_td.text->separator_encode->lengthof();\n"
       "   }\n"
-      "   encoded_length+=value_elements[a].TEXT_encode(%s_descr_,p_buf);\n"
+      "   encoded_length+=value_elements[a].TEXT_encode(*p_td.oftype_descr,p_buf);\n"
       "  }\n"
       "  if(p_td.text->end_encode){\n"
       "    p_buf.put_cs(*p_td.text->end_encode);\n"
@@ -2184,7 +2274,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "  }\n"
       "  return encoded_length;\n"
       "}\n"
-      ,name,sdef->oftypedescrname
+      ,name
       );
     src = mputprintf(src,
       "int %s::TEXT_decode(const TTCN_Typedescriptor_t& p_td,"
@@ -2223,7 +2313,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "  while(TRUE){\n"
       "    %s val;\n"
       "    pos=p_buf.get_pos();\n"
-      "    int len=val.TEXT_decode(%s_descr_,p_buf,limit,TRUE);\n"
+      "    int len=val.TEXT_decode(*p_td.oftype_descr,p_buf,limit,TRUE);\n"
       "    if(len==-1 || (len==0 && !limit.has_token())){\n"
       "      p_buf.set_pos(pos);\n"
       "      if(sep_found){\n"
@@ -2261,7 +2351,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "      }\n"
       "    }\n"
       "  }\n"
-      ,name,type,sdef->oftypedescrname
+      ,name,type
      );
     src = mputstr(src,
       "   limit.remove_tokens(ml);\n"
@@ -2315,7 +2405,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
        "    for(int elem_i=0; elem_i<n_elements; elem_i++) {\n"
        "      ec.set_msg(\"Component #%%d: \", elem_i);\n"
        "      new_tlv->add_TLV(value_elements[elem_i].BER_encode_TLV"
-       "(%s_descr_, p_coding));\n"
+       "(*p_td.oftype_descr, p_coding));\n"
        "    }\n"
        "%s"
        "  }\n"
@@ -2341,16 +2431,16 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
        "  while(BER_decode_constdTLV_next(stripped_tlv, V_pos, L_form, "
        "tmp_tlv)) {\n"
        "  set_size(n_elements+1);\n"
-       "  value_elements[n_elements-1].BER_decode_TLV(%s_descr_, tmp_tlv, "
+       "  value_elements[n_elements-1].BER_decode_TLV(*p_td.oftype_descr, tmp_tlv, "
          "L_form);\n"
        "  ec_2.set_msg(\"%%d: \", n_elements);\n"
        "  }\n"
        "  return TRUE;\n"
        "}\n"
        "\n"
-       , name, sdef->oftypedescrname
+       , name
        , sdef->kind==SET_OF?"    new_tlv->sort_tlvs();\n":""
-       , name, sdef->oftypedescrname
+       , name
        );
 
     if(sdef->has_opentypes) {
@@ -2396,7 +2486,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
     "    int a=0;\n"
     "    if(sel_field==-1) sel_field=p_td.raw->fieldlength;\n"
     "    for(a=0;a<sel_field;a++){\n"
-    "      decoded_field_length=(*this)[a+start_field].RAW_decode(%s_descr_,"
+    "      decoded_field_length=(*this)[a+start_field].RAW_decode(*p_td.oftype_descr,"
     "p_buf,limit,top_bit_ord,TRUE);\n"
     "      if(decoded_field_length < 0) return decoded_field_length;\n"
     "      decoded_length+=decoded_field_length;\n"
@@ -2413,7 +2503,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
     "    }\n"
     "    while(limit>0){\n"
     "      start_of_field=p_buf.get_pos_bit();\n"
-    "      decoded_field_length=(*this)[a].RAW_decode(%s_descr_,p_buf,limit,"
+    "      decoded_field_length=(*this)[a].RAW_decode(*p_td.oftype_descr,p_buf,limit,"
     "top_bit_ord,TRUE);\n"
     "      if(decoded_field_length < 0){\n"
     /*"        delete &(*this)[a];\n"*/
@@ -2427,7 +2517,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
     "      decoded_length+=decoded_field_length;\n"
     "      limit-=decoded_field_length;\n"
     "      a++;\n"
-    ,name,sdef->oftypedescrname,sdef->oftypedescrname
+    ,name
     );
     if(sdef->raw.extension_bit!=XDEFNO && sdef->raw.extension_bit!=XDEFDEFAULT){
       src=mputprintf(src,
@@ -2452,12 +2542,12 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
     "  myleaf.body.node.nodes=init_nodes_of_enc_tree(encoded_num_of_records);\n"
     "  for(int a=0;a<encoded_num_of_records;a++){\n"
     "    myleaf.body.node.nodes[a]=new RAW_enc_tree(TRUE,&myleaf,"
-    "&(myleaf.curr_pos),a,%s_descr_.raw);\n"
-    "    encoded_length+=(*this)[a].RAW_encode(%s_descr_,"
+    "&(myleaf.curr_pos),a,p_td.oftype_descr->raw);\n"
+    "    encoded_length+=(*this)[a].RAW_encode(*p_td.oftype_descr,"
     "*myleaf.body.node.nodes[a]);\n"
     "  }\n"
     " return myleaf.length=encoded_length;\n}\n\n"
-    , name, sdef->oftypedescrname, sdef->oftypedescrname
+    , name
     );
   }
 
@@ -2471,10 +2561,12 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "boolean %s::can_start(const char *name, const char *uri, "
       "XERdescriptor_t const& xd, unsigned int flavor) {\n"
       "  boolean e_xer = is_exer(flavor);\n"
-      "  if (e_xer && (xd.xer_bits & ANY_ELEMENT)) "
+      "  if ((!e_xer || !(xd.xer_bits & UNTAGGED)) && !(flavor & XER_RECOF)) return "
+      "check_name(name, xd, e_xer) && (!e_xer || check_namespace(uri, xd));\n"
+      "  if (e_xer && (xd.oftype_descr->xer_bits & ANY_ELEMENT)) "
       , name
       );
-    if (sdef->nFollowers) {
+    if (!force_gen_seof && sdef->nFollowers) {
       /* If there are optional fields following the record-of, then seeing
        * {any XML tag that belongs to those fields} where the record-of may be
        * means that the record-of is empty. */
@@ -2494,12 +2586,9 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
     else src = mputstr(src, "return TRUE;\n");
 
     src = mputprintf(src,
-      "  if ((!e_xer || !(xd.xer_bits & UNTAGGED)) && !(flavor & XER_RECOF)) return "
-      "check_name(name, xd, e_xer) && (!e_xer || check_namespace(uri, xd));\n"
-      "  else return %s::can_start(name, uri, %s_xer_, flavor | XER_RECOF);\n"
+      "  return %s::can_start(name, uri, *xd.oftype_descr, flavor | XER_RECOF);\n"
       "}\n\n"
       , sdef->type
-      , sdef->oftypedescrname
       );
 
     src = mputprintf(src,
@@ -2512,7 +2601,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "    size_t num_new;\n"
       "    for (int i = 0; i < n_elements; ++i) {\n"
       "      bool def_ns_1 = false;"
-      "      new_ns = value_elements[i].collect_ns(%s_xer_, num_new, def_ns_1);\n"
+      "      new_ns = value_elements[i].collect_ns(*p_td.oftype_descr, num_new, def_ns_1);\n"
       "      merge_ns(collected_ns, num_collected, new_ns, num_new);\n"
       "      def_ns = def_ns || def_ns_1;\n" /* alas, no ||= */
       "    }\n"
@@ -2527,7 +2616,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "  num = num_collected;\n"
       "  return collected_ns;\n"
       "}\n\n"
-      , name, sdef->oftypedescrname);
+      , name);
 
     src=mputprintf(src,
       "int %s::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf, "
@@ -2541,16 +2630,18 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "%s" /* Factor out p_indent if not attribute */
       "  if (n_elements==0) {\n" /* Empty record of */
       , name
-      , sdef->xerAttribute ? "" : "  if (indenting) do_indent(p_buf, p_indent);\n"
+      , force_gen_seof ? "  if (indenting && !(p_td.xer_bits & XER_ATTRIBUTE)) do_indent(p_buf, p_indent);\n"
+      : (sdef->xerAttribute ? "" : "  if (indenting) do_indent(p_buf, p_indent);\n")
       );
-    if (sdef->xerAttribute) {
-      src=mputstr(src,
-        "    if (e_xer) {\n" /* Empty attribute. */
+    if (force_gen_seof || sdef->xerAttribute) {
+      src=mputprintf(src,
+        "    if (e_xer%s) {\n" /* Empty attribute. */
         "      begin_attribute(p_td, p_buf);\n"
         "      p_buf.put_c('\\'');\n"
-        "    } else\n");
+        "    } else\n"
+        , force_gen_seof ? " && (p_td.xer_bits & XER_ATTRIBUTE)" : "");
     }
-    else {
+    if (force_gen_seof || !sdef->xerAttribute) {
       src = mputstr(src,
         "    if (own_tag)");
     }
@@ -2578,7 +2669,8 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "    }\n"
       "  }\n"
       "  else {\n" /* Not empty record of. Start tag or attribute */
-      , sdef->xerAttribute ? "      if (indenting) do_indent(p_buf, p_indent);\n" : ""
+      , force_gen_seof ? "  if (indenting && !(p_td.xer_bits & XER_ATTRIBUTE)) do_indent(p_buf, p_indent);\n"
+      : (sdef->xerAttribute ? "" : "  if (indenting) do_indent(p_buf, p_indent);\n")
       );
     if (sdef->xerAnyAttrElem) {
       src = mputstr(src,
@@ -2660,11 +2752,12 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
         "      p_buf.put_s(shorter, saved);\n" /* restore the '>' and anything after */
         "    } else {\n");
     }
-    if (sdef->xerAttribute) {
-      src=mputstr(src,
-        "    if (e_xer) {\n"
+    if (force_gen_seof || sdef->xerAttribute) {
+      src=mputprintf(src,
+        "    if (e_xer%s) {\n"
         "      begin_attribute(p_td, p_buf);\n"
-        "    } else\n");
+        "    } else\n"
+        , force_gen_seof ? " && (p_td.xer_bits & XER_ATTRIBUTE)" : "");
     }
     src=mputprintf(src,
       "    if (own_tag) {\n"
@@ -2690,7 +2783,8 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "        Free(collected_ns);\n"
       "        p_buf.put_s(1 + keep_newline, (cbyte*)\">\\n\");\n"
       "      }\n"
-      , sdef->xerAttribute ? "      if (indenting) do_indent(p_buf, p_indent);\n" : ""
+      , force_gen_seof ? "      if (indenting && (p_td.xer_bits & XER_ATTRIBUTE)) do_indent(p_buf, p_indent);\n"
+      : (sdef->xerAttribute ? "      if (indenting) do_indent(p_buf, p_indent);\n" : "")
       );
     if (sdef->xmlValueList) {
       src=mputstr(src, "      if (indenting && !e_xer) do_indent(p_buf, p_indent+1);\n"); /* !e_xer or GDMO */
@@ -2701,20 +2795,26 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "    TTCN_EncDec_ErrorContext ec_0(\"Index \");\n"
       "    TTCN_EncDec_ErrorContext ec_1;\n"
       );
-    src=mputprintf(src,
+    src=mputstr(src,
       "    for (int i = 0; i < n_elements; ++i) {\n"
-      /*"      if (i > 0 && !own_tag && 0 != emb_val &&\n"
-      "          emb_val->embval_index < emb_val->embval_size) {\n"
-      "        emb_val->embval_array->get_embedded_value(emb_val->embval_index).XER_encode(\n"
-      "          UNIVERSAL_CHARSTRING_xer_, p_buf, p_flavor | EMBED_VALUES, p_indent+1, 0);\n"
+      "      if (i > 0 && !own_tag && 0 != emb_val &&\n"
+      "          emb_val->embval_index < (0 != emb_val->embval_array_reg ?\n"
+      "          emb_val->embval_array_reg->size_of() : emb_val->embval_array_opt->size_of())) {\n"
+      "        if (0 != emb_val->embval_array_reg) {\n"
+      "          (*emb_val->embval_array_reg)[emb_val->embval_index].XER_encode(\n"
+      "            UNIVERSAL_CHARSTRING_xer_, p_buf, p_flavor | EMBED_VALUES, p_indent+1, 0);\n"
+      "        }\n"
+      "        else {\n"
+      "          (*emb_val->embval_array_opt)[emb_val->embval_index].XER_encode(\n"
+      "            UNIVERSAL_CHARSTRING_xer_, p_buf, p_flavor | EMBED_VALUES, p_indent+1, 0);\n"
+      "        }\n"
       "        ++emb_val->embval_index;\n"
-      "      }\n" - temporarily removed in RT1 */
-      "      ec_1.set_msg(\"%%d: \", i);\n"
+      "      }\n"
+      "      ec_1.set_msg(\"%d: \", i);\n"
       "      if (e_xer && (p_td.xer_bits & XER_LIST) && i>0) p_buf.put_c(' ');\n"
-      "      value_elements[i].XER_encode(%s_xer_, p_buf, p_flavor, p_indent+own_tag, emb_val);\n"
+      "      value_elements[i].XER_encode(*p_td.oftype_descr, p_buf, p_flavor, p_indent+own_tag, emb_val);\n"
       "    }\n"
-      "    if (indenting && !is_exerlist(p_flavor)) {\n",
-      sdef->oftypedescrname
+      "    if (indenting && !is_exerlist(p_flavor)) {\n"
     );
     if (sdef->xmlValueList) {
       src=mputstr(src, "      if (!e_xer) p_buf.put_c('\\n');\n"); /* !e_xer or GDMO */
@@ -2722,10 +2822,11 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
     src=mputstr(src,
       "      do_indent(p_buf, p_indent);\n"
       "    }\n");
-    if (sdef->xerAttribute) {
-      src=mputstr(src,
-        "    if (e_xer) p_buf.put_c('\\'');\n"
-        "    else\n");
+    if (force_gen_seof || sdef->xerAttribute) {
+      src=mputprintf(src,
+        "    if (e_xer%s) p_buf.put_c('\\'');\n"
+        "    else\n"
+        , force_gen_seof ? " && (p_td.xer_bits & XER_ATTRIBUTE)" : "");
     }
     src=mputstr(src,
       "    if (own_tag){\n"
@@ -2787,7 +2888,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       , name
       );
 
-    src = mputprintf(src,
+    src = mputstr(src,
       "  if (e_xer && (p_td.xer_bits & XER_LIST)) {\n" /* LIST decoding*/
       "    char *x_val = (char*)p_reader.NewValue();\n" /* we own it */
       "    size_t x_pos = 0;\n"
@@ -2801,13 +2902,13 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "      x_pos += strlen(str) + 1;\n"
       "      TTCN_Buffer buf_2;\n"
       "      buf_2.put_c('<');\n"
-      "      write_ns_prefix(%s_xer_, buf_2);\n"
-      "      const char * const exer_name = %s_xer_.names[1];\n"
-      "      boolean i_can_has_ns = %s_xer_.my_module != 0 && %s_xer_.ns_index != -1;\n"
+      "      write_ns_prefix(*p_td.oftype_descr, buf_2);\n"
+      "      const char * const exer_name = p_td.oftype_descr->names[1];\n"
+      "      boolean i_can_has_ns = p_td.oftype_descr->my_module != 0 && p_td.oftype_descr->ns_index != -1;\n"
       /* If it has a namespace, chop off the '>' from the end */
-      "      buf_2.put_s((size_t)%s_xer_.namelens[1]-1-i_can_has_ns, (cbyte*)exer_name);\n"
+      "      buf_2.put_s((size_t)p_td.oftype_descr->namelens[1]-1-i_can_has_ns, (cbyte*)exer_name);\n"
       "      if (i_can_has_ns) {\n"
-      "        const namespace_t * const pns = %s_xer_.my_module->get_ns(%s_xer_.ns_index);\n"
+      "        const namespace_t * const pns = p_td.oftype_descr->my_module->get_ns(p_td.oftype_descr->ns_index);\n"
       "        buf_2.put_s(7 - (*pns->px == 0), (cbyte*)\" xmlns:\");\n"
       "        buf_2.put_s(strlen(pns->px), (cbyte*)pns->px);\n"
       "        buf_2.put_s(2, (cbyte*)\"='\");\n"
@@ -2818,14 +2919,14 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "      buf_2.put_s(strlen(str), (cbyte*)str);\n"
       "      buf_2.put_c('<');\n"
       "      buf_2.put_c('/');\n"
-      "      write_ns_prefix(%s_xer_, buf_2);\n"
-      "      buf_2.put_s((size_t)%s_xer_.namelens[1], (cbyte*)exer_name);\n"
+      "      write_ns_prefix(*p_td.oftype_descr, buf_2);\n"
+      "      buf_2.put_s((size_t)p_td.oftype_descr->namelens[1], (cbyte*)exer_name);\n"
       "      XmlReaderWrap reader_2(buf_2);\n"
       "      rd_ok = reader_2.Read();\n" /* Move to the start element. */
       /* Don't move to the #text, that's the callee's responsibility. */
       /* The call to the non-const operator[] creates a new element object,
        * then we call its XER_decode with the temporary XML reader. */
-      "      (*this)[n_elements].XER_decode(%s_xer_, reader_2, p_flavor, 0);\n"
+      "      (*this)[n_elements].XER_decode(*p_td.oftype_descr, reader_2, p_flavor, 0);\n"
       "      if (p_flavor & EXIT_ON_ERROR && !(*this)[n_elements - 1].is_bound()) {\n"
       "        if (1 == n_elements) {\n"
       // Failed to decode even the first element
@@ -2847,11 +2948,6 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "      p_reader.Read();\n" /* past it */
       "    }\n"
       "  }\n"
-      , sdef->oftypedescrname, sdef->oftypedescrname
-      , sdef->oftypedescrname, sdef->oftypedescrname
-      , sdef->oftypedescrname, sdef->oftypedescrname
-      , sdef->oftypedescrname, sdef->oftypedescrname
-      , sdef->oftypedescrname, sdef->oftypedescrname
     );
 
     src = mputprintf(src,
@@ -2881,17 +2977,17 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
         "            if (p_reader.NodeType() != XML_READER_TYPE_ELEMENT) rd_ok = p_reader.Read();\n"
         "          } else");
     }
-    src = mputprintf(src,
+    src = mputstr(src,
       "          {\n"
       /* An untagged record-of ends if it encounters an element with a name
        * that doesn't match its component */
       "            if (!own_tag && !can_start((const char*)p_reader.LocalName(), "
-      "(const char*)p_reader.NamespaceUri(), %s_xer_, p_flavor)) {\n"
+      "(const char*)p_reader.NamespaceUri(), p_td, p_flavor)) {\n"
       "              for (; rd_ok == 1 && p_reader.Depth() > xml_depth; rd_ok = p_reader.Read()) ;\n"
       "              break;\n"
       "            }\n"
       /* The call to the non-const operator[] creates the element */
-      "            operator [](n_elements).XER_decode(%s_xer_, p_reader, p_flavor, emb_val);\n"
+      "            operator [](n_elements).XER_decode(*p_td.oftype_descr, p_reader, p_flavor, emb_val);\n"
       "            if (0 != emb_val && !own_tag && n_elements > 1) {\n"
       "              ++emb_val->embval_index;\n"
       "            }\n"
@@ -2905,11 +3001,16 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "          }\n"
       "          break;\n"
       "        }\n"
-      /*"        else if (XML_READER_TYPE_TEXT == type && 0 != emb_val && !own_tag && n_elements > 0) {\n"
+      "        else if (XML_READER_TYPE_TEXT == type && 0 != emb_val && !own_tag && n_elements > 0) {\n"
       "          UNIVERSAL_CHARSTRING emb_ustr((const char*)p_reader.Value());\n"
-      "          emb_val->embval_array->set_embedded_value(emb_val->embval_index, emb_ustr);\n"
+      "          if (0 != emb_val->embval_array_reg) {\n"
+      "            (*emb_val->embval_array_reg)[emb_val->embval_index] = emb_ustr;\n"
+      "          }\n"
+      "          else {\n"
+      "            (*emb_val->embval_array_opt)[emb_val->embval_index] = emb_ustr;\n"
+      "          }\n"
       "          rd_ok = p_reader.Read();\n"
-      "        }\n" - temporarily removed in RT1 */
+      "        }\n"
       "        else {\n"
       "          rd_ok = p_reader.Read();\n"
       "        }\n"
@@ -2918,13 +3019,12 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "  }\n" /* if not LIST */
       "  return 1;\n"
       "}\n\n"
-      , sdef->oftypedescrname, sdef->oftypedescrname
     );
   }
   if (json_needed) {
     // JSON encode, RT1, mem. alloc. optimised
     src = mputprintf(src,
-      "int %s::JSON_encode(const TTCN_Typedescriptor_t&, JSON_Tokenizer& p_tok) const\n"
+      "int %s::JSON_encode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& p_tok) const\n"
       "{\n"
       "  if (!is_bound()) {\n"
       "    TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_UNBOUND,\n"
@@ -2933,18 +3033,18 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "  }\n\n"
       "  int enc_len = p_tok.put_next_token(JSON_TOKEN_ARRAY_START, NULL);\n"
       "  for(int i = 0; i < n_elements; ++i) {\n"
-      "    int ret_val = value_elements[i].JSON_encode(%s_descr_, p_tok);\n"
+      "    int ret_val = value_elements[i].JSON_encode(*p_td.oftype_descr, p_tok);\n"
       "    if (0 > ret_val) break;\n"
       "    enc_len += ret_val;\n"
       "  }\n"
       "  enc_len += p_tok.put_next_token(JSON_TOKEN_ARRAY_END, NULL);\n"
       "  return enc_len;\n"
       "}\n\n"
-      , name, dispname, sdef->oftypedescrname);
+      , name, dispname);
     
     // JSON decode, RT1, mem. alloc. optimised
     src = mputprintf(src,
-      "int %s::JSON_decode(const TTCN_Typedescriptor_t&, JSON_Tokenizer& p_tok, boolean p_silent)\n"
+      "int %s::JSON_decode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& p_tok, boolean p_silent)\n"
       "{\n"
       "  json_token_t token = JSON_TOKEN_NONE;\n"
       "  int dec_len = p_tok.get_next_token(&token, NULL, NULL);\n"
@@ -2959,7 +3059,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "  while (true) {\n"
       "    size_t buf_pos = p_tok.get_buf_pos();\n"
       "    %s val;\n"
-      "    int ret_val = val.JSON_decode(%s_descr_, p_tok, p_silent);\n"
+      "    int ret_val = val.JSON_decode(*p_td.oftype_descr, p_tok, p_silent);\n"
       "    if (JSON_ERROR_INVALID_TOKEN == ret_val) {\n"
       "      p_tok.set_buf_pos(buf_pos);\n"
       "      break;\n"
@@ -2984,7 +3084,7 @@ void defRecordOfClassMemAllocOptimized(const struct_of_def *sdef, output_struct 
       "  }\n\n"
       "  return dec_len;\n"
       "}\n\n"
-      , name, type, sdef->oftypedescrname);
+      , name, type);
   }
   /* end of class */
   def = mputstr(def, "};\n\n");
@@ -3024,8 +3124,8 @@ void defRecordOfClass2(const struct_of_def *sdef, output_struct *output)
   char *def = NULL, *src = NULL;
   const char *name = sdef->name;
   const char *type = sdef->type;
-  boolean raw_needed = sdef->hasRaw && enable_raw();
-  boolean xer_needed = sdef->hasXer && enable_xer();
+  boolean raw_needed = force_gen_seof || (sdef->hasRaw && enable_raw());
+  boolean xer_needed = force_gen_seof || (sdef->hasXer && enable_xer());
 
   /* Class definition */
   def = mputprintf(def,
@@ -3164,12 +3264,10 @@ void defRecordOfClass2(const struct_of_def *sdef, output_struct *output)
   src = mputprintf(src,
     "Base_Type* %s::create_elem() const { return new %s; }\n"
     "const Base_Type* %s::get_unbound_elem() const { return &UNBOUND_ELEM; }\n"
-    "const TTCN_Typedescriptor_t* %s::get_descriptor() const { return &%s_descr_; }\n"
-    "const TTCN_Typedescriptor_t* %s::get_elem_descr() const { return &%s_descr_; }\n\n",
+    "const TTCN_Typedescriptor_t* %s::get_descriptor() const { return &%s_descr_; }\n",
     name, type,
     name,
-    name, name,
-    name, sdef->oftypedescrname);
+    name, name);
 
   /* helper functions called by enc/dec members of the ancestor class */
   if (raw_needed) {
@@ -3194,13 +3292,20 @@ void defRecordOfClass2(const struct_of_def *sdef, output_struct *output)
       "boolean %s::can_start(const char *name, const char *uri, "
       "XERdescriptor_t const& xd, unsigned int flavor) {\n"
       "  boolean e_xer = is_exer(flavor);\n"
+      /* if EXER and UNTAGGED, it can begin with the tag of the element,
+       * otherwise it must be the tag of the type itself,
+       * specified in the supplied parameter.
+       * If flavor contains UNTAGGED, that's a signal to go directly
+       * to the embedded type. */
+      "  if (!e_xer || !((xd.xer_bits|flavor) & UNTAGGED)) return "
+      "check_name(name, xd, e_xer) && (!e_xer || check_namespace(uri, xd));\n"
       /* a record-of with ANY-ELEMENT can start with any tag
        * :-( with some exceptions )-: */
-      "  if (e_xer && (xd.xer_bits & ANY_ELEMENT)) "
+      "  if (e_xer && (xd.oftype_descr->xer_bits & ANY_ELEMENT)) "
       , name, name
       );
 
-    if (sdef->nFollowers) {
+    if (!force_gen_seof && sdef->nFollowers) {
       size_t f;
       src = mputstr(src, "{\n");
       for (f = 0; f < sdef->nFollowers; ++f) {
@@ -3218,15 +3323,8 @@ void defRecordOfClass2(const struct_of_def *sdef, output_struct *output)
       src = mputstr(src, "return TRUE;\n");
     }
     src = mputprintf(src,
-      /* if EXER and UNTAGGED, it can begin with the tag of the element,
-       * otherwise it must be the tag of the type itself,
-       * specified in the supplied parameter.
-       * If flavor contains UNTAGGED, that's a signal to go directly
-       * to the embedded type. */
-      "  if (!e_xer || !((xd.xer_bits|flavor) & UNTAGGED)) return "
-      "check_name(name, xd, e_xer) && (!e_xer || check_namespace(uri, xd));\n"
-      "  else return %s::can_start(name, uri, %s_xer_, flavor | XER_RECOF);\n"
-      "}\n\n", sdef->type, sdef->oftypedescrname);
+      "  return %s::can_start(name, uri, *xd.oftype_descr, flavor | XER_RECOF);\n"
+      "}\n\n", sdef->type);
     def = mputprintf(def, "boolean isXmlValueList() const { return %s; }\n\n",
       sdef->xmlValueList ? "TRUE" : "FALSE");
   }
@@ -3363,15 +3461,15 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
   def = mputstr(def,
     "static boolean match_function_specific(const Base_Type *value_ptr, "
       "int value_index, const Restricted_Length_Template *template_ptr, "
-      "int template_index);\n");
+      "int template_index, boolean legacy);\n");
   src = mputprintf(src,
     "boolean %s_template::match_function_specific(const Base_Type *value_ptr, "
       "int value_index, const Restricted_Length_Template *template_ptr, "
-      "int template_index)\n"
+      "int template_index, boolean legacy)\n"
     "{\n"
     "if (value_index >= 0) return ((const %s_template*)template_ptr)->"
       "single_value.value_elements[template_index]->"
-      "match((*(const %s*)value_ptr)[value_index]);\n"
+      "match((*(const %s*)value_ptr)[value_index], legacy);\n"
     "else return ((const %s_template*)template_ptr)->"
       "single_value.value_elements[template_index]->is_any_or_omit();\n"
     "}\n\n", name, name, name, name);
@@ -3381,15 +3479,15 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     def = mputstr(def,
       "static boolean match_function_set(const Base_Type *value_ptr, "
 	"int value_index, const Restricted_Length_Template *template_ptr, "
-	"int template_index);\n");
+	"int template_index, boolean legacy);\n");
     src = mputprintf(src,
       "boolean %s_template::match_function_set(const Base_Type *value_ptr, "
 	"int value_index, const Restricted_Length_Template *template_ptr, "
-	"int template_index)\n"
+	"int template_index, boolean legacy)\n"
       "{\n"
       "if (value_index >= 0) return ((const %s_template*)template_ptr)->"
 	"value_set.set_items[template_index].match("
-	"(*(const %s*)value_ptr)[value_index]);\n"
+	"(*(const %s*)value_ptr)[value_index], legacy);\n"
       "else return ((const %s_template*)template_ptr)->"
 	"value_set.set_items[template_index].is_any_or_omit();\n"
       "}\n\n", name, name, name, name);
@@ -3398,16 +3496,16 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     def = mputstr(def,
       "static void log_function(const Base_Type *value_ptr, "
 	"const Restricted_Length_Template *template_ptr,"
-    " int index_value, int index_template);\n");
+    " int index_value, int index_template, boolean legacy);\n");
     src = mputprintf(src,
       "void %s_template::log_function(const Base_Type *value_ptr, "
 	"const Restricted_Length_Template *template_ptr,"
-    " int index_value, int index_template)\n"
+    " int index_value, int index_template, boolean legacy)\n"
       "{\n"
       "if (value_ptr != NULL && template_ptr != NULL)"
       "((const %s_template*)template_ptr)"
       "->single_value.value_elements[index_template]"
-      "->log_match((*(const %s*)value_ptr)[index_value]);\n"
+      "->log_match((*(const %s*)value_ptr)[index_value], legacy);\n"
       "else if (value_ptr != NULL) (*(const %s*)value_ptr)[index_value].log();\n"
       "else if (template_ptr != NULL) ((const %s_template*)template_ptr)"
 	"->single_value.value_elements[index_template]->log();\n"
@@ -3835,10 +3933,10 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     dispname, dispname, dispname, dispname, dispname, dispname);
 
   /* match operation */
-  def = mputprintf(def, "boolean match(const %s& other_value) const;\n",
-                   name);
+  def = mputprintf(def, "boolean match(const %s& other_value, boolean legacy "
+    "= FALSE) const;\n", name);
   src = mputprintf(src,
-    "boolean %s_template::match(const %s& other_value) const\n"
+    "boolean %s_template::match(const %s& other_value, boolean legacy) const\n"
     "{\n"
     "if (!other_value.is_bound()) return FALSE;\n"
     "int value_length = other_value.size_of();\n"
@@ -3846,7 +3944,7 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     "switch (template_selection) {\n"
     "case SPECIFIC_VALUE:\n"
     "return match_%s_of(&other_value, value_length, this, "
-      "single_value.n_elements, match_function_specific);\n"
+      "single_value.n_elements, match_function_specific, legacy);\n"
     "case OMIT_VALUE:\n"
     "return FALSE;\n"
     "case ANY_VALUE:\n"
@@ -3856,7 +3954,7 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     "case COMPLEMENTED_LIST:\n"
     "for (unsigned int list_count = 0; list_count < value_list.n_values; "
       "list_count++)\n"
-    "if (value_list.list_value[list_count].match(other_value)) "
+    "if (value_list.list_value[list_count].match(other_value, legacy)) "
       "return template_selection == VALUE_LIST;\n"
     "return template_selection == COMPLEMENTED_LIST;\n",
     name, name, sdef->kind == RECORD_OF ? "record" : "set");
@@ -3865,7 +3963,7 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
       "case SUPERSET_MATCH:\n"
       "case SUBSET_MATCH:\n"
       "return match_set_of(&other_value, value_length, this, "
-	"value_set.n_items, match_function_set);\n");
+	"value_set.n_items, match_function_set, legacy);\n");
   }
   src = mputprintf(src,
     "default:\n"
@@ -4066,13 +4164,13 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
      "log_ifpresent();\n"
      "}\n\n");
 
-  def = mputprintf(def, "void log_match(const %s& match_value) const;\n",
-                   name);
-  src = mputprintf(src, "void %s_template::log_match(const %s& match_value) "
-                   "const\n"
+  def = mputprintf(def, "void log_match(const %s& match_value, "
+    "boolean legacy = FALSE) const;\n", name);
+  src = mputprintf(src, "void %s_template::log_match(const %s& match_value, "
+    "boolean legacy) const\n"
     "{\n"
     "if(TTCN_Logger::VERBOSITY_COMPACT == TTCN_Logger::get_matching_verbosity()){\n"
-    "if(match(match_value)){\n"
+    "if(match(match_value, legacy)){\n"
     "TTCN_Logger::print_logmatch_buffer();\n"
     "TTCN_Logger::log_event_str(\" matched\");\n"
     "}else{\n", name, name);
@@ -4085,9 +4183,9 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     "size_t previous_size = TTCN_Logger::get_logmatch_buffer_len();\n"
     "for (int elem_count = 0; elem_count < single_value.n_elements; "
     "elem_count++) {\n"
-    "if(!single_value.value_elements[elem_count]->match(match_value[elem_count])){\n"
+    "if(!single_value.value_elements[elem_count]->match(match_value[elem_count], legacy)){\n"
     "TTCN_Logger::log_logmatch_info(\"[%d]\", elem_count);\n"
-    "single_value.value_elements[elem_count]->log_match(match_value[elem_count]);\n"
+    "single_value.value_elements[elem_count]->log_match(match_value[elem_count], legacy);\n"
     "TTCN_Logger::set_logmatch_buffer_len(previous_size);\n"
     "}\n"
     "}\n"
@@ -4105,7 +4203,7 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     "size_t previous_size = TTCN_Logger::get_logmatch_buffer_len();\n"
     "if (template_selection == SPECIFIC_VALUE)\n"
     "  log_match_heuristics(&match_value, match_value.size_of(), this, "
-    "single_value.n_elements, match_function_specific, log_function);\n"
+    "single_value.n_elements, match_function_specific, log_function, legacy);\n"
     "else{\n"
     "if(previous_size != 0){\n"
     "TTCN_Logger::print_logmatch_buffer();\n"
@@ -4134,7 +4232,7 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
 	"elem_count++) {\n"
       "if (elem_count > 0) TTCN_Logger::log_event_str(\", \");\n"
       "single_value.value_elements[elem_count]->log_match"
-      "(match_value[elem_count]);\n"
+      "(match_value[elem_count], legacy);\n"
       "}\n"
       "TTCN_Logger::log_event_str(\" }\");\n"
       "log_match_length(single_value.n_elements);\n"
@@ -4144,13 +4242,13 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     "match_value.log();\n"
     "TTCN_Logger::log_event_str(\" with \");\n"
     "log();\n"
-    "if (match(match_value)) TTCN_Logger::log_event_str(\" matched\");\n");
+    "if (match(match_value, legacy)) TTCN_Logger::log_event_str(\" matched\");\n");
   if (sdef->kind == SET_OF) {
     src = mputstr(src, "else {\n"
       "TTCN_Logger::log_event_str(\" unmatched\");\n"
       "if (template_selection == SPECIFIC_VALUE) log_match_heuristics("
 	"&match_value, match_value.size_of(), this, single_value.n_elements, "
-	"match_function_specific, log_function);\n"
+	"match_function_specific, log_function, legacy);\n"
       "}\n");
   } else {
     src = mputstr(src, "else TTCN_Logger::log_event_str(\" unmatched\");\n"
@@ -4248,18 +4346,18 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     "}\n\n", dispname);
 
   /* TTCN-3 ispresent() function */
-  def = mputstr(def, "boolean is_present() const;\n");
+  def = mputstr(def, "boolean is_present(boolean legacy = FALSE) const;\n");
   src = mputprintf(src,
-    "boolean %s_template::is_present() const\n"
+    "boolean %s_template::is_present(boolean legacy) const\n"
     "{\n"
     "if (template_selection==UNINITIALIZED_TEMPLATE) return FALSE;\n"
-    "return !match_omit();\n"
+    "return !match_omit(legacy);\n"
     "}\n\n", name);
 
   /* match_omit() */
-  def = mputstr(def, "boolean match_omit() const;\n");
+  def = mputstr(def, "boolean match_omit(boolean legacy = FALSE) const;\n");
   src = mputprintf(src,
-    "boolean %s_template::match_omit() const\n"
+    "boolean %s_template::match_omit(boolean legacy) const\n"
     "{\n"
     "if (is_ifpresent) return TRUE;\n"
     "switch (template_selection) {\n"
@@ -4268,10 +4366,12 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     "return TRUE;\n"
     "case VALUE_LIST:\n"
     "case COMPLEMENTED_LIST:\n"
+    "if (legacy) {\n"
     "for (unsigned int i=0; i<value_list.n_values; i++)\n"
     "if (value_list.list_value[i].match_omit())\n"
     "return template_selection==VALUE_LIST;\n"
     "return template_selection==COMPLEMENTED_LIST;\n"
+    "} // else fall through\n"
     "default:\n"
     "return FALSE;\n"
     "}\n"
@@ -4298,7 +4398,11 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     "    return;\n"
     "  }\n"
     "  param.basic_check(Module_Param::BC_TEMPLATE|Module_Param::BC_LIST, \"%s of template\");\n"
-    "  switch (param.get_type()) {\n"
+    "  Module_Param_Ptr mp = &param;\n"
+    "  if (param.get_type() == Module_Param::MP_Reference) {\n"
+    "    mp = param.get_referenced_param();\n"
+    "  }\n"
+    "  switch (mp->get_type()) {\n"
     "  case Module_Param::MP_Omit:\n"
     "    *this = OMIT_VALUE;\n"
     "    break;\n"
@@ -4309,40 +4413,43 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     "    *this = ANY_OR_OMIT;\n"
     "    break;\n"
     "  case Module_Param::MP_List_Template:\n"
-    "  case Module_Param::MP_ComplementList_Template:\n"
-    "    set_type(param.get_type()==Module_Param::MP_List_Template ? VALUE_LIST : COMPLEMENTED_LIST, param.get_size());\n"
-    "    for (size_t p_i=0; p_i<param.get_size(); p_i++) {\n"
-    "      list_item(p_i).set_param(*param.get_elem(p_i));\n"
+    "  case Module_Param::MP_ComplementList_Template: {\n"
+    "    %s_template temp;\n"
+    "    temp.set_type(mp->get_type()==Module_Param::MP_List_Template ? "
+    "VALUE_LIST : COMPLEMENTED_LIST, mp->get_size());\n"
+    "    for (size_t p_i=0; p_i<mp->get_size(); p_i++) {\n"
+    "      temp.list_item(p_i).set_param(*mp->get_elem(p_i));\n"
     "    }\n"
-    "    break;\n"
+    "    *this = temp;\n"
+    "    break; }\n"
     "  case Module_Param::MP_Indexed_List:\n"
     "    if (template_selection!=SPECIFIC_VALUE) set_size(0);\n"
-    "    for (size_t p_i=0; p_i<param.get_size(); ++p_i) {\n"
-    "      (*this)[(int)(param.get_elem(p_i)->get_id()->get_index())].set_param(*param.get_elem(p_i));\n"
+    "    for (size_t p_i=0; p_i<mp->get_size(); ++p_i) {\n"
+    "      (*this)[(int)(mp->get_elem(p_i)->get_id()->get_index())].set_param(*mp->get_elem(p_i));\n"
     "    }\n"
     "    break;\n",
-    name, sdef->kind==RECORD_OF?"record":"set", dispname, sdef->kind==RECORD_OF?"record":"set");
+    name, sdef->kind==RECORD_OF?"record":"set", dispname, sdef->kind==RECORD_OF?"record":"set", name);
   if (sdef->kind == RECORD_OF) {
     src = mputstr(src,
     "  case Module_Param::MP_Value_List: {\n"
-    "    set_size(param.get_size());\n"
+    "    set_size(mp->get_size());\n"
     "    int curr_idx = 0;\n"
-    "    for (size_t p_i=0; p_i<param.get_size(); ++p_i) {\n"
-    "      switch (param.get_elem(p_i)->get_type()) {\n"
+    "    for (size_t p_i=0; p_i<mp->get_size(); ++p_i) {\n"
+    "      switch (mp->get_elem(p_i)->get_type()) {\n"
     "      case Module_Param::MP_NotUsed:\n"
     "        curr_idx++;\n"
     "        break;\n"
     "      case Module_Param::MP_Permutation_Template: {\n"
     "        int perm_start_idx = curr_idx;\n"
-    "        for (size_t perm_i=0; perm_i<param.get_elem(p_i)->get_size(); perm_i++) {\n"
-    "          (*this)[curr_idx].set_param(*(param.get_elem(p_i)->get_elem(perm_i)));\n"
+    "        for (size_t perm_i=0; perm_i<mp->get_elem(p_i)->get_size(); perm_i++) {\n"
+    "          (*this)[curr_idx].set_param(*(mp->get_elem(p_i)->get_elem(perm_i)));\n"
     "          curr_idx++;\n"
     "        }\n"
     "        int perm_end_idx = curr_idx - 1;\n"
     "        add_permutation(perm_start_idx, perm_end_idx);\n"
     "      } break;\n"
     "      default:\n"
-    "        (*this)[curr_idx].set_param(*param.get_elem(p_i));\n"
+    "        (*this)[curr_idx].set_param(*mp->get_elem(p_i));\n"
     "        curr_idx++;\n"
     "      }\n"
     "    }\n"
@@ -4350,18 +4457,18 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
   } else {
     src = mputstr(src,
     "  case Module_Param::MP_Value_List:\n"
-    "    set_size(param.get_size());\n"
-    "    for (size_t p_i=0; p_i<param.get_size(); ++p_i) {\n"
-    "      if (param.get_elem(p_i)->get_type()!=Module_Param::MP_NotUsed) {\n"
-    "        (*this)[p_i].set_param(*param.get_elem(p_i));\n"
+    "    set_size(mp->get_size());\n"
+    "    for (size_t p_i=0; p_i<mp->get_size(); ++p_i) {\n"
+    "      if (mp->get_elem(p_i)->get_type()!=Module_Param::MP_NotUsed) {\n"
+    "        (*this)[p_i].set_param(*mp->get_elem(p_i));\n"
     "      }\n"
     "    }\n"
     "    break;\n"
     "  case Module_Param::MP_Superset_Template:\n"
     "  case Module_Param::MP_Subset_Template:\n"
-    "    set_type(param.get_type()==Module_Param::MP_Superset_Template ? SUPERSET_MATCH : SUBSET_MATCH, param.get_size());\n"
-    "    for (size_t p_i=0; p_i<param.get_size(); p_i++) {\n"
-    "      set_item(p_i).set_param(*param.get_elem(p_i));\n"
+    "    set_type(mp->get_type()==Module_Param::MP_Superset_Template ? SUPERSET_MATCH : SUBSET_MATCH, mp->get_size());\n"
+    "    for (size_t p_i=0; p_i<mp->get_size(); p_i++) {\n"
+    "      set_item(p_i).set_param(*mp->get_elem(p_i));\n"
     "    }\n"
     "    break;\n");
   }
@@ -4369,16 +4476,84 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
     "  default:\n"
     "    param.type_error(\"%s of template\", \"%s\");\n"
     "  }\n"
-    "  is_ifpresent = param.get_ifpresent();\n"
-    "  set_length_range(param);\n"
+    "  is_ifpresent = param.get_ifpresent() || mp->get_ifpresent();\n"
+    "  if (param.get_length_restriction() != NULL) {\n"
+    "    set_length_range(param);\n"
+    "  }\n"
+    "  else {\n"
+    "    set_length_range(*mp);\n"
+    "  };\n"
     "}\n\n", sdef->kind==RECORD_OF?"record":"set", dispname);
+  
+  /* get_param() */
+  def = mputstr(def, "Module_Param* get_param(Module_Param_Name& param_name) const;\n");
+  src = mputprintf
+    (src,
+    "Module_Param* %s_template::get_param(Module_Param_Name& param_name) const\n"
+    "{\n"
+    "  if (param_name.next_name()) {\n"
+    // Haven't reached the end of the module parameter name
+    // => the name refers to one of the elements, not to the whole record of
+    "    char* param_field = param_name.get_current_name();\n"
+    "    if (param_field[0] < '0' || param_field[0] > '9') {\n"
+    "      TTCN_error(\"Unexpected record field name in module parameter reference, \"\n"
+    "        \"expected a valid index for %s template type `%s'\");\n"
+    "    }\n"
+    "    int param_index = -1;\n"
+    "    sscanf(param_field, \"%%d\", &param_index);\n"
+    "    return (*this)[param_index].get_param(param_name);\n"
+    "  }\n"
+    "  Module_Param* mp = NULL;\n"
+    "  switch (template_selection) {\n"
+    "  case UNINITIALIZED_TEMPLATE:\n"
+    "    mp = new Module_Param_Unbound();\n"
+    "    break;\n"
+    "  case OMIT_VALUE:\n"
+    "    mp = new Module_Param_Omit();\n"
+    "    break;\n"
+    "  case ANY_VALUE:\n"
+    "    mp = new Module_Param_Any();\n"
+    "    break;\n"
+    "  case ANY_OR_OMIT:\n"
+    "    mp = new Module_Param_AnyOrNone();\n"
+    "    break;\n"
+    "  case SPECIFIC_VALUE: {\n"
+    "    Vector<Module_Param*> values;\n"
+    "    for (int i = 0; i < single_value.n_elements; ++i) {\n"
+    "      values.push_back((*this)[i].get_param(param_name));\n"
+    "    }\n"
+    "    mp = new Module_Param_Value_List();\n"
+    "    mp->add_list_with_implicit_ids(&values);\n"
+    "    values.clear();\n"
+    "    break; }\n"
+    "  case VALUE_LIST:\n"
+    "  case COMPLEMENTED_LIST: {\n"
+    "    if (template_selection == VALUE_LIST) {\n"
+    "      mp = new Module_Param_List_Template();\n"
+    "    }\n"
+    "    else {\n"
+    "      mp = new Module_Param_ComplementList_Template();\n"
+    "    }\n"
+    "    for (size_t i = 0; i < value_list.n_values; ++i) {\n"
+    "      mp->add_elem(value_list.list_value[i].get_param(param_name));\n"
+    "    }\n"
+    "    break; }\n"
+    "  default:\n"
+    "    break;\n"
+    "  }\n"
+    "  if (is_ifpresent) {\n"
+    "    mp->set_ifpresent();\n"
+    "  }\n"
+    "  mp->set_length_restriction(get_length_range());\n"
+    "  return mp;\n"
+    "}\n\n", name, sdef->kind==RECORD_OF ? "record of" : "set of", dispname);
 
   /* check template restriction */
   def = mputstr(def, "void check_restriction(template_res t_res, "
-    "const char* t_name=NULL) const;\n");
+    "const char* t_name=NULL, boolean legacy = FALSE) const;\n");
   src = mputprintf(src,
     "void %s_template::check_restriction("
-      "template_res t_res, const char* t_name) const\n"
+      "template_res t_res, const char* t_name, boolean legacy) const\n"
     "{\n"
     "if (template_selection==UNINITIALIZED_TEMPLATE) return;\n"
     "switch ((t_name&&(t_res==TR_VALUE))?TR_OMIT:t_res) {\n"
@@ -4391,7 +4566,7 @@ void defRecordOfTemplate1(const struct_of_def *sdef, output_struct *output)
       "t_res, t_name ? t_name : \"%s\");\n"
     "return;\n"
     "case TR_PRESENT:\n"
-    "if (!match_omit()) return;\n"
+    "if (!match_omit(legacy)) return;\n"
     "break;\n"
     "default:\n"
     "return;\n"
@@ -4527,8 +4702,9 @@ void defRecordOfTemplate2(const struct_of_def *sdef, output_struct *output)
     type, name, type);
 
   /* match operation */
-  def = mputprintf(def, "inline boolean match(const %s& match_value) const "
-    "{ return matchv(&match_value); }\n", name);
+  def = mputprintf(def, "inline boolean match(const %s& match_value, "
+    "boolean legacy = FALSE) const "
+    "{ return matchv(&match_value, legacy); }\n", name);
 
   /* valueof operation */
   def = mputprintf(def, "%s valueof() const;\n", name);
@@ -4586,8 +4762,9 @@ void defRecordOfTemplate2(const struct_of_def *sdef, output_struct *output)
   }
 
   /* logging functions */
-  def = mputprintf(def, "inline void log_match(const %s& match_value) const "
-    "{ log_matchv(&match_value); }\n", name);
+  def = mputprintf(def, "inline void log_match(const %s& match_value, "
+    "boolean legacy = FALSE) const "
+    "{ log_matchv(&match_value, legacy); }\n", name);
 
   /* virtual helper functions */
   def = mputprintf(def,

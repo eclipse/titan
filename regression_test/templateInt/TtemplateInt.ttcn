@@ -1,16 +1,21 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 module TtemplateInt {
+
+import from ImportedTemplates all;
+
 type component templateInt_mycomp {};
 type record templateInt_rec {
  integer x1,
  integer x2,
  integer x3 optional };
+type integer templateInt_subtype (0..1457664);
+ 
 template templateInt_rec templateInt_tSpec :={ //specific values
  x1:=1,
  x2:=2,
@@ -258,6 +263,80 @@ testcase TR_HJ94652() runs on templateInt_mycomp {
   }
 }
 
+testcase templateIntSubtype() runs on templateInt_mycomp {
+  // this tests the use of inline templates (value ranges)
+  // with subtypes and variables
+  var templateInt_subtype x := 312;
+  var templateInt_subtype lower_limit := 100;
+  var templateInt_subtype upper_limit := 65535;
+  if (not match(x, templateInt_subtype:(0..upper_limit))) { // TR: artf602477
+    setverdict(fail);
+  }
+  if (not match(x, integer:(100..upper_limit))) {
+    setverdict(fail);
+  }
+  if (not match(312, templateInt_subtype:(100..upper_limit))) {
+    setverdict(fail);
+  }
+  if (not match(x, templateInt_subtype:(100..65535))) {
+    setverdict(fail);
+  }
+  if (not match(x, templateInt_subtype:(lower_limit..65535))) {
+    setverdict(fail);
+  }
+  if (not match(x, templateInt_subtype:(lower_limit..upper_limit))) {
+    setverdict(fail);
+  }
+  setverdict(pass);
+}
+
+// test case: using a parameterized template with no actual parameters (using default values)
+// before its declaration
+template integer tReverse := tPard;
+
+template integer tPard(integer p := 6) := p;
+
+testcase templateIntReverseOrder() runs on templateInt_mycomp {
+  var template integer vtExpected := 6;
+  if (log2str(tReverse) == log2str(vtExpected)) {
+    setverdict(pass);
+  }
+  else {
+    setverdict(fail, "Expected: ", vtExpected, ", got: ", tReverse);
+  }
+}
+
+// same test, but the parameterized template is passed as a parameter to
+// an imported parameterized template
+template integer tReverse2 := tImported(tPard2);
+
+template integer tPard2(integer p := 4) := p;
+
+testcase templateIntReverseOrderImported() runs on templateInt_mycomp {
+  var template integer vtExpected := 4;
+  if (log2str(tReverse2) == log2str(vtExpected)) {
+    setverdict(pass);
+  }
+  else {
+    setverdict(fail, "Expected: ", vtExpected, ", got: ", tReverse2);
+  }
+}
+
+// same as the previous test, but with a non-parameterized template
+template integer tReverse3 := tImported(tNonPard);
+
+template integer tNonPard := (1, 2);
+
+testcase templateIntReverseOrderImported2() runs on templateInt_mycomp {
+  var template integer vtExpected := (1, 2);
+  if (log2str(tReverse3) == log2str(vtExpected)) {
+    setverdict(pass);
+  }
+  else {
+    setverdict(fail, "Expected: ", vtExpected, ", got: ", tReverse3);
+  }
+}
+
 control {
  execute(templateIntSpec());
  execute(templateIntList());
@@ -271,5 +350,9 @@ control {
  execute(templateIntRange4());
  execute(templateIntIfpresent());
  execute(TR_HJ94652());
+ execute(templateIntSubtype());
+ execute(templateIntReverseOrder());
+ execute(templateIntReverseOrderImported());
+ execute(templateIntReverseOrderImported2());
 }
 }

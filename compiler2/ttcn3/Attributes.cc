@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -543,14 +543,15 @@ namespace Ttcn {
             }
             break;
           case Type::T_CSTR:
-            if (!type->has_encoding(Type::CT_TEXT) && !type->has_encoding(Type::CT_XER)) {
-              act_attr->error("A `raw' %s value was used for erroneous type `%s' which has no TEXT or XER encodings.",
+            if (!type->has_encoding(Type::CT_TEXT) && !type->has_encoding(Type::CT_XER) &&
+                !type->has_encoding(Type::CT_JSON)) {
+              act_attr->error("A `raw' %s value was used for erroneous type `%s' which has no TEXT, XER or JSON encodings.",
                               ti_type->get_typename().c_str(), type->get_typename().c_str());
             }
             break;
           case Type::T_USTR:
-            if (!type->has_encoding(Type::CT_XER)) {
-              act_attr->error("A `raw' %s value was used for erroneous type `%s' which has no XER encoding.",
+            if (!type->has_encoding(Type::CT_XER) && !type->has_encoding(Type::CT_JSON)) {
+              act_attr->error("A `raw' %s value was used for erroneous type `%s' which has no XER or JSON encoding.",
                               ti_type->get_typename().c_str(), type->get_typename().c_str());
             }
             break;
@@ -1205,14 +1206,14 @@ namespace Ttcn {
           case SingleWithAttrib::AT_VARIANT: {
             // Ignore JSON variants, these should not produce warnings
             const string& spec = act_single->get_attribSpec().get_spec();
-            size_t i = 0;
-            while (i < spec.size()) {
-              if (spec[i] != ' ' && spec[i] != '\t') {
+            size_t i2 = 0;
+            while (i2 < spec.size()) {
+              if (spec[i2] != ' ' && spec[i2] != '\t') {
                 break;
               }
-              ++i;
+              ++i2;
             }
-            if (i == spec.size() || spec.find("JSON", i) != i) {
+            if (i2 == spec.size() || spec.find("JSON", i2) != i2) {
               self_has_variant = true;
             }
             break; }

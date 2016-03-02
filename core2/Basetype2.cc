@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@
 #include "Charstring.hh"
 #include "Universal_charstring.hh"
 #include "Addfunc.hh"
+#include "PreGenRecordOf.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -175,6 +176,13 @@ int Base_Type::RAW_encode_negtest_raw(RAW_enc_tree&) const
   return 0;
 }
 
+int Base_Type::JSON_encode_negtest_raw(JSON_Tokenizer&) const
+{
+  TTCN_error("A value of type %s cannot be used as erroneous raw value for JSON encoding.",
+             get_descriptor()->name);
+  return 0;
+}
+
 int Base_Type::XER_encode_negtest(const Erroneous_descriptor_t* /*p_err_descr*/,
   const XERdescriptor_t& p_td, TTCN_Buffer& p_buf, unsigned int flavor, int indent, embed_values_enc_struct_t*) const
 {
@@ -185,6 +193,13 @@ int Base_Type::RAW_encode_negtest(const Erroneous_descriptor_t *,
   const TTCN_Typedescriptor_t&, RAW_enc_tree&) const
 {
   TTCN_error("Internal error: calling Base_Type::RAW_encode_negtest().");
+  return 0;
+}
+
+int Base_Type::JSON_encode_negtest(const Erroneous_descriptor_t* /*p_err_descr*/,
+  const TTCN_Typedescriptor_t& /*p_td*/, JSON_Tokenizer& /*p_tok*/) const
+{
+  TTCN_error("Internal error: calling Base_Type::JSON_encode_negtest().");
   return 0;
 }
 
@@ -255,7 +270,8 @@ Record_Of_Type::Record_Of_Type(null_type /*other_value*/)
 }
 
 Record_Of_Type::Record_Of_Type(const Record_Of_Type& other_value)
-: Base_Type(other_value), val_ptr(NULL), err_descr(other_value.err_descr), refd_ind_ptr(NULL)
+: Base_Type(other_value), RefdIndexInterface(other_value)
+, val_ptr(NULL), err_descr(other_value.err_descr), refd_ind_ptr(NULL)
 {
   if (!other_value.is_bound())
     TTCN_error("Copying an unbound record of/set of value.");
@@ -856,7 +872,7 @@ int Record_Of_Type::TEXT_encode(const TTCN_Typedescriptor_t& p_td,
     }
     return encoded_length;
   }
-  const TTCN_Typedescriptor_t* elem_descr = get_elem_descr();
+  const TTCN_Typedescriptor_t* elem_descr = p_td.oftype_descr;
   for(int a=0;a<get_nof_elements();a++) {
     if(a!=0 && p_td.text->separator_encode) {
       buff.put_cs(*p_td.text->separator_encode);
@@ -942,9 +958,9 @@ int Record_Of_Type::TEXT_encode_negtest(const Erroneous_descriptor_t* p_err_desc
       }
       if (emb_descr) {
         encoded_length += get_at(a)->TEXT_encode_negtest(
-          emb_descr,*get_elem_descr(),buff);
+          emb_descr,*p_td.oftype_descr,buff);
       } else {
-        encoded_length += get_at(a)->TEXT_encode(*get_elem_descr(),buff);
+        encoded_length += get_at(a)->TEXT_encode(*p_td.oftype_descr,buff);
       }
       need_separator=true;
     }
@@ -1012,7 +1028,7 @@ int Record_Of_Type::TEXT_decode(const TTCN_Typedescriptor_t& p_td,
   while(TRUE){
     Base_Type* val = create_elem();
     pos=buff.get_pos();
-    int len = val->TEXT_decode(*get_elem_descr(),buff,limit,TRUE);
+    int len = val->TEXT_decode(*p_td.oftype_descr,buff,limit,TRUE);
     if(len==-1 || (len==0 && !limit.has_token())){
       buff.set_pos(pos);
       delete val;
@@ -1103,7 +1119,7 @@ ASN_BER_TLV_t* Record_Of_Type::BER_encode_TLV(const TTCN_Typedescriptor_t& p_td,
     TTCN_EncDec_ErrorContext ec;
     for(int elem_i=0; elem_i<get_nof_elements(); elem_i++) {
       ec.set_msg("Component #%d: ", elem_i);
-      new_tlv->add_TLV(get_at(elem_i)->BER_encode_TLV(*get_elem_descr(), p_coding));
+      new_tlv->add_TLV(get_at(elem_i)->BER_encode_TLV(*p_td.oftype_descr, p_coding));
     }
     if (is_set()) new_tlv->sort_tlvs();
   }
@@ -1156,10 +1172,10 @@ ASN_BER_TLV_t* Record_Of_Type::BER_encode_TLV_negtest(const Erroneous_descriptor
         ec.set_msg("Component #%d: ", elem_i);
         if (emb_descr) {
           new_tlv->add_TLV(get_at(elem_i)->BER_encode_TLV_negtest(
-            emb_descr, *get_elem_descr(), p_coding));
+            emb_descr, *p_td.oftype_descr, p_coding));
         } else {
           new_tlv->add_TLV(get_at(elem_i)->BER_encode_TLV(
-            *get_elem_descr(), p_coding));
+            *p_td.oftype_descr, p_coding));
         }
       }
 
@@ -1199,7 +1215,7 @@ boolean Record_Of_Type::BER_decode_TLV(const TTCN_Typedescriptor_t& p_td,
   TTCN_EncDec_ErrorContext ec_1("Component #");
   TTCN_EncDec_ErrorContext ec_2("0: ");
   while(BER_decode_constdTLV_next(stripped_tlv, V_pos, L_form, tmp_tlv)) {
-    get_at(get_nof_elements())->BER_decode_TLV(*get_elem_descr(), tmp_tlv, L_form);
+    get_at(get_nof_elements())->BER_decode_TLV(*p_td.oftype_descr, tmp_tlv, L_form);
     ec_2.set_msg("%d: ", val_ptr->n_elements);
   }
   return TRUE;
@@ -1232,7 +1248,7 @@ int Record_Of_Type::RAW_decode(const TTCN_Typedescriptor_t& p_td,
     set_size(0);
   }
   int start_field = get_nof_elements(); // append at the end
-  TTCN_Typedescriptor_t const& elem_descr = *get_elem_descr();
+  TTCN_Typedescriptor_t const& elem_descr = *p_td.oftype_descr;
   if (p_td.raw->fieldlength || sel_field != -1) {
     if (sel_field == -1) sel_field = p_td.raw->fieldlength;
     for (int a = 0; a < sel_field; a++) {
@@ -1250,7 +1266,6 @@ int Record_Of_Type::RAW_decode(const TTCN_Typedescriptor_t& p_td,
       if (!first_call) return -1;
       goto finished;
     }
-    int ext_bit = rawdec_ebv();
     while (limit > 0) {
       start_of_field = buff.get_pos_bit();
       Base_Type* field_bt = get_at(a); // non-const, extend the record-of
@@ -1267,12 +1282,11 @@ int Record_Of_Type::RAW_decode(const TTCN_Typedescriptor_t& p_td,
       decoded_length += decoded_field_length;
       limit -= decoded_field_length;
       a++;
-      if (ext_bit != 1/*XDEFNO*/&& ext_bit != -1/*XDEFDEFAULT*/) {
-        // ext_bit here may be 2 (XDEFYES) or 3 (XDEFREVERSE).
-        // (ext_bit != 2) is   0           or 1
+      if (EXT_BIT_NO != p_td.raw->extension_bit) {
+        // (EXT_BIT_YES != p_td.raw->extension_bit) is 0 or 1
         // This is the opposite value of what the bit needs to be to signal
         // the end of decoding, because x-or is the equivalent of !=
-        if ((ext_bit != 2/*XDEFYES*/) ^ buff.get_last_bit()) {
+        if ((EXT_BIT_YES != p_td.raw->extension_bit) ^ buff.get_last_bit()) {
           goto finished;
         }
       }
@@ -1294,7 +1308,7 @@ int Record_Of_Type::RAW_encode(const TTCN_Typedescriptor_t& p_td, RAW_enc_tree& 
   myleaf.rec_of = TRUE;
   myleaf.body.node.num_of_nodes = encoded_num_of_records;
   myleaf.body.node.nodes = init_nodes_of_enc_tree(encoded_num_of_records);
-  TTCN_Typedescriptor_t const& elem_descr = *get_elem_descr();
+  TTCN_Typedescriptor_t const& elem_descr = *p_td.oftype_descr;
   for (int a = 0; a < encoded_num_of_records; a++) {
     const Base_Type *field_bt = get_at(a);
     myleaf.body.node.nodes[a] = new RAW_enc_tree(TRUE, &myleaf, &(myleaf.curr_pos), a, elem_descr.raw);
@@ -1345,7 +1359,7 @@ int Record_Of_Type::RAW_encode_negtest(const Erroneous_descriptor_t *p_err_descr
       continue;
     const Erroneous_values_t *err_vals = p_err_descr->next_field_err_values(i, values_idx);
     const Erroneous_descriptor_t *emb_descr = p_err_descr->next_field_emb_descr(i, edescr_idx);
-    TTCN_Typedescriptor_t const& elem_descr = *get_elem_descr();
+    TTCN_Typedescriptor_t const& elem_descr = *p_td.oftype_descr;
     if (err_vals && err_vals->before) {
       if (err_vals->before->errval == NULL)
         TTCN_error("internal error: erroneous before value missing");
@@ -1388,11 +1402,11 @@ int Record_Of_Type::RAW_encode_negtest(const Erroneous_descriptor_t *p_err_descr
         myleaf.body.node.nodes[node_pos] = new RAW_enc_tree(TRUE, &myleaf,
           &(myleaf.curr_pos), node_pos, elem_descr.raw);
         encoded_length += get_at(i)->RAW_encode_negtest(emb_descr, 
-          *get_elem_descr(), *myleaf.body.node.nodes[node_pos++]);
+          *p_td.oftype_descr, *myleaf.body.node.nodes[node_pos++]);
       } else {
         myleaf.body.node.nodes[node_pos] = new RAW_enc_tree(TRUE, &myleaf,
           &(myleaf.curr_pos), node_pos, elem_descr.raw);
-        encoded_length += get_at(i)->RAW_encode(*get_elem_descr(), 
+        encoded_length += get_at(i)->RAW_encode(*p_td.oftype_descr, 
           *myleaf.body.node.nodes[node_pos++]);
       }
     }
@@ -1421,7 +1435,33 @@ int Record_Of_Type::RAW_encode_negtest(const Erroneous_descriptor_t *p_err_descr
   return myleaf.length = encoded_length;
 }
 
-int Record_Of_Type::JSON_encode(const TTCN_Typedescriptor_t&, JSON_Tokenizer& p_tok) const
+int Record_Of_Type::JSON_encode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& p_tok) const
+{
+  if (err_descr) {
+	  return JSON_encode_negtest(err_descr, p_td, p_tok);
+  }
+  
+  if (!is_bound()) {
+    TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_UNBOUND,
+      "Encoding an unbound %s of value.", is_set() ? "set" : "record");
+    return -1;
+  }
+  
+  int enc_len = p_tok.put_next_token(JSON_TOKEN_ARRAY_START, NULL);
+  
+  for (int i = 0; i < get_nof_elements(); ++i) {
+    int ret_val = get_at(i)->JSON_encode(*p_td.oftype_descr, p_tok);
+    if (0 > ret_val) break;
+    enc_len += ret_val;
+  }
+  
+  enc_len += p_tok.put_next_token(JSON_TOKEN_ARRAY_END, NULL);
+  return enc_len;
+}
+
+int Record_Of_Type::JSON_encode_negtest(const Erroneous_descriptor_t* p_err_descr,
+                                        const TTCN_Typedescriptor_t& p_td,
+                                        JSON_Tokenizer& p_tok) const 
 {
   if (!is_bound()) {
     TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_UNBOUND,
@@ -1431,10 +1471,70 @@ int Record_Of_Type::JSON_encode(const TTCN_Typedescriptor_t&, JSON_Tokenizer& p_
   
   int enc_len = p_tok.put_next_token(JSON_TOKEN_ARRAY_START, NULL);
   
-  for(int i = 0; i < get_nof_elements(); ++i) {
-    int ret_val = get_at(i)->JSON_encode(*get_elem_descr(), p_tok);
-    if (0 > ret_val) break;
-    enc_len += ret_val;
+  int values_idx = 0;
+  int edescr_idx = 0;
+  
+  for (int i = 0; i < get_nof_elements(); ++i) {
+    if (-1 != p_err_descr->omit_before && p_err_descr->omit_before > i) {
+      continue;
+    }
+    
+    const Erroneous_values_t* err_vals = p_err_descr->next_field_err_values(i, values_idx);
+    const Erroneous_descriptor_t* emb_descr = p_err_descr->next_field_emb_descr(i, edescr_idx);
+    
+    if (NULL != err_vals && NULL != err_vals->before) {
+      if (NULL == err_vals->before->errval) {
+        TTCN_error("internal error: erroneous before value missing");
+      }
+      if (err_vals->before->raw) {
+        enc_len += err_vals->before->errval->JSON_encode_negtest_raw(p_tok);
+      } else {
+        if (NULL == err_vals->before->type_descr) {
+          TTCN_error("internal error: erroneous before typedescriptor missing");
+        }
+        enc_len += err_vals->before->errval->JSON_encode(*(err_vals->before->type_descr), p_tok);
+      }
+    }
+    
+    if (NULL != err_vals && NULL != err_vals->value) {
+      if (NULL != err_vals->value->errval) {
+        if (err_vals->value->raw) {
+          enc_len += err_vals->value->errval->JSON_encode_negtest_raw(p_tok);
+        } else {
+          if (NULL == err_vals->value->type_descr) {
+            TTCN_error("internal error: erroneous before typedescriptor missing");
+          }
+          enc_len += err_vals->value->errval->JSON_encode(*(err_vals->value->type_descr), p_tok);
+        }
+      }
+    } else {
+      int ret_val;
+      if (NULL != emb_descr) {
+        ret_val = get_at(i)->JSON_encode_negtest(emb_descr, *p_td.oftype_descr, p_tok);
+      } else {
+        ret_val = get_at(i)->JSON_encode(*p_td.oftype_descr, p_tok);
+      }
+      if (0 > ret_val) break;
+      enc_len += ret_val;
+    }
+    
+    if (NULL != err_vals && NULL != err_vals->after) {
+      if (NULL == err_vals->after->errval) {
+        TTCN_error("internal error: erroneous after value missing");
+      }
+      if (err_vals->after->raw) {
+        enc_len += err_vals->after->errval->JSON_encode_negtest_raw(p_tok);
+      } else {
+        if (NULL == err_vals->after->type_descr) {
+          TTCN_error("internal error: erroneous before typedescriptor missing");
+        }
+        enc_len += err_vals->after->errval->JSON_encode(*(err_vals->after->type_descr), p_tok);
+      }
+    }
+    
+    if (-1 != p_err_descr->omit_after && p_err_descr->omit_after <= i) {
+      break;
+    }
   }
   
   enc_len += p_tok.put_next_token(JSON_TOKEN_ARRAY_END, NULL);
@@ -1458,7 +1558,7 @@ int Record_Of_Type::JSON_decode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenize
     // Read value tokens until we reach some other token
     size_t buf_pos = p_tok.get_buf_pos();
     Base_Type* val = create_elem();
-    int ret_val = val->JSON_decode(*get_elem_descr(), p_tok, p_silent);
+    int ret_val = val->JSON_decode(*p_td.oftype_descr, p_tok, p_silent);
     if (JSON_ERROR_INVALID_TOKEN == ret_val) {
       // undo the last action on the buffer
       p_tok.set_buf_pos(buf_pos);
@@ -1634,7 +1734,7 @@ char **Record_Of_Type::collect_ns(const XERdescriptor_t& p_td, size_t& num, bool
     if (val_ptr) for (int i = 0; i < get_nof_elements(); ++i) {
       size_t num_new = 0;
       char **new_namespaces = get_at(i)->collect_ns(
-        *get_elem_descr()->xer, num_new, def_ns_1);
+        *p_td.oftype_descr, num_new, def_ns_1);
       merge_ns(collected_ns, num_collected, new_namespaces, num_new);
       def_ns = def_ns || def_ns_1; // alas, no ||=
     }
@@ -1786,6 +1886,8 @@ int Record_Of_Type::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf,
   }
   else { // not ANY-ATTRIBUTES
     unsigned int sub_flavor = flavor | XER_RECOF | (p_td.xer_bits & (XER_LIST));
+    TTCN_EncDec_ErrorContext ec_0("Index ");
+    TTCN_EncDec_ErrorContext ec_1;
 
     for (int i = 0; i < nof_elements; ++i) {
       if (i > 0 && !own_tag && 0 != emb_val &&
@@ -1794,8 +1896,9 @@ int Record_Of_Type::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf,
           UNIVERSAL_CHARSTRING_xer_, p_buf, flavor | EMBED_VALUES, indent+1, 0);
         ++emb_val->embval_index;
       }
+      ec_1.set_msg("%d: ", i);
       if (exer && (p_td.xer_bits & XER_LIST) && i>0) p_buf.put_c(' ');
-      get_at(i)->XER_encode(*get_elem_descr()->xer, p_buf,
+      get_at(i)->XER_encode(*p_td.oftype_descr, p_buf,
         sub_flavor, indent+own_tag, emb_val);
     }
 
@@ -1824,7 +1927,7 @@ int Record_Of_Type::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf,
  * @param indent indentation level
  * @return number of bytes generated
  */
-int Record_Of_Type::encode_element(int i,
+int Record_Of_Type::encode_element(int i, const XERdescriptor_t& p_td,
   const Erroneous_values_t* ev, const Erroneous_descriptor_t* ed,
   TTCN_Buffer& p_buf, unsigned int sub_flavor, int indent, embed_values_enc_struct_t* emb_val) const
 {
@@ -1869,10 +1972,10 @@ int Record_Of_Type::encode_element(int i,
   } else {
     ec.set_msg("Component #%d: ", i);
     if (ed) {
-      get_at(i)->XER_encode_negtest(ed, *get_elem_descr()->xer, p_buf, sub_flavor, indent, emb_val);
+      get_at(i)->XER_encode_negtest(ed, p_td, p_buf, sub_flavor, indent, emb_val);
     } else {
       // the "real" encoder
-      get_at(i)->XER_encode(*get_elem_descr()->xer, p_buf, sub_flavor, indent, emb_val);
+      get_at(i)->XER_encode(p_td, p_buf, sub_flavor, indent, emb_val);
     }
   }
 
@@ -2069,8 +2172,8 @@ int Record_Of_Type::XER_encode_negtest(const Erroneous_descriptor_t* p_err_descr
           ev0_i = emb_val->embval_err->next_field_err_values(emb_val->embval_index, emb_val->embval_err_val_idx);
           ed0_i = emb_val->embval_err->next_field_emb_descr (emb_val->embval_index, emb_val->embval_err_descr_idx);
         }
-        emb_val->embval_array->encode_element(emb_val->embval_index, ev0_i, ed0_i,
-          p_buf, flavor | EMBED_VALUES, indent + own_tag, 0);
+        emb_val->embval_array->encode_element(emb_val->embval_index, UNIVERSAL_CHARSTRING_xer_,
+          ev0_i, ed0_i, p_buf, flavor | EMBED_VALUES, indent + own_tag, 0);
         ++emb_val->embval_index;
       }
 
@@ -2079,7 +2182,7 @@ int Record_Of_Type::XER_encode_negtest(const Erroneous_descriptor_t* p_err_descr
       const Erroneous_descriptor_t* emb_descr =
         p_err_descr->next_field_emb_descr (i, edescr_idx);
 
-      encode_element(i, err_vals, emb_descr, p_buf, sub_flavor, indent+own_tag, emb_val);
+      encode_element(i, *p_td.oftype_descr, err_vals, emb_descr, p_buf, sub_flavor, indent+own_tag, emb_val);
 
       // omit_after value -1 becomes "very big"
       if ((unsigned int)i >= (unsigned int)p_err_descr->omit_after) break;
@@ -2146,7 +2249,7 @@ int Record_Of_Type::XER_decode(const XERdescriptor_t& p_td,
       pos += strlen(str) + 1;
       // Construct a new XML Reader with the current token.
       TTCN_Buffer buf2;
-      const XERdescriptor_t& sub_xer = *get_elem_descr()->xer;
+      const XERdescriptor_t& sub_xer = *p_td.oftype_descr;
       buf2.put_c('<');
       write_ns_prefix(sub_xer, buf2);
 
@@ -2233,7 +2336,7 @@ int Record_Of_Type::XER_decode(const XERdescriptor_t& p_td,
              * belong to the embedded type, the record-of has already ended. */
             if (!own_tag && !can_start_v(
               (const char*)reader.LocalName(), (const char*)reader.NamespaceUri(),
-              *get_elem_descr()->xer, flavor | UNTAGGED))
+              p_td, flavor | UNTAGGED))
             {
               for (; success == 1 && reader.Depth() > depth; success = reader.Read()) ;
               // We should now be back at the same depth as we started.
@@ -2241,7 +2344,7 @@ int Record_Of_Type::XER_decode(const XERdescriptor_t& p_td,
             }
             ec_1.set_msg("%d: ", get_nof_elements());
             /* The call to the non-const get_at() creates the element */
-            get_at(get_nof_elements())->XER_decode(*get_elem_descr()->xer, reader, flavor, emb_val);
+            get_at(get_nof_elements())->XER_decode(*p_td.oftype_descr, reader, flavor, emb_val);
             if (0 != emb_val && !own_tag && get_nof_elements() > 1) {
               ++emb_val->embval_index;
             }
@@ -2268,6 +2371,10 @@ int Record_Of_Type::XER_decode(const XERdescriptor_t& p_td,
       } /* next read */
     } /* if not empty element */
   } /* if not LIST */
+  if (!own_tag && exer && (p_td.xer_bits & XER_OPTIONAL) && get_nof_elements() == 0) {
+    // set it to unbound, so the OPTIONAL class sets it to omit
+    clean_up();
+  }
   return 1; // decode successful
 }
 
@@ -2288,25 +2395,31 @@ void Record_Of_Type::set_param(Module_Param& param) {
   }
   
   param.basic_check(Module_Param::BC_VALUE|Module_Param::BC_LIST, is_set()?"set of value":"record of value");
+  
+  Module_Param_Ptr mp = &param;
+  if (param.get_type() == Module_Param::MP_Reference) {
+    mp = param.get_referenced_param();
+  }
+  
   switch (param.get_operation_type()) {
   case Module_Param::OT_ASSIGN:
-    if (param.get_type()==Module_Param::MP_Value_List && param.get_size()==0) {
+    if (mp->get_type()==Module_Param::MP_Value_List && mp->get_size()==0) {
       set_val(NULL_VALUE);
       return;
     }
-    switch (param.get_type()) {
+    switch (mp->get_type()) {
     case Module_Param::MP_Value_List:
-      set_size(param.get_size());
-      for (size_t i=0; i<param.get_size(); ++i) {
-        Module_Param* const curr = param.get_elem(i);
+      set_size(mp->get_size());
+      for (size_t i=0; i<mp->get_size(); ++i) {
+        Module_Param* const curr = mp->get_elem(i);
         if (curr->get_type()!=Module_Param::MP_NotUsed) {
           get_at(i)->set_param(*curr);
         }
       }
       break;
     case Module_Param::MP_Indexed_List:
-      for (size_t i=0; i<param.get_size(); ++i) {
-        Module_Param* const current = param.get_elem(i);
+      for (size_t i=0; i<mp->get_size(); ++i) {
+        Module_Param* const current = mp->get_elem(i);
         get_at(current->get_id()->get_index())->set_param(*current);
       }
       break;
@@ -2315,12 +2428,12 @@ void Record_Of_Type::set_param(Module_Param& param) {
     }
     break;
   case Module_Param::OT_CONCAT:
-    switch (param.get_type()) {
+    switch (mp->get_type()) {
     case Module_Param::MP_Value_List: {
       if (!is_bound()) set_val(NULL_VALUE);
       int start_idx = lengthof();
-      for (size_t i=0; i<param.get_size(); ++i) {
-        Module_Param* const curr = param.get_elem(i);
+      for (size_t i=0; i<mp->get_size(); ++i) {
+        Module_Param* const curr = mp->get_elem(i);
         if ((curr->get_type()!=Module_Param::MP_NotUsed)) {
           get_at(start_idx+(int)i)->set_param(*curr);
         }
@@ -2336,6 +2449,34 @@ void Record_Of_Type::set_param(Module_Param& param) {
   default:
     TTCN_error("Internal error: Record_Of_Type::set_param()");
   }
+}
+
+Module_Param* Record_Of_Type::get_param(Module_Param_Name& param_name) const
+{
+  if (!is_bound()) {
+    return new Module_Param_Unbound();
+  }
+  if (param_name.next_name()) {
+    // Haven't reached the end of the module parameter name
+    // => the name refers to one of the elements, not to the whole record of
+    char* param_field = param_name.get_current_name();
+    if (param_field[0] < '0' || param_field[0] > '9') {
+      TTCN_error("Unexpected record field name in module parameter reference, "
+        "expected a valid index for %s type `%s'",
+        is_set() ? "set of" : "record of", get_descriptor()->name);
+    }
+    int param_index = -1;
+    sscanf(param_field, "%d", &param_index);
+    return get_at(param_index)->get_param(param_name);
+  }
+  Vector<Module_Param*> values;
+  for (int i = 0; i < val_ptr->n_elements; ++i) {
+    values.push_back(val_ptr->value_elements[i]->get_param(param_name));
+  }
+  Module_Param_Value_List* mp = new Module_Param_Value_List();
+  mp->add_list_with_implicit_ids(&values);
+  values.clear();
+  return mp;
 }
 
 void Record_Of_Type::set_implicit_omit()
@@ -2473,21 +2614,27 @@ void Record_Type::set_param(Module_Param& param) {
   }
 
   param.basic_check(Module_Param::BC_VALUE, is_set()?"set value":"record value");
-  switch (param.get_type()) {
+  
+  Module_Param_Ptr mp = &param;
+  if (param.get_type() == Module_Param::MP_Reference) {
+    mp = param.get_referenced_param();
+  }
+  
+  switch (mp->get_type()) {
   case Module_Param::MP_Value_List:
-    if (get_count()<(int)param.get_size()) {
-      param.error("%s value of type %s has %d fields but list value has %d fields", is_set()?"Set":"Record", get_descriptor()->name, get_count(), (int)param.get_size());
+    if (get_count()<(int)mp->get_size()) {
+      param.error("%s value of type %s has %d fields but list value has %d fields", is_set()?"Set":"Record", get_descriptor()->name, get_count(), (int)mp->get_size());
     }
-    for (size_t i=0; i<param.get_size(); i++) {
-      Module_Param* mp = param.get_elem(i);
-      if (mp->get_type()!=Module_Param::MP_NotUsed) {
-        get_at((int)i)->set_param(*mp);
+    for (size_t i=0; i<mp->get_size(); i++) {
+      Module_Param* mp_elem = mp->get_elem(i);
+      if (mp_elem->get_type()!=Module_Param::MP_NotUsed) {
+        get_at((int)i)->set_param(*mp_elem);
       }
     }
     break;
   case Module_Param::MP_Assignment_List:
-    for (size_t i=0; i<param.get_size(); ++i) {
-      Module_Param* const current = param.get_elem(i);
+    for (size_t i=0; i<mp->get_size(); ++i) {
+      Module_Param* const current = mp->get_elem(i);
       bool found = false;
       for (int j=0; j<get_count(); ++j) {
         if (!strcmp(fld_name(j), current->get_id()->get_name())) {
@@ -2506,6 +2653,38 @@ void Record_Type::set_param(Module_Param& param) {
   default:
     param.type_error(is_set()?"set value":"record value", get_descriptor()->name);
   }
+}
+
+Module_Param* Record_Type::get_param(Module_Param_Name& param_name) const
+{
+  if (!is_bound()) {
+    return new Module_Param_Unbound();
+  }
+  if (param_name.next_name()) {
+    // Haven't reached the end of the module parameter name
+    // => the name refers to one of the fields, not to the whole record
+    char* param_field = param_name.get_current_name();
+    if (param_field[0] >= '0' && param_field[0] <= '9') {
+      TTCN_error("Unexpected array index in module parameter reference, "
+        "expected a valid field name for %s type `%s'",
+        is_set() ? "set" : "record", get_descriptor()->name);
+    }
+    int field_cnt = get_count();
+    for (int field_idx = 0; field_idx < field_cnt; field_idx++) {
+      if (strcmp(fld_name(field_idx), param_field) == 0) {
+        return get_at(field_idx)->get_param(param_name);
+      }
+    }
+    TTCN_error("Field `%s' not found in %s type `%s'",
+      param_field, is_set() ? "set" : "record", get_descriptor()->name);
+  }
+  Module_Param_Assignment_List* mp = new Module_Param_Assignment_List();
+  for (int i = 0; i < get_count(); ++i) {
+    Module_Param* mp_field = get_at(i)->get_param(param_name);
+    mp_field->set_id(new Module_Param_FieldName(mcopystr(fld_name(i))));
+    mp->add_elem(mp_field);
+  }
+  return mp;
 }
 
 void Record_Type::set_implicit_omit()
@@ -3918,8 +4097,16 @@ int Record_Type::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf,
   // start tag, i.e. the ">\n". This is used later to "back up" over it.
   int start_tag_len = 1 + indenting;
   // The EMBED-VALUES member, if applicable
-  const Record_Of_Type* const embed_values = (p_td.xer_bits & EMBED_VALUES)
-  ? static_cast<const Record_Of_Type*>(get_at(0)) : 0;
+  const Record_Of_Type* embed_values = 0;
+  if (p_td.xer_bits & EMBED_VALUES) {
+    embed_values = dynamic_cast<const Record_Of_Type*>(get_at(0));
+    if (NULL == embed_values) {
+      const OPTIONAL<Record_Of_Type>* const embed_opt = static_cast<const OPTIONAL<Record_Of_Type>*>(get_at(0));
+      if(embed_opt->is_present()) {
+        embed_values = &(*embed_opt)();
+      }
+    }
+  }
   // The USE-ORDER member, if applicable
   const Record_Of_Type* const use_order = (p_td.xer_bits & USE_ORDER)
   ? static_cast<const Record_Of_Type*>(get_at(uo_index)) : 0;
@@ -4016,7 +4203,7 @@ int Record_Type::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf,
     if (p_td.xer_bits & XER_ATTRIBUTE) p_buf.put_c('\'');
   }
   else { // not USE-QNAME
-    if (!exer && (p_td.xer_bits & EMBED_VALUES)) {
+    if (!exer && (p_td.xer_bits & EMBED_VALUES) && embed_values != NULL) {
       // The EMBED-VALUES member as an ordinary record of string
       sub_len += embed_values->XER_encode(*xer_descr(0), p_buf, flavor, indent+1, 0);
     }
@@ -4084,7 +4271,7 @@ int Record_Type::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf,
 
     if (exer && (p_td.xer_bits & EMBED_VALUES)) {
       /* write the first string */
-      if (embed_values->size_of() > 0) {
+      if (embed_values != NULL && embed_values->size_of() > 0) {
         sub_len += embed_values->get_at(0)->XER_encode(UNIVERSAL_CHARSTRING_xer_,
           p_buf, flavor | EMBED_VALUES, indent+1, 0);
       }
@@ -4112,9 +4299,8 @@ int Record_Type::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf,
         ++n_optionals;
       }
 
-      int expected_min = field_cnt - first_nonattr - n_optionals;
       int expected_max = field_cnt - first_nonattr;
-
+      int expected_min = expected_max - n_optionals;
 
       if ((p_td.xer_bits & USE_NIL) && get_at(field_cnt-1)->ispresent()) {
         // The special case when USE_ORDER refers to the fields of a field,
@@ -4168,7 +4354,8 @@ int Record_Type::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf,
     // early_to_bed can only be true if exer is true (transitive through nil_attribute)
     if (!early_to_bed) {
       embed_values_enc_struct_t* emb_val = 0;
-      if (exer && (p_td.xer_bits & EMBED_VALUES) && embed_values->size_of() > 1) {
+      if (exer && (p_td.xer_bits & EMBED_VALUES) && 
+          embed_values != NULL && embed_values->size_of() > 1) {
         emb_val = new embed_values_enc_struct_t;
         emb_val->embval_array = embed_values;
         emb_val->embval_index = 1;
@@ -4198,7 +4385,7 @@ int Record_Type::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf,
 
         // Now the next embed-values string (NOT affected by USE-ORDER!)
         if (exer && (p_td.xer_bits & EMBED_VALUES) && 0 != emb_val &&
-            emb_val->embval_index < embed_values->size_of()) {
+            embed_values != NULL && emb_val->embval_index < embed_values->size_of()) {
           embed_values->get_at(emb_val->embval_index)->XER_encode(UNIVERSAL_CHARSTRING_xer_
             , p_buf, flavor | EMBED_VALUES, indent+1, 0);
           ++emb_val->embval_index;
@@ -4206,7 +4393,7 @@ int Record_Type::XER_encode(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf,
       } //for
       
       if (0 != emb_val) {
-        if (emb_val->embval_index < embed_values->size_of()) {
+        if (embed_values != NULL && emb_val->embval_index < embed_values->size_of()) {
           ec_1.set_msg("%s': ", fld_name(0));
           TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_CONSTRAINT,
             "Too many EMBED-VALUEs specified: %d (expected %d or less)",
@@ -4690,8 +4877,8 @@ int Record_Type::XER_encode_negtest(const Erroneous_descriptor_t* p_err_descr,
           ev0_0 = ed0->next_field_err_values(0, embed_values_val_idx);
           ed0_0 = ed0->next_field_emb_descr (0, embed_values_descr_idx);
         }
-        sub_len += embed_values->encode_element(0, ev0_0, ed0_0,
-          p_buf, flavor | EMBED_VALUES, indent+!omit_tag, 0);
+        sub_len += embed_values->encode_element(0, UNIVERSAL_CHARSTRING_xer_,
+          ev0_0, ed0_0, p_buf, flavor | EMBED_VALUES, indent+!omit_tag, 0);
       }
     }
 
@@ -4844,8 +5031,8 @@ int Record_Type::XER_encode_negtest(const Erroneous_descriptor_t* p_err_descr,
             ev0_i = ed0->next_field_err_values(emb_val->embval_index, emb_val->embval_err_val_idx);
             ed0_i = ed0->next_field_emb_descr (emb_val->embval_index, emb_val->embval_err_descr_idx);
           }
-          embed_values->encode_element(emb_val->embval_index, ev0_i, ed0_i,
-            p_buf, flavor | EMBED_VALUES, indent + !omit_tag, 0);
+          embed_values->encode_element(emb_val->embval_index, UNIVERSAL_CHARSTRING_xer_,
+            ev0_i, ed0_i, p_buf, flavor | EMBED_VALUES, indent + !omit_tag, 0);
           ++emb_val->embval_index;
         }
       } //for
@@ -5149,9 +5336,16 @@ int Record_Type::XER_decode(const XERdescriptor_t& p_td, XmlReaderWrap& reader,
 
     /* * * * * * * * Non-attributes (elements) * * * * * * * * * * * */
     embed_values_dec_struct_t* emb_val = 0;
+    bool emb_val_optional = false;
     if (exer && (p_td.xer_bits & EMBED_VALUES)) {
       emb_val = new embed_values_dec_struct_t;
-      emb_val->embval_array = static_cast<Record_Of_Type*>(get_at(0));
+      emb_val->embval_array = dynamic_cast<Record_Of_Type*>(get_at(0));
+      if (NULL == emb_val->embval_array) {
+        OPTIONAL<PreGenRecordOf::PREGEN__RECORD__OF__UNIVERSAL__CHARSTRING>* embed_value = static_cast<OPTIONAL<PreGenRecordOf::PREGEN__RECORD__OF__UNIVERSAL__CHARSTRING>*>(get_at(0));
+        embed_value->set_to_present();
+        emb_val->embval_array = static_cast<Record_Of_Type*>((*embed_value).get_opt_value());
+        emb_val_optional = true;
+      }
       emb_val->embval_array->set_size(0);
       emb_val->embval_index = 0;
     }
@@ -5166,98 +5360,79 @@ int Record_Type::XER_decode(const XERdescriptor_t& p_td, XmlReaderWrap& reader,
         get_at(oi)->set_to_omit();
         ++n_optionals;
       }
+
       Record_Of_Type *use_order = static_cast<Record_Of_Type*>(get_at(uo_index));
       // Initialize the use_order field to empty. Let it grow on demand.
       // (setting it to the minimum acceptable size may leave unbound elements
       // if the XML was incomplete).
       use_order->set_size(0);
 
-      Record_Type *jumbled = this; // the record affected by USE_ORDER
-      int begin = first_nonattr;
-      int end   = field_cnt; // "one past"
-      if (p_td.xer_bits & USE_NIL) {
-        Base_Type *last_optional = get_at(field_cnt-1);
-        if (!usenil_attribute) { // exer known true
-          last_optional->set_to_present();
-          jumbled = static_cast<Record_Type*>(last_optional->get_opt_value());
-          // We will operate on the members of last_optional,
-          // effectively bypassing last_optional->XER_decode() itself.
-          begin = 0;
-          end   = jumbled->get_count();
-          ec_1.set_msg("%s': ", fld_name(field_cnt-1));
-        }
-      }
-      if (num_attributes > 0
-        && first_nonattr != field_cnt
-        && i == first_nonattr - 1) { // exer known true
-        // If there were attributes and their processing just finished,
-        // the reader is positioned on the start tag of the record.
-        // Move ahead, unless there are no non-attribute fields.
-        reader.Read();
-      }
-      // Then, the non-attributes
-
-      // The index runs over the members affected by USE-ORDER.
-      // This is [first_nonattr,field_cnt) unless USE-NIL is involved,
-      // in which case it's [0,optional_sequence::field_cnt)
-      int *seen = new int[end-begin];
-      int num_seen = 0;
-      int last_any_elem = begin - 1;
-      // The index of the latest embedded value can change outside of this function
-      // (if the field is a untagged record of), in this case the next value should
-      // be ignored, as it's already been handled by the record of
-      int last_embval_index = 0;
-      for (i = begin; i < end; i++) {
-        for (success = reader.Ok(); success == 1; success = reader.Read()) {
-          type = reader.NodeType();
-          if (0 != emb_val && reader.NodeType()==XML_READER_TYPE_TEXT) {
-            UNIVERSAL_CHARSTRING emb_ustr((const char*)reader.Value());
-            emb_val->embval_array->get_at(emb_val->embval_index)->set_value(&emb_ustr);
+      // Nothing to order if there are no child elements
+      if (!tag_closed) {
+        Record_Type *jumbled = this; // the record affected by USE_ORDER
+        int begin = first_nonattr;
+        int end   = field_cnt; // "one past"
+        if (p_td.xer_bits & USE_NIL) {
+          Base_Type *last_optional = get_at(field_cnt-1);
+          if (!usenil_attribute) { // exer known true
+            last_optional->set_to_present();
+            jumbled = static_cast<Record_Type*>(last_optional->get_opt_value());
+            // We will operate on the members of last_optional,
+            // effectively bypassing last_optional->XER_decode() itself.
+            begin = 0;
+            end   = jumbled->get_count();
+            ec_1.set_msg("%s': ", fld_name(field_cnt-1));
           }
-          // The non-attribute components must not be UNTAGGED
-          if (type == XML_READER_TYPE_ELEMENT) break;
-          // else if (type==XML_READER_TYPE_END_ELEMENT) panic?
         }
-        if (0 != emb_val) {
-          if (last_embval_index == emb_val->embval_index) {
-            ++emb_val->embval_index;
-          }
-          last_embval_index = emb_val->embval_index;
+        if (num_attributes > 0
+          && first_nonattr != field_cnt
+          && i == first_nonattr - 1) { // exer known true
+          // If there were attributes and their processing just finished,
+          // the reader is positioned on the start tag of the record.
+          // Move ahead, unless there are no non-attribute fields.
+          reader.Read();
         }
-        if (success != 1) break;
-        const char *name = (const char *)reader.LocalName();
-        boolean field_name_found = false;
-        // Find out which member it is.
-        // FIXME some hashing should be implemented
-        for (int k = begin; k < end; k++) {
-          if (!(jumbled->xer_descr(k)->xer_bits & ANY_ELEMENT) &&
-              check_name(name, *jumbled->xer_descr(k), 1)) {
-            ec_1.set_msg("%s': ", jumbled->fld_name(k));
+        // Then, the non-attributes
 
-            // Check for the same field being decoded twice.
-            // We can't use the field's is_bound()/is_present(),
-            // because the field may be bound on input, e.g. for
-            // prototype(fast) or prototype(backtrack).
-            int in_dex = k - begin;
-            for (int o = 0; o < num_seen ;++o) {
-              if (in_dex == seen[o]) TTCN_EncDec_ErrorContext::error(
-                TTCN_EncDec::ET_INVAL_MSG, "Duplicate element");
+        // The index runs over the members affected by USE-ORDER.
+        // This is [first_nonattr,field_cnt) unless USE-NIL is involved,
+        // in which case it's [0,optional_sequence::field_cnt)
+        int *seen = new int[end-begin];
+        int num_seen = 0;
+        int last_any_elem = begin - 1;
+        // The index of the latest embedded value can change outside of this function
+        // (if the field is an untagged record of), in this case the next value should
+        // be ignored, as it's already been handled by the record of
+        int last_embval_index = 0;
+        bool early_exit = false;
+        for (i = begin; i < end; i++) {
+          for (success = reader.Ok(); success == 1; success = reader.Read()) {
+            type = reader.NodeType();
+            if (0 != emb_val && reader.NodeType()==XML_READER_TYPE_TEXT) {
+              UNIVERSAL_CHARSTRING emb_ustr((const char*)reader.Value());
+              emb_val->embval_array->get_at(emb_val->embval_index)->set_value(&emb_ustr);
             }
-            seen[num_seen++] = in_dex;
-            // Set the next use-order member.
-            // Non-const get_at creates the object in the record-of.
-            static_cast<Enum_Type*>(use_order->get_at(i - begin))
-            ->from_int(in_dex);
-            Base_Type *b = jumbled->get_at(k);
-            b->XER_decode(*jumbled->xer_descr(k), reader, flavor, emb_val);
-            field_name_found = true;
-            break;
+            // The non-attribute components must not be UNTAGGED
+            if (type == XML_READER_TYPE_ELEMENT) break;
+            if (type == XML_READER_TYPE_END_ELEMENT) {
+              early_exit = true;
+              break;
+            }
           }
-        }
-        if (!field_name_found) {
-          // Check the anyElement fields
-          for (int k = last_any_elem + 1; k < end; k++) {
-            if (jumbled->xer_descr(k)->xer_bits & ANY_ELEMENT) {
+          if (0 != emb_val) {
+            if (last_embval_index == emb_val->embval_index) {
+              ++emb_val->embval_index;
+            }
+            last_embval_index = emb_val->embval_index;
+          }
+          if (success != 1 || early_exit) break;
+          const char *name = (const char *)reader.LocalName();
+          bool field_name_found = false;
+          // Find out which member it is.
+          // FIXME some hashing should be implemented
+          for (int k = begin; k < end; k++) {
+            if (!(jumbled->xer_descr(k)->xer_bits & ANY_ELEMENT) &&
+                check_name(name, *jumbled->xer_descr(k), 1)) {
               ec_1.set_msg("%s': ", jumbled->fld_name(k));
 
               // Check for the same field being decoded twice.
@@ -5276,44 +5451,77 @@ int Record_Type::XER_decode(const XERdescriptor_t& p_td, XmlReaderWrap& reader,
               ->from_int(in_dex);
               Base_Type *b = jumbled->get_at(k);
               b->XER_decode(*jumbled->xer_descr(k), reader, flavor, emb_val);
-              last_any_elem = k;
+              field_name_found = true;
               break;
             }
           }
-        }
-      } // next field
-      if (0 != emb_val) {
-        if (reader.NodeType()==XML_READER_TYPE_TEXT) {
-          UNIVERSAL_CHARSTRING emb_ustr((const char*)reader.Value());
-          emb_val->embval_array->get_at(emb_val->embval_index)->set_value(&emb_ustr);
-        }
-        if (last_embval_index == emb_val->embval_index) {
-          ++emb_val->embval_index;
-        }
-      }
-      delete [] seen;
-      ec_1.set_msg(" "); // no active component
-      ec_0.set_msg(" ");
+          if (!field_name_found) {
+            // Check the anyElement fields
+            for (int k = last_any_elem + 1; k < end; k++) {
+              if (jumbled->xer_descr(k)->xer_bits & ANY_ELEMENT) {
+                ec_1.set_msg("%s': ", jumbled->fld_name(k));
 
-      // Check that we collected the required number of children
-      int num_collected = use_order->size_of();
-      if (p_td.xer_bits & USE_NIL) {
-        int expected = usenil_attribute ? 0 : jumbled->get_count();
-        if (num_collected != expected) {
-          TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_INCOMPL_MSG,
-            "Incorrect number of fields %d, expected %d",
-            num_collected, expected);
+                // Check for the same field being decoded twice.
+                // We can't use the field's is_bound()/is_present(),
+                // because the field may be bound on input, e.g. for
+                // prototype(fast) or prototype(backtrack).
+                int in_dex = k - begin;
+                for (int o = 0; o < num_seen ;++o) {
+                  if (in_dex == seen[o]) TTCN_EncDec_ErrorContext::error(
+                    TTCN_EncDec::ET_INVAL_MSG, "Duplicate element");
+                }
+                seen[num_seen++] = in_dex;
+                // Set the next use-order member.
+                // Non-const get_at creates the object in the record-of.
+                static_cast<Enum_Type*>(use_order->get_at(i - begin))
+                ->from_int(in_dex);
+                Base_Type *b = jumbled->get_at(k);
+                b->XER_decode(*jumbled->xer_descr(k), reader, flavor, emb_val);
+                last_any_elem = k;
+                field_name_found = true;
+                break;
+              }
+            }
+          }
+          if (!field_name_found) {
+            TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_INVAL_MSG,
+              "Bad XML tag '%s' instead of a valid field", name);
+            break;
+          }
+        } // next field
+        if (0 != emb_val) {
+          if (reader.NodeType()==XML_READER_TYPE_TEXT) {
+            UNIVERSAL_CHARSTRING emb_ustr((const char*)reader.Value());
+            emb_val->embval_array->get_at(emb_val->embval_index)->set_value(&emb_ustr);
+          }
+          if (last_embval_index == emb_val->embval_index) {
+            ++emb_val->embval_index;
+          }
         }
-      }
-      else {
-        if (num_collected < field_cnt - first_nonattr - n_optionals
-          ||num_collected > field_cnt - first_nonattr) {
-          TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_INCOMPL_MSG,
-            "Wrong number of fields! size = %d, expected %d..%d",
-            use_order->size_of(), field_cnt - first_nonattr - n_optionals,
-            field_cnt - first_nonattr);
+        delete [] seen;
+        ec_1.set_msg(" "); // no active component
+        ec_0.set_msg(" ");
+
+        // Check that we collected the required number of children
+        int num_collected = use_order->size_of();
+        if (p_td.xer_bits & USE_NIL) {
+          int expected = usenil_attribute ? 0 : jumbled->get_count();
+          if (num_collected != expected) {
+            TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_INCOMPL_MSG,
+              "Incorrect number of fields %d, expected %d",
+              num_collected, expected);
+          }
         }
-      }
+        else {
+          if (num_collected < field_cnt - first_nonattr - n_optionals
+            ||num_collected > field_cnt - first_nonattr) {
+            TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_INCOMPL_MSG,
+              "Wrong number of fields! size = %d, expected %d..%d",
+              use_order->size_of(), field_cnt - first_nonattr - n_optionals,
+              field_cnt - first_nonattr);
+          }
+        }
+      } // not empty element
     }
     else { // not USE-ORDER, simpler code      
       if (usenil_attribute) {
@@ -5380,17 +5588,31 @@ int Record_Type::XER_decode(const XERdescriptor_t& p_td, XmlReaderWrap& reader,
     } // if use-order
 
     if (0 != emb_val) {
+      bool all_unbound = true;
       static const UNIVERSAL_CHARSTRING emptystring(0, (const char*)NULL);
       for (int j = 0; j < emb_val->embval_index; ++j) {
         if (!emb_val->embval_array->get_at(j)->is_bound()) {
           emb_val->embval_array->get_at(j)->set_value(&emptystring);
+        }else if((static_cast<const UNIVERSAL_CHARSTRING*>(emb_val->embval_array->get_at(j)))->lengthof() !=0) {
+          all_unbound = false;
         }
+      }
+      if(emb_val_optional && all_unbound){
+        static_cast<OPTIONAL<PreGenRecordOf::PREGEN__RECORD__OF__UNIVERSAL__CHARSTRING>*>(get_at(0))->set_to_omit();
       }
       delete emb_val;
     } // if embed-values
 
   } // if use-qname
-
+  
+  // Check if every non-optional field has been set
+  for (i = 0; i < field_cnt; ++i) {
+    if (!get_at(i)->is_optional() && !get_at(i)->is_bound()) {
+      TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_INCOMPL_MSG,
+        "No data found for non-optional field '%s'", fld_name(i));
+    }
+  }
+  
   if (own_tag) {
     // We had our start tag. Then our fields did their thing.
     // Now we expect the end tag. And it better be our end tag!
@@ -5437,8 +5659,12 @@ int Record_Type::XER_decode(const XERdescriptor_t& p_td, XmlReaderWrap& reader,
   return 1; // decode successful
 }
 
-int Record_Type::JSON_encode(const TTCN_Typedescriptor_t&, JSON_Tokenizer& p_tok) const
+int Record_Type::JSON_encode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& p_tok) const
 {
+  if (err_descr) {		
+    return JSON_encode_negtest(err_descr, p_td, p_tok);		
+  }
+
   if (!is_bound()) {
     TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_UNBOUND,
       "Encoding an unbound %s value.", is_set() ? "set" : "record");
@@ -5448,15 +5674,123 @@ int Record_Type::JSON_encode(const TTCN_Typedescriptor_t&, JSON_Tokenizer& p_tok
   int enc_len = p_tok.put_next_token(JSON_TOKEN_OBJECT_START, NULL);
   
   int field_count = get_count();
-  for(int i = 0; i < field_count; ++i) {
+  for (int i = 0; i < field_count; ++i) {
+    boolean metainfo_unbound = NULL != fld_descr(i)->json && fld_descr(i)->json->metainfo_unbound;
     if ((NULL != fld_descr(i)->json && fld_descr(i)->json->omit_as_null) || 
-        !get_at(i)->is_optional() || get_at(i)->is_present()) {
-      if (NULL != fld_descr(i)->json && NULL != fld_descr(i)->json->alias) {
-        enc_len += p_tok.put_next_token(JSON_TOKEN_NAME, fld_descr(i)->json->alias);
-      } else {
-        enc_len += p_tok.put_next_token(JSON_TOKEN_NAME, fld_name(i));
+        get_at(i)->is_present() || metainfo_unbound) {
+      const char* field_name = (NULL != fld_descr(i)->json && NULL != fld_descr(i)->json->alias) ?
+        fld_descr(i)->json->alias : fld_name(i);
+      enc_len += p_tok.put_next_token(JSON_TOKEN_NAME, field_name);
+      if (metainfo_unbound && !get_at(i)->is_bound()) {
+        enc_len += p_tok.put_next_token(JSON_TOKEN_LITERAL_NULL);
+        char* metainfo_str = mprintf("metainfo %s", field_name);
+        enc_len += p_tok.put_next_token(JSON_TOKEN_NAME, metainfo_str);
+        Free(metainfo_str);
+        enc_len += p_tok.put_next_token(JSON_TOKEN_STRING, "\"unbound\"");
       }
-      enc_len += get_at(i)->JSON_encode(*fld_descr(i), p_tok);
+      else {
+        enc_len += get_at(i)->JSON_encode(*fld_descr(i), p_tok);
+      }
+    }
+  }
+  
+  enc_len += p_tok.put_next_token(JSON_TOKEN_OBJECT_END, NULL);
+  return enc_len;
+}
+
+int Record_Type::JSON_encode_negtest(const Erroneous_descriptor_t* p_err_descr,
+                                     const TTCN_Typedescriptor_t& p_td,
+                                     JSON_Tokenizer& p_tok) const 
+{
+  if (!is_bound()) {
+    TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_UNBOUND,
+      "Encoding an unbound %s value.", is_set() ? "set" : "record");
+    return -1;
+  }
+  
+  int enc_len = p_tok.put_next_token(JSON_TOKEN_OBJECT_START, NULL);
+  
+  int values_idx = 0;
+  int edescr_idx = 0;
+  
+  int field_count = get_count();
+  for (int i = 0; i < field_count; ++i) {
+    if (-1 != p_err_descr->omit_before && p_err_descr->omit_before > i) {
+      continue;
+    }
+    
+    const Erroneous_values_t* err_vals = p_err_descr->next_field_err_values(i, values_idx);
+    const Erroneous_descriptor_t* emb_descr = p_err_descr->next_field_emb_descr(i, edescr_idx);
+    
+    if (NULL != err_vals && NULL != err_vals->before) {
+      if (NULL == err_vals->before->errval) {
+        TTCN_error("internal error: erroneous before value missing");
+      }
+      if (err_vals->before->raw) {
+        enc_len += err_vals->before->errval->JSON_encode_negtest_raw(p_tok);
+      } else {
+        if (NULL == err_vals->before->type_descr) {
+          TTCN_error("internal error: erroneous before typedescriptor missing");
+        }
+        // it's an extra field, so use the erroneous type's name as the field name
+        enc_len += p_tok.put_next_token(JSON_TOKEN_NAME, err_vals->before->type_descr->name);
+        enc_len += err_vals->before->errval->JSON_encode(*(err_vals->before->type_descr), p_tok);
+      }
+    }
+    
+    const char* field_name = (NULL != fld_descr(i)->json && NULL != fld_descr(i)->json->alias) ?
+      fld_descr(i)->json->alias : fld_name(i);
+    if (NULL != err_vals && NULL != err_vals->value) {
+      if (NULL != err_vals->value->errval) {
+        if (err_vals->value->raw) {
+          enc_len += err_vals->value->errval->JSON_encode_negtest_raw(p_tok);
+        } else {
+          if (NULL == err_vals->value->type_descr) {
+            TTCN_error("internal error: erroneous before typedescriptor missing");
+          }
+          // only replace the field's value, keep the field name
+          enc_len += p_tok.put_next_token(JSON_TOKEN_NAME, field_name);
+          enc_len += err_vals->value->errval->JSON_encode(*(err_vals->value->type_descr), p_tok);
+        }
+      }
+    } else {
+      boolean metainfo_unbound = NULL != fld_descr(i)->json && fld_descr(i)->json->metainfo_unbound;
+      if ((NULL != fld_descr(i)->json && fld_descr(i)->json->omit_as_null) || 
+          get_at(i)->is_present() || metainfo_unbound) {
+        enc_len += p_tok.put_next_token(JSON_TOKEN_NAME, field_name);
+        if (metainfo_unbound && !get_at(i)->is_bound()) {
+          enc_len += p_tok.put_next_token(JSON_TOKEN_LITERAL_NULL);
+          char* metainfo_str = mprintf("metainfo %s", field_name);
+          enc_len += p_tok.put_next_token(JSON_TOKEN_NAME, metainfo_str);
+          Free(metainfo_str);
+          enc_len += p_tok.put_next_token(JSON_TOKEN_STRING, "\"unbound\"");
+        }
+        else if (NULL != emb_descr) {
+          enc_len += get_at(i)->JSON_encode_negtest(emb_descr, *fld_descr(i), p_tok);
+        } else {
+          enc_len += get_at(i)->JSON_encode(*fld_descr(i), p_tok);
+        }
+      }
+    }
+    
+    if (NULL != err_vals && NULL != err_vals->after) {
+      if (NULL == err_vals->after->errval) {
+        TTCN_error("internal error: erroneous after value missing");
+      }
+      if (err_vals->after->raw) {
+        enc_len += err_vals->after->errval->JSON_encode_negtest_raw(p_tok);
+      } else {
+        if (NULL == err_vals->after->type_descr) {
+          TTCN_error("internal error: erroneous before typedescriptor missing");
+        }
+        // it's an extra field, so use the erroneous type's name as the field name
+        enc_len += p_tok.put_next_token(JSON_TOKEN_NAME, err_vals->after->type_descr->name);
+        enc_len += err_vals->after->errval->JSON_encode(*(err_vals->after->type_descr), p_tok);
+      }
+    }
+    
+    if (-1 != p_err_descr->omit_after && p_err_descr->omit_after <= i) {
+      break;
     }
   }
   
@@ -5479,6 +5813,13 @@ int Record_Type::JSON_decode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& 
   
   const int field_count = get_count();
   
+  // initialize meta info states
+  int* metainfo = new int[field_count];
+  for (int i = 0; i < field_count; ++i) {
+    metainfo[i] = (NULL != fld_descr(i)->json && fld_descr(i)->json->metainfo_unbound) ?
+      JSON_METAINFO_NONE : JSON_METAINFO_NOT_APPLICABLE;
+  }
+  
   while (true) {
     // Read name - value token pairs until we reach some other token
     char* name = 0;
@@ -5495,6 +5836,14 @@ int Record_Type::JSON_decode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& 
       break;
     }
     else {
+      // check for meta info
+      boolean is_metainfo = FALSE;
+      if (name_len > 9 && 0 == strncmp(name, "metainfo ", 9)) {
+        name += 9;
+        name_len -= 9;
+        is_metainfo = TRUE;
+      }
+      
       // check field name
       int field_idx;
       for (field_idx = 0; field_idx < field_count; ++field_idx) {
@@ -5512,7 +5861,8 @@ int Record_Type::JSON_decode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& 
       if (field_count == field_idx) {
         // invalid field name
         char* name2 = mcopystrn(name, name_len);
-        JSON_ERROR(TTCN_EncDec::ET_INVAL_MSG, JSON_DEC_INVALID_NAME_ERROR, name2);
+        JSON_ERROR(TTCN_EncDec::ET_INVAL_MSG, is_metainfo ?
+          JSON_DEC_METAINFO_NAME_ERROR : JSON_DEC_INVALID_NAME_ERROR, name2);
         // if this is set to a warning, skip the value of the field
         dec_len += p_tok.get_next_token(&token, NULL, NULL);
         if (JSON_TOKEN_NUMBER != token && JSON_TOKEN_STRING != token &&
@@ -5526,14 +5876,53 @@ int Record_Type::JSON_decode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& 
         continue;
       }
       
-      int ret_val = get_at(field_idx)->JSON_decode(*fld_descr(field_idx), p_tok, p_silent);
-      if (0 > ret_val) {
-        if (JSON_ERROR_INVALID_TOKEN) {
-          JSON_ERROR(TTCN_EncDec::ET_INVAL_MSG, JSON_DEC_FIELD_TOKEN_ERROR, fld_name(field_idx));
+      if (is_metainfo) {
+        if (JSON_METAINFO_NOT_APPLICABLE != metainfo[field_idx]) {
+          // check meta info
+          char* info_value = 0;
+          size_t info_len = 0;
+          dec_len += p_tok.get_next_token(&token, &info_value, &info_len);
+          if (JSON_TOKEN_STRING == token && 9 == info_len &&
+              0 == strncmp(info_value, "\"unbound\"", 9)) {
+            metainfo[field_idx] = JSON_METAINFO_UNBOUND;
+          }
+          else {
+            JSON_ERROR(TTCN_EncDec::ET_INVAL_MSG, JSON_DEC_METAINFO_VALUE_ERROR,
+              fld_name(field_idx));
+            return JSON_ERROR_FATAL;
+          }
         }
-        return JSON_ERROR_FATAL;
+        else {
+          JSON_ERROR(TTCN_EncDec::ET_INVAL_MSG, JSON_DEC_METAINFO_NOT_APPLICABLE,
+            fld_name(field_idx));
+          return JSON_ERROR_FATAL;
+        }
       }
-      dec_len += ret_val;
+      else {
+        buf_pos = p_tok.get_buf_pos();
+        int ret_val = get_at(field_idx)->JSON_decode(*fld_descr(field_idx), p_tok, p_silent);
+        if (0 > ret_val) {
+          if (JSON_ERROR_INVALID_TOKEN == ret_val) {
+            // undo the last action on the buffer, check if the invalid token was a null token 
+            p_tok.set_buf_pos(buf_pos);
+            p_tok.get_next_token(&token, NULL, NULL);
+            if (JSON_TOKEN_LITERAL_NULL == token) {
+              if (JSON_METAINFO_NONE == metainfo[field_idx]) {
+                // delay reporting an error for now, there might be meta info later
+                metainfo[field_idx] = JSON_METAINFO_NEEDED;
+                continue;
+              }
+              else if (JSON_METAINFO_UNBOUND == metainfo[field_idx]) {
+                // meta info already found
+                continue;
+              }
+            }
+            JSON_ERROR(TTCN_EncDec::ET_INVAL_MSG, JSON_DEC_FIELD_TOKEN_ERROR, fld_name(field_idx));
+          }
+          return JSON_ERROR_FATAL;
+        }
+        dec_len += ret_val;
+      }
     }
   }
   
@@ -5543,10 +5932,17 @@ int Record_Type::JSON_decode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& 
     return JSON_ERROR_FATAL;
   }
   
-  // Check if every field has been set
+  // Check if every field has been set and handle meta info
   for (int field_idx = 0; field_idx < field_count; ++field_idx) {
     Base_Type* field = get_at(field_idx);
-    if (!field->is_bound()) {
+    if (JSON_METAINFO_UNBOUND == metainfo[field_idx]) {
+      field->clean_up();
+    }
+    else if (JSON_METAINFO_NEEDED == metainfo[field_idx]) {
+      // no meta info was found for this field, report the delayed error
+      JSON_ERROR(TTCN_EncDec::ET_INVAL_MSG, JSON_DEC_FIELD_TOKEN_ERROR, fld_name(field_idx));
+    }
+    else if (!field->is_bound()) {
       if (NULL != fld_descr(field_idx)->json && NULL != fld_descr(field_idx)->json->default_value) {
         get_at(field_idx)->JSON_decode(*fld_descr(field_idx), DUMMY_BUFFER, p_silent);
       }
@@ -5558,6 +5954,8 @@ int Record_Type::JSON_decode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer& 
       }
     }
   }
+  
+  delete metainfo;
   
   return dec_len;
 }
@@ -5592,10 +5990,22 @@ void Empty_Record_Type::log() const
 
 void Empty_Record_Type::set_param(Module_Param& param) {
   param.basic_check(Module_Param::BC_VALUE, "empty record/set value (i.e. { })");
-  if (param.get_type()!=Module_Param::MP_Value_List || param.get_size()>0) {
+  Module_Param_Ptr mp = &param;
+  if (param.get_type() == Module_Param::MP_Reference) {
+    mp = param.get_referenced_param();
+  }
+  if (mp->get_type()!=Module_Param::MP_Value_List || mp->get_size()>0) {
     param.type_error("empty record/set value (i.e. { })", get_descriptor()->name);
   }
   bound_flag = TRUE;
+}
+
+Module_Param* Empty_Record_Type::get_param(Module_Param_Name& /* param_name */) const
+{
+  if (!is_bound()) {
+    return new Module_Param_Unbound();
+  }
+  return new Module_Param_Value_List();
 }
 
 void Empty_Record_Type::encode_text(Text_Buf& /*text_buf*/) const

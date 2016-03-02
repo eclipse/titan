@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -12,10 +12,11 @@
 #include "Encdec.hh"
 #include "RInt.hh"
 #include "JSON_Tokenizer.hh"
-#include "Vector.hh"
 #ifdef TITAN_RUNTIME_2
 #include "Struct_of.hh"
 #include "XER.hh"
+#include "Vector.hh"
+#include "RefdIndex.hh"
 #endif
 
 struct ASN_BERdescriptor_t;
@@ -26,6 +27,7 @@ struct XERdescriptor_t;
 struct TTCN_JSONdescriptor_t;
 class  XmlReaderWrap;
 class Module_Param;
+class Module_Param_Name;
 struct embed_values_enc_struct_t;
 struct embed_values_dec_struct_t;
 
@@ -43,6 +45,7 @@ struct TTCN_Typedescriptor_t {
   const TTCN_TEXTdescriptor_t * const text; /**< Information for TEXT coding */
   const XERdescriptor_t * const xer; /**< Information for XER */
   const TTCN_JSONdescriptor_t * const json; /**< Information for JSON coding */
+  const TTCN_Typedescriptor_t * const oftype_descr; /**< Record-of element's type descriptor */
   /** ASN subtype
    *
    *  Used by classes implementing more than one ASN.1 type
@@ -150,7 +153,16 @@ public:
     XERdescriptor_t const& xd, unsigned int flavor);
 
 #ifdef TITAN_RUNTIME_2
+  /** Initialize this object (or one of its fields/elements) with a 
+    * module parameter value. The module parameter may contain references to
+    * other module parameters or module parameter expressions, which are processed
+    * by this method to calculated the final result.
+    * @param param module parameter value (its ID specifies which object is to be set) */
   virtual void set_param(Module_Param& param) = 0;
+  /** Create a module parameter value equivalent to this object (or one of its
+    * fields/elements)
+    * @param param_name module parameter ID, specifies which object to convert */
+  virtual Module_Param* get_param(Module_Param_Name& param_name) const = 0;
   /** Whether the type is a sequence-of.
    * @return \c FALSE */
   virtual boolean is_seof() const { return FALSE; }
@@ -363,6 +375,7 @@ public:
   virtual ASN_BER_TLV_t* BER_encode_negtest_raw() const;
   virtual int encode_raw(TTCN_Buffer& p_buf) const;
   virtual int RAW_encode_negtest_raw(RAW_enc_tree& p_myleaf) const;
+  virtual int JSON_encode_negtest_raw(JSON_Tokenizer&) const;
 #endif
 
   /** Examines whether this message corresponds the tags in the
@@ -563,6 +576,17 @@ public:
    * @note Basetype::JSON_encode throws an error. */
   VIRTUAL_IF_RUNTIME_2 int JSON_encode(const TTCN_Typedescriptor_t& p_td, JSON_Tokenizer&) const;
   
+#ifdef TITAN_RUNTIME_2
+  /** Encode with JSON encoding negative test.
+    * @return the length of the encoding
+    * @param p_err_descr erroneous type descriptor
+    * @param p_td type descriptor
+    * @param p_tok JSON tokenizer for the encoded data
+    * @note Basetype::JSON_encode_negtest throws an error. */
+  virtual int JSON_encode_negtest(const Erroneous_descriptor_t* p_err_descr, const TTCN_Typedescriptor_t& p_td,
+          JSON_Tokenizer& p_tok) const;
+#endif
+  
   /** Decode JSON.
    * @return decoded length
    * @note Basetype::JSON_decode throws an error. */
@@ -642,7 +666,7 @@ class INTEGER;
  *
  */
 // Record_Of_Template can be found in Template.hh
-class Record_Of_Type : public Base_Type
+class Record_Of_Type : public Base_Type, public RefdIndexInterface
 {
   friend class Set_Of_Template;
   friend class Record_Of_Template;
@@ -735,6 +759,7 @@ public:
   int lengthof() const;
   virtual void log() const;
   virtual void set_param(Module_Param& param);
+  virtual Module_Param* get_param(Module_Param_Name& param_name) const;
   virtual void set_implicit_omit();
   virtual void encode_text(Text_Buf& text_buf) const;
   virtual void decode_text(Text_Buf& text_buf);
@@ -776,7 +801,7 @@ public:
   virtual int XER_encode_negtest(const Erroneous_descriptor_t* p_err_descr,
     const XERdescriptor_t& p_td, TTCN_Buffer& p_buf, unsigned flavor, int indent, embed_values_enc_struct_t*) const;
   /// Helper for XER_encode_negtest
-  int encode_element(int i, const Erroneous_values_t* err_vals,
+  int encode_element(int i, const XERdescriptor_t& p_td, const Erroneous_values_t* err_vals,
     const Erroneous_descriptor_t* emb_descr,
     TTCN_Buffer& p_buf, unsigned int flavor, int indent, embed_values_enc_struct_t* emb_val) const;
   virtual int XER_decode(const XERdescriptor_t& p_td, XmlReaderWrap& reader, unsigned int, embed_values_dec_struct_t*);
@@ -787,6 +812,11 @@ public:
     * Returns the length of the encoded data. */
   int JSON_encode(const TTCN_Typedescriptor_t&, JSON_Tokenizer&) const;
   
+  /** Negative testing for the JSON encoder
+    * Encodes this value according to the JSON encoding rules, but with the
+    * modifications (errors) specified in the erroneous descriptor parameter. */
+  int JSON_encode_negtest(const Erroneous_descriptor_t*, const TTCN_Typedescriptor_t&, JSON_Tokenizer&) const;
+  
   /** Decodes accordingly to the JSON encoding rules.
     * Returns the length of the decoded data. */
   int JSON_decode(const TTCN_Typedescriptor_t&, JSON_Tokenizer&, boolean);
@@ -794,8 +824,6 @@ public:
   /** @returns \c true  if this is a set-of type,
    *           \c false if this is a record-of type */
   virtual boolean is_set() const = 0;
-  /** return the type descriptor of the element */
-  virtual const TTCN_Typedescriptor_t* get_elem_descr() const = 0;
   /** creates an instance of the record's element class, using the default constructor */
   virtual Base_Type* create_elem() const = 0;
 
@@ -812,12 +840,12 @@ public:
   /** Indicates that the element at the given index is referenced by an 'out' or
     * 'inout' parameter and must not be deleted.
     * Used just before the actual function call that references the element. */
-  void add_refd_index(int index);
+  virtual void add_refd_index(int index);
   
   /** Indicates that the element at the given index is no longer referenced by
     * an 'out' or 'inout' parameter.
     * Used immediately after the actual function call that referenced the element. */
-  void remove_refd_index(int index);
+  virtual void remove_refd_index(int index);
 };
 
 extern boolean operator==(null_type null_value,
@@ -886,6 +914,7 @@ public:
   virtual void clean_up();
   virtual void log() const;
   virtual void set_param(Module_Param& param);
+  virtual Module_Param* get_param(Module_Param_Name& param_name) const;
   virtual void set_implicit_omit();
 
   int size_of() const;
@@ -931,6 +960,11 @@ public:
     * Returns the length of the encoded data. */
   int JSON_encode(const TTCN_Typedescriptor_t&, JSON_Tokenizer&) const;
   
+  /** Negative testing for the JSON encoder
+    * Encodes this value according to the JSON encoding rules, but with the
+    * modifications (errors) specified in the erroneous descriptor parameter. */
+  int JSON_encode_negtest(const Erroneous_descriptor_t*, const TTCN_Typedescriptor_t&, JSON_Tokenizer&) const;
+  
   /** Decodes accordingly to the JSON encoding rules.
     * Returns the length of the decoded data. */
   int JSON_decode(const TTCN_Typedescriptor_t&, JSON_Tokenizer&, boolean);
@@ -967,7 +1001,8 @@ public:
   virtual boolean is_bound() const { return bound_flag; }
   virtual void clean_up() { bound_flag = FALSE; }
   virtual void log() const;
-  virtual void set_param(Module_Param& param); 
+  virtual void set_param(Module_Param& param);
+  virtual Module_Param* get_param(Module_Param_Name& param_name) const;
 
   int size_of() const { return 0; }
   virtual void encode_text(Text_Buf& text_buf) const;

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -92,6 +92,12 @@ class UNIVERSAL_CHARSTRING : public Base_Type {
   void init_struct(int n_uchars);
   void copy_value();
   UNIVERSAL_CHARSTRING(int n_uchars, bool cstring = false);
+  
+  /** An extended version of set_param(), which also accepts string patterns if
+    * the second parameter is set (needed by UNIVERSAL_CHARSTRING_template to
+    * concatenate string patterns). 
+    * @return TRUE, if the module parameter was a string pattern, otherwise FALSE */
+  boolean set_param_internal(Module_Param& param, boolean allow_pattern);
 
 public:
 
@@ -303,6 +309,7 @@ public:
     * @note UFT-8 strings (whose characters were not in quadruple notation) will 
     * be decoded */
   void set_param(Module_Param& param);
+  Module_Param* get_param(Module_Param_Name& param_name) const;
 
   void encode_text(Text_Buf& text_buf) const;
   void decode_text(Text_Buf& text_buf);
@@ -318,6 +325,10 @@ public:
   boolean BER_decode_TLV(const TTCN_Typedescriptor_t& p_td,
                          const ASN_BER_TLV_t& p_tlv, unsigned L_form);
   
+  int TEXT_encode(const TTCN_Typedescriptor_t&,
+                 TTCN_Buffer&) const;
+  int TEXT_decode(const TTCN_Typedescriptor_t&, TTCN_Buffer&,  Limit_Token_List&,
+                  boolean no_err=FALSE, boolean first_call=TRUE);
   int XER_encode(const XERdescriptor_t&, TTCN_Buffer&, unsigned int, int, embed_values_enc_struct_t*) const;
   int XER_decode(const XERdescriptor_t&, XmlReaderWrap& reader, unsigned int, embed_values_dec_struct_t*);
   /** Decodes UTF-8 into the internal representation (UCS4-BE)
@@ -357,6 +368,11 @@ public:
 private:
 #ifdef TITAN_RUNTIME_2
   virtual int encode_raw(TTCN_Buffer& p_buf) const;
+  /** Encodes this universal charstring with UTF-8 and adds the result to the end
+    * of a JSON buffer as raw data.
+    * Used during the negative testing of the JSON encoder.
+    * @return The number of bytes added. */
+  int JSON_encode_negtest_raw(JSON_Tokenizer&) const;
 #endif
 };
 
@@ -544,7 +560,7 @@ public:
   const UNIVERSAL_CHARSTRING_ELEMENT operator[]
     (const INTEGER& index_value) const;
 
-  boolean match(const UNIVERSAL_CHARSTRING& other_value) const;
+  boolean match(const UNIVERSAL_CHARSTRING& other_value, boolean legacy = FALSE) const;
   const UNIVERSAL_CHARSTRING& valueof() const;
 
   int lengthof() const;
@@ -556,15 +572,16 @@ public:
   void set_max(const UNIVERSAL_CHARSTRING& max_value);
 
   void log() const;
-  void log_match(const UNIVERSAL_CHARSTRING& match_value) const;
+  void log_match(const UNIVERSAL_CHARSTRING& match_value, boolean legacy = FALSE) const;
 
   void set_param(Module_Param& param);
+  Module_Param* get_param(Module_Param_Name& param_name) const;
 
   void encode_text(Text_Buf& text_buf) const;
   void decode_text(Text_Buf& text_buf);
 
-  boolean is_present() const;
-  boolean match_omit() const;
+  boolean is_present(boolean legacy = FALSE) const;
+  boolean match_omit(boolean legacy = FALSE) const;
 
 #ifdef TITAN_RUNTIME_2
   void valueofv(Base_Type* value) const { *(static_cast<UNIVERSAL_CHARSTRING*>(value)) = valueof(); }
@@ -572,10 +589,10 @@ public:
   void copy_value(const Base_Type* other_value) { *this = *(static_cast<const UNIVERSAL_CHARSTRING*>(other_value)); }
   Base_Template* clone() const { return new UNIVERSAL_CHARSTRING_template(*this); }
   const TTCN_Typedescriptor_t* get_descriptor() const { return &UNIVERSAL_CHARSTRING_descr_; }
-  boolean matchv(const Base_Type* other_value) const { return match(*(static_cast<const UNIVERSAL_CHARSTRING*>(other_value))); }
-  void log_matchv(const Base_Type* match_value) const  { log_match(*(static_cast<const UNIVERSAL_CHARSTRING*>(match_value))); }
+  boolean matchv(const Base_Type* other_value, boolean legacy) const { return match(*(static_cast<const UNIVERSAL_CHARSTRING*>(other_value)), legacy); }
+  void log_matchv(const Base_Type* match_value, boolean legacy) const  { log_match(*(static_cast<const UNIVERSAL_CHARSTRING*>(match_value)), legacy); }
 #else
-  void check_restriction(template_res t_res, const char* t_name=NULL) const;
+  void check_restriction(template_res t_res, const char* t_name=NULL, boolean legacy = FALSE) const;
 #endif
 
   const CHARSTRING& get_single_value() const;

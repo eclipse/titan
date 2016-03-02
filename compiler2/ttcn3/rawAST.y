@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -151,6 +151,9 @@ static void yyprint(FILE *file, int type, const YYSTYPE& value);
 %token <enumval> XHigh
 %token XToplevelKeyword
 %token XRepeatableKeyword
+%token XIntXKeyword
+%token XBitKeyword
+%token XUnsignedKeyword
 
        /* XER attributes */
 %token XKWall           "all"
@@ -170,10 +173,12 @@ static void yyprint(FILE *file, int type, const YYSTYPE& value);
 %token XKWprefix        "prefix"
 
 
+%token XKWabstract         "abstact"
 %token XKWanyAttributes    "anyAttributes"
 %token XKWanyElement       "anyElement"
 %token XKWattribute        "attribute"
 %token XKWattributeFormQualified   "attributeFormQualified"
+%token XKWblock            "block"
 %token XKWcontrolNamespace "controlNamespace"
 %token XKWdefaultForEmpty  "defaultForEmpty"
 %token XKWelement          "element"
@@ -258,6 +263,10 @@ static void yyprint(FILE *file, int type, const YYSTYPE& value);
 %token XAliasToken        "JSON alias"
 %token XKWvalue           "value"
 %token XKWdefault         "default"
+%token XKWextend          "extend"
+%token XKWmetainfo        "metainfo"
+%token XKWfor             "for"
+%token XKWunbound         "unbound"
 %token XJsonValueStart    "("
 %token XJsonValueEnd      ")"
 %token XJsonValueSegment  "JSON value"
@@ -274,7 +283,7 @@ static void yyprint(FILE *file, int type, const YYSTYPE& value);
     XLengthIndexDef XStructFieldRefOrEmpty XStructFieldRef
 
 %type <str>
-    XEncodeToken XmatchDef XAliasToken XJsonValueSegment XJsonValue
+    XEncodeToken XmatchDef XAliasToken XJsonValueSegment XJsonValueCore XJsonValue
 
 %type <decodetoken>
     XDecodeToken
@@ -329,6 +338,7 @@ Xtoken
 Xstring
 XAliasToken
 XJsonValueSegment
+XJsonValueCore
 XJsonValue
 
 %destructor { delete $$; }
@@ -454,6 +464,10 @@ XSingleEncodingDef : XPaddingDef
         { rawstruct->repeatable = $1;raw_f=true; }
     | XToplevelDef
         { rawstruct->topleveleind=1; raw_f=true;}
+    | XIntXKeyword
+        { rawstruct->intx = true; raw_f = true; }
+    | XBitDef
+        { raw_f = true; }
     /* TEXT encoder keywords */
     | XBeginDef
         { text_f=true; }
@@ -828,6 +842,22 @@ XRvalue: XIdentifier{
 	$$.v_value = new Common::Value(Common::Value::V_OMIT);
 	$$.v_value->set_location(infile, @$);
       }
+;
+
+/* Alternative RAW attributes for types defined in annex E of the TTCN-3 standard */
+XBitDef:
+  XNumber XBitKeyword
+  {
+    rawstruct->fieldlength = $1;
+    rawstruct->comp = XDEFSIGNBIT;
+    rawstruct->byteorder = XDEFLAST;
+  }
+| XUnsignedKeyword XNumber XBitKeyword
+  {
+    rawstruct->fieldlength = $2;
+    rawstruct->comp = XDEFUNSIGNED;
+    rawstruct->byteorder = XDEFLAST;
+  }
 ;
 
 /* Text encoder */
@@ -1257,10 +1287,12 @@ XERattributes: /* a non-empty list */
     ;
 
 XERattribute:
-    anyAttributes { FreeNamespaceRestriction(xerstruct->anyAttributes_); xerstruct->anyAttributes_ = $1; }
+    XKWabstract { xerstruct->abstract_ = true; }
+    | anyAttributes { FreeNamespaceRestriction(xerstruct->anyAttributes_); xerstruct->anyAttributes_ = $1; }
     | anyElement  { FreeNamespaceRestriction(xerstruct->anyElement_); xerstruct->anyElement_ = $1; }
     | XKWattribute  { xerstruct->attribute_ = true; }
     | XKWattributeFormQualified { xerstruct->form_ |= XerAttributes::ATTRIBUTE_DEFAULT_QUALIFIED; }
+    | XKWblock { xerstruct->block_ = true; }
     | controlNamespace /* directly on the module */
       {
         mymod->set_controlns($1.uri, $1.prefix);
@@ -1498,7 +1530,7 @@ xsddata: /* XSD:something */
 
 // JSON encoder
 XJsonDef:
-  XKWjson XOptSpaces ':' XOptSpaces XJsonAttribute
+  XOptSpaces XKWjson XOptSpaces ':' XOptSpaces XJsonAttribute XOptSpaces
 ;
 
 XJsonAttribute:
@@ -1506,6 +1538,8 @@ XJsonAttribute:
 | XNameAs
 | XAsValue
 | XDefault
+| XExtend
+| XMetainfoForUnbound
 ;
 
 XOmitAsNull:
@@ -1521,13 +1555,26 @@ XAsValue:
 ;
 
 XDefault:
-  XKWdefault XOptSpaces XJsonValueStart XJsonValue XJsonValueEnd { jsonstruct->default_value = mcopystr($4); }
-| XKWdefault XOptSpaces XJsonValueStart XJsonValueEnd { jsonstruct->default_value = mcopystr(""); }
+  XKWdefault XOptSpaces XJsonValue { jsonstruct->default_value = mcopystr($3); }
+;
+
+XExtend:
+  XKWextend XOptSpaces XJsonValue XOptSpaces ':' XOptSpaces XJsonValue
+  { jsonstruct->schema_extensions.add(new JsonSchemaExtension($3, $7)); }
 ;
 
 XJsonValue:
-  XJsonValue XJsonValueSegment { $$ = mcopystr($1); $$ = mputstr($$, $2); }
-| XJsonValueSegment            { $$ = mcopystr($1); }
+  XJsonValueStart XJsonValueCore XJsonValueEnd { $$ = mcopystr($2); }
+| XJsonValueStart XJsonValueEnd                { $$ = mcopystr(""); }
+;
+
+XJsonValueCore:
+  XJsonValueCore XJsonValueSegment { $$ = mcopystr($1); $$ = mputstr($$, $2); }
+| XJsonValueSegment                { $$ = mcopystr($1); }
+;
+
+XMetainfoForUnbound:
+  XKWmetainfo XOptSpaces XKWfor XOptSpaces XKWunbound { jsonstruct->metainfo_unbound = true; }
 ;
 
 XOptSpaces:

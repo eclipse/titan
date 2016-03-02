@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -180,7 +180,8 @@ namespace Common {
       CT_RAW,   /**< TTCN-3 RAW */
       CT_TEXT,  /**< TTCN-3 TEXT */
       CT_XER,    /**< ASN.1 XER */
-      CT_JSON   /**< TTCN-3 JSON */
+      CT_JSON,   /**< TTCN-3 JSON */
+      CT_CUSTOM /**< user defined encoding */
     };
 
     /** selector for value checking algorithms */
@@ -244,7 +245,7 @@ namespace Common {
     static const char *get_encoding_name(MessageEncodingType_t encoding_type);
     /** Returns a pool type that represents the encoded stream of the given
      * \a encoding_type. */
-    static Type *get_stream_type(MessageEncodingType_t encoding_type);
+    static Type *get_stream_type(MessageEncodingType_t encoding_type, int stream_variant=0);
 
     enum truth {
       No, Maybe, Yes
@@ -548,10 +549,13 @@ namespace Common {
      *  \p p_right_chain are there to prevent infinite recursion.
      *  \p p_left_chain contains the type chain of the left operand from the
      *  "root" type to this point in the type's structure.  \p p_right_chain
-     *  is the same for the right operand.  */
+     *  is the same for the right operand.
+     * \p p_is_inline_template indicates that the conversion is requested for an
+     * inline template. Type conversion code is not needed in this case. */
     bool is_compatible(Type *p_type, TypeCompatInfo *p_info,
                        TypeChain *p_left_chain = NULL,
-                       TypeChain *p_right_chain = NULL);
+                       TypeChain *p_right_chain = NULL,
+                       bool p_is_inline_template = false);
     /** Check if the restrictions of a T_SEQOF/T_SETOF are "compatible" with
      *  the given type \a p_type.  Can be called only as a T_SEQOF/T_SETOF.
      *  Currently, used for structured types only.  \a p_type can be any kind
@@ -572,25 +576,33 @@ namespace Common {
      *  \p p_right_chain are there to prevent infinite recursion.
      *  \p p_left_chain contains the type chain of the left operand from the
      *  "root" type to this point in the type's structure.  \p p_right_chain
-     *  is the same for the right operand.  */
+     *  is the same for the right operand. 
+     *  \p p_is_inline_template indicates that the conversion is requested for an
+     *  inline template. Type conversion code is not needed in this case. */
     bool is_compatible_record(Type *p_type, TypeCompatInfo *p_info,
                               TypeChain *p_left_chain = NULL,
-                              TypeChain *p_right_chain = NULL);
+                              TypeChain *p_right_chain = NULL,
+                              bool p_is_inline_template = false);
     bool is_compatible_record_of(Type *p_type, TypeCompatInfo *p_info,
                                  TypeChain *p_left_chain = NULL,
-                                 TypeChain *p_right_chain = NULL);
+                                 TypeChain *p_right_chain = NULL,
+                                 bool p_is_inline_template = false);
     bool is_compatible_set(Type *p_type, TypeCompatInfo *p_info,
                            TypeChain *p_left_chain = NULL,
-                           TypeChain *p_right_chain = NULL);
+                           TypeChain *p_right_chain = NULL,
+                           bool p_is_inline_template = false);
     bool is_compatible_set_of(Type *p_type, TypeCompatInfo *p_info,
                               TypeChain *p_left_chain = NULL,
-                              TypeChain *p_right_chain = NULL);
+                              TypeChain *p_right_chain = NULL,
+                              bool p_is_inline_template = false);
     bool is_compatible_array(Type *p_type, TypeCompatInfo *p_info,
                              TypeChain *p_left_chain = NULL,
-                             TypeChain *p_right_chain = NULL);
+                             TypeChain *p_right_chain = NULL,
+                             bool p_is_inline_template = false);
     bool is_compatible_choice_anytype(Type *p_type, TypeCompatInfo *p_info,
                                       TypeChain *p_left_chain = NULL,
-                                      TypeChain *p_right_chain = NULL);
+                                      TypeChain *p_right_chain = NULL,
+                                      bool p_is_inline_template = false);
   public:
     /** Returns whether this type is identical to \a p_type from TTCN-3 point
      *  of view.  Note: This relation is symmetric.  The function returns true
@@ -607,7 +619,10 @@ namespace Common {
     /** Returns true if this is a list type (string, rec.of, set.of or array */
     bool is_list_type(bool allow_array);
 
-    void chk_coding(bool encode);
+    /** Sets the encoding or decoding function for the type (in case of custom
+      * encoding). */
+    void set_coding_function(bool encode, const string& function_name);
+    void chk_coding(bool encode, bool delayed = false);
     bool is_coding_by_function() const;
     const string& get_coding(bool encode) const;
   private:
@@ -961,13 +976,13 @@ namespace Common {
     bool hasVariantAttrs();
     /** Returns whether the type has the encoding attribute specified by
       * the parameter (either in its own 'with' statement or in the module's) */
-    bool hasEncodeAttr(const MessageEncodingType_t encoding_type);
+    bool hasEncodeAttr(const char* encoding_name);
     /** Returns whether \a this can be encoded according to rules
      * \a p_encoding.
      * @note Should be called only during code generation, after the entire
      * AST has been checked, or else the compiler might choke on code like:
      * type MyRecordOfType[-] ElementTypeAlias; */
-    bool has_encoding(const MessageEncodingType_t encoding_type);
+    bool has_encoding(const MessageEncodingType_t encoding_type, const string* custom_encoding = NULL);
     /** Generates the C++ equivalent class(es) of the type. */
     void generate_code(output_struct *target);
     size_t get_codegen_index(size_t index);
@@ -1017,6 +1032,10 @@ namespace Common {
         otherwise returns false.  **/
     bool ispresent_anyvalue_embedded_field(Type* t,
       Ttcn::FieldOrArrayRefs *subrefs, size_t begin_index);
+    
+    /** Returns true if the C++ class for this type has already been pre-generated
+      * or false if it still needs to be generated */
+    bool is_pregenerated();
   public:
     /** Generates type specific call for the reference used in isbound call
      * into argument \a expr. Argument \a subrefs holds the reference path
@@ -1165,6 +1184,12 @@ namespace Common {
     /** Generates a reference to this type's schema segment and inserts it into
       * the given schema. */
     void generate_json_schema_ref(JSON_Tokenizer& json);
+    
+    JsonAST* get_json_attributes() const { return jsonattrib; }
+    
+    /** Returns true if the type is a union with the JSON "as value" attribute, or
+      * if a union with this attribute is embedded in the type. */
+    bool has_as_value_union();
   };
 
   /** @} end of AST_Type group */

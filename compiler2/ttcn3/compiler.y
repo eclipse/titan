@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -706,6 +706,7 @@ static const string anyname("anytype");
 %token TitanSpecificTryKeyword
 %token TitanSpecificCatchKeyword
 %token TitanSpecificLazyKeyword
+%token TitanSpecificProfilerKeyword
 
 /* Keywords combined with a leading dot */
 
@@ -755,6 +756,7 @@ static const string anyname("anytype");
 %token hex2strKeyword
 %token int2bitKeyword
 %token int2charKeyword
+%token int2enumKeyword
 %token int2floatKeyword
 %token int2hexKeyword
 %token int2octKeyword
@@ -900,7 +902,7 @@ static const string anyname("anytype");
   StartTimerStatement StopExecutionStatement StopStatement StopTCStatement
   StopTimerStatement TimeoutStatement TimerStatements TriggerStatement
   UnmapStatement VerdictStatements WhileStatement SelectCaseConstruct
-  StopTestcaseStatement String2TtcnStatement
+  StopTestcaseStatement String2TtcnStatement ProfilerStatement int2enumStatement
 %type <statementblock> StatementBlock optElseClause FunctionStatementOrDefList
   ControlStatementOrDefList ModuleControlBody
 %type <subtypeparse> ValueOrRange
@@ -940,7 +942,7 @@ static const string anyname("anytype");
   PredefinedValue ReadTimerOp ReferOp ReferencedValue RunningOp RunningTimerOp
   SelfOp SingleExpression SingleLowerBound SystemOp TemplateOps TimerOps
   TimerValue UpperBound Value ValueofOp VerdictOps VerdictValue optReplyValue
-  optTestcaseTimerValue optToClause
+  optTestcaseTimerValue optToClause ProfilerRunningOp
 %type <values> ArrayElementExpressionList seqArrayExpressionSpec
 %type <variableentries> VariableList
 %type <variableentry> VariableEntry
@@ -1147,6 +1149,7 @@ IDentifier
 IdentifierOrAddressKeyword
 ImportFromSpec
 InLineTemplate
+int2enumStatement
 IntegerValue
 InterleavedConstruct
 InterleavedGuardElement
@@ -1204,6 +1207,8 @@ PortType
 PredefOrIdentifier
 PredefinedOps
 PredefinedValue
+ProfilerRunningOp
+ProfilerStatement
 RaiseStatement
 Range
 ReadTimerOp
@@ -1711,20 +1716,20 @@ optRunsOnComprefOrSelf
 %left '*' '/' ModKeyword RemKeyword
 %left UnarySign
 
-%expect 24
+%expect 26
 
 %start GrammarRoot
 
 /*
-XXX Source of conflicts (24 S/R):
+XXX Source of conflicts (26 S/R):
 
-1.) 8 conflicts in one state
+1.) 9 conflicts in one state
 The Expression after 'return' keyword is optional in ReturnStatement.
-For 8 tokens the parser cannot decide whether the token is a part of
+For 9 tokens the parser cannot decide whether the token is a part of
 the return expression (shift) or it is the beginning of the next statement
 (reduce).
 
-2.) 8 distinct states, each with one conflict caused by token '['
+2.) 9 distinct states, each with one conflict caused by token '['
 The local definitions in altsteps can be followed immediately by the guard
 expression. When the parser sees the '[' token it cannot decide whether it
 belongs to the local definition as array dimension or array subreference
@@ -1738,6 +1743,7 @@ The situations are the following:
 - var t v <here> [
 - var t v := ref.objid{...}.subref <here> [
 - var template t v <here> [
+- var t v := function(...)<subrefs> <here> [
 
 3.) 1 conflict
 The sequence identifier.objid can be either the beginning of a module name
@@ -1755,10 +1761,7 @@ non-standard language extension.
 6.) 1 Conflict due to pattern concatenation
 
 Note that the parser implemented by bison always chooses to shift instead of
-reduce in case of conflicts. This is the desired behaviour in situations 1.),
-2.) and 4.) since the opposite alternative can be forced by the correct usage
-of semi-colons. Situation 3.) does not cause any problems as anytype is not
-supported at the moment.
+reduce in case of conflicts.
 */
 
 %%
@@ -3910,6 +3913,8 @@ FunctionStatement: // 180
 | SUTStatements {$$=$1;}
 | StopExecutionStatement { $$ = $1; }
 | StopTestcaseStatement { $$ = $1; }
+| ProfilerStatement { $$ = $1; }
+| int2enumStatement { $$ = $1; }
 ;
 
 FunctionInstance: /* refpard */ // 181
@@ -5078,6 +5083,8 @@ ControlStatement: /* Statement *stmt */ // 295
 | BehaviourStatements { $$ = $1; }
 | SUTStatements { $$ = $1; }
 | StopExecutionStatement { $$ = $1; }
+| ProfilerStatement { $$ = $1; }
+| int2enumStatement { $$ = $1; }
 ;
 
 /* A.1.6.2.1 Variable instantiation */
@@ -7538,6 +7545,40 @@ StopTestcaseStatement:
   }
 ;
 
+  /* these deliberately don't have their locations set */
+ProfilerStatement:
+  TitanSpecificProfilerKeyword DotStartKeyword
+  {
+    $$ = new Statement(Statement::S_START_PROFILER);
+  }
+| TitanSpecificProfilerKeyword DotStopKeyword
+  {
+    $$ = new Statement(Statement::S_STOP_PROFILER);
+  }
+;
+
+int2enumStatement:
+  int2enumKeyword '(' optError Expression optError ',' optError Reference optError ')'
+  {
+    Ttcn::Reference* out_ref;
+    if ($8.is_ref) out_ref = $8.ref;
+    else {
+      out_ref = new Ttcn::Reference($8.id);
+      out_ref->set_location(infile, @8);
+    }
+    $$ = new Statement(Statement::S_INT2ENUM, $4, out_ref);
+    $$->set_location(infile, @$);
+  }
+;
+
+ProfilerRunningOp:
+  TitanSpecificProfilerKeyword DotRunningKeyword
+  {
+    $$ = new Value(Value::OPTYPE_PROF_RUNNING);
+    $$->set_location(infile, @$);
+  }
+;
+
 ReturnStatement: // 552
   ReturnKeyword
   {
@@ -8315,8 +8356,10 @@ OpCall: // 611
     else $$ = new Value(Value::V_ERROR);
     $$->set_location(infile, @$);
   }
-| FunctionInstance
+| FunctionInstance optExtendedFieldReference
   {
+    for (size_t i = 0; i < $2.nElements; i++) $1->add($2.elements[i]);
+    Free($2.elements);
     $$ = new Value(Value::V_REFD, $1);
     $$->set_location(infile, @$);
   }
@@ -8336,6 +8379,7 @@ OpCall: // 611
     else $$ = new Value(Value::V_ERROR);
     $$->set_location(infile, @$);
   }
+| ProfilerRunningOp { $$ = $1; }
 ;
 
 PredefinedOps:
@@ -8625,6 +8669,10 @@ PredefOrIdentifier:
     const string& at_field = anytype_field(string(builtin_typename));
 
     $$ = new Identifier(Identifier::ID_TTCN, at_field);
+  }
+| NullValue
+  {
+    $$ = new Identifier(Identifier::ID_NAME, string("NULL"));
   }
 
 IschosenArg: /* see also Reference... */

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
 // Author:                Janos Zoltan Szabo
 // mail:                  tmpjsz@eth.ericsson.se
 //
-// Copyright Ericsson Telecom AB 2000-2014
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 //
 //----------------------------------------------------------------------------
 
@@ -121,6 +121,7 @@ void MainController::add_poll_fd(int fd)
 {
   if (fd < 0) return;
   epoll_event event;
+  memset(&event,0,sizeof(event));
   event.events = EPOLLIN;
   event.data.fd = fd;
   if (epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &event) < 0)
@@ -132,6 +133,7 @@ void MainController::remove_poll_fd(int fd)
 {
   if (fd < 0) return;
   epoll_event event;
+  memset(&event,0,sizeof(event));
   event.events = EPOLLIN;
   event.data.fd = fd;
   if (epoll_ctl(epfd, EPOLL_CTL_DEL, fd, &event) < 0)

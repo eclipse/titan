@@ -1,5 +1,5 @@
 .******************************************************************************
-.* Copyright (c) 2000-2014 Ericsson Telecom AB
+.* Copyright (c) 2000-2015 Ericsson Telecom AB
 .* All rights reserved. This program and the accompanying materials
 .* are made available under the terms of the Eclipse Public License v1.0
 .* which accompanies this distribution, and is available at
@@ -16,9 +16,9 @@
 :docname.Test Description
 :docno.17/152 91-CRL 113 200/3 Uen
 :rev.A
-:date.2013-01-17
+:date.2015-04-27
 
-:prep.ETH/XZR Krisztian Pandi
+:prep.ETH/XZ Jeno Balasko
 :appr.ETH/XZ (Gyula Koos)
 :checked.EKRISZA
 
@@ -2135,7 +2135,7 @@ template recT r:={
 	f3:= "aiyyo"
 }
 
-template recT f modifies r:= ({ f1:= 1, f2:= 0.9 }, omit);
+template recT f modifies r:= ({ f1:= 1, f2:= 0.9 }, { f1 := 1, f2 := 0.9, f3 := "pppp" });
 
 }
 <END_MODULE>
@@ -2170,7 +2170,7 @@ template recT r:={
 	f3:= "aiyyo"
 }
 
-template recT f modifies r:= complement({ f1:= 1, f2:= 0.9 }, omit);
+template recT f modifies r:= complement({ f1:= 1, f2:= 0.9 }, { f1:= 1, f2:= 0.9, f3 := "pppp" });
 
 }
 <END_MODULE>
@@ -4032,7 +4032,7 @@ type charstring myCharType length( float2int(rnd()) );
 }
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)error.+?evaluatable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
+(?im)error.+?evaluable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
 <END_RESULT>
 <RESULT IF_PASS COUNT 1>
 (?im)\bNotify\b.+?\bcode\b.+?\bnot\b.+?\bgenerated\b
@@ -4094,7 +4094,7 @@ type charstring myCharType length( float2int(rnd()) .. 5 );
 }
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)error.+?evaluatable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
+(?im)error.+?evaluable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
 <END_RESULT>
 <RESULT IF_PASS COUNT 1>
 (?im)\bNotify\b.+?\bcode\b.+?\bnot\b.+?\bgenerated\b
@@ -4160,7 +4160,7 @@ type charstring myCharType length( float2int(rnd()) .. myFunct());
 }
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)error.+?evaluatable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
+(?im)error.+?evaluable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
 <END_RESULT>
 <RESULT IF_PASS COUNT 1>
 (?im)error.+?Reference.+?constant.+?expected.+?instead
@@ -4192,7 +4192,7 @@ type integer myIntType ( float2int(rnd()) .. 255 );
 }
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)error.+?evaluatable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
+(?im)error.+?evaluable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
 <END_RESULT>
 <RESULT IF_PASS COUNT 1>
 (?im)\bNotify\b.+?\bcode\b.+?\bnot\b.+?\bgenerated\b
@@ -4258,7 +4258,7 @@ type float myIntType ( rnd() .. myFunct() );
 }
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)error.+?evaluatable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
+(?im)error.+?evaluable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
 <END_RESULT>
 <RESULT IF_PASS COUNT 1>
 (?im)error.+?Reference.+?constant.+?expected.+?instead
@@ -4290,7 +4290,7 @@ type integer myIntType ( float2int(rnd()), 255 );
 }
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)error.+?evaluatable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
+(?im)error.+?evaluable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
 <END_RESULT>
 <RESULT IF_PASS COUNT 1>
 (?im)\bNotify\b.+?\bcode\b.+?\bnot\b.+?\bgenerated\b
@@ -4356,7 +4356,7 @@ type float myIntType ( rnd(), 255.0, myFunct() );
 }
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)error.+?evaluatable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
+(?im)error.+?evaluable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
 <END_RESULT>
 <RESULT IF_PASS COUNT 1>
 (?im)error.+?Reference.+?constant.+?expected.+?instead
@@ -6900,7 +6900,7 @@ module x {
 }
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)error.+?evaluatable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
+(?im)error.+?evaluable.+?constant.+?value.+?expected.+?instead.+?of.+?operation
 <END_RESULT>
 <RESULT IF_PASS COUNT 1>
 (?is)\berror:
@@ -16537,7 +16537,7 @@ ConsoleMask := WARNING | ERROR | TESTCASE | STATISTICS
 ModuleA
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)Dynamic test case error: Accessing an element in an unbound value of type @ModuleA.t_recof.
+(?im)Dynamic test case error: Accessing an element in an unbound value of type @PreGenRecordOf.PREGEN_RECORD_OF_INTEGER.
 <END_RESULT>
 <END_TC>
 :exmp.
@@ -16577,7 +16577,7 @@ ConsoleMask := WARNING | ERROR | TESTCASE | STATISTICS
 ModuleA
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)Dynamic test case error: Index overflow in a value of type @ModuleA.t_recof: The index is 10, but the value has only 2 elements.
+(?im)Dynamic test case error: Index overflow in a value of type @PreGenRecordOf.PREGEN_RECORD_OF_INTEGER: The index is 10, but the value has only 2 elements.
 <END_RESULT>
 <END_TC>
 :exmp.
@@ -16617,7 +16617,7 @@ ConsoleMask := WARNING | ERROR | TESTCASE | STATISTICS
 ModuleA
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)Dynamic test case error: Accessing an element in an unbound value of type @ModuleA.t_setof.
+(?im)Dynamic test case error: Accessing an element in an unbound value of type @PreGenRecordOf.PREGEN_SET_OF_INTEGER.
 <END_RESULT>
 <END_TC>
 :exmp.
@@ -16657,7 +16657,7 @@ ConsoleMask := WARNING | ERROR | TESTCASE | STATISTICS
 ModuleA
 <END_MODULE>
 <RESULT IF_PASS COUNT 1>
-(?im)Dynamic test case error: Index overflow in a value of type @ModuleA.t_setof: The index is 10, but the value has only 2 elements.
+(?im)Dynamic test case error: Index overflow in a value of type @PreGenRecordOf.PREGEN_SET_OF_INTEGER: The index is 10, but the value has only 2 elements.
 <END_RESULT>
 <END_TC>
 :exmp.

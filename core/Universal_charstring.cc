@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@
 #include "Logger.hh"
 #include "Encdec.hh"
 #include "Addfunc.hh" // for unichar2int
+#include "TEXT.hh"
 #include <string>
 #include <iostream>
 #include <stdint.h>
@@ -200,7 +201,7 @@ UNIVERSAL_CHARSTRING::UNIVERSAL_CHARSTRING
   other_value.must_bound("Initialization of a universal charstring with an "
     "unbound universal charstring element.");
   if (charstring) {
-    cstr = CHARSTRING(other_value.get_uchar().uc_cell);
+    cstr = CHARSTRING((const char)(other_value.get_uchar().uc_cell));
     val_ptr = NULL;
   } else {
     init_struct(1);
@@ -932,10 +933,14 @@ UNIVERSAL_CHARSTRING UNIVERSAL_CHARSTRING::from_UTF8_buffer(TTCN_Buffer& p_buff)
   }
 }
 
-void UNIVERSAL_CHARSTRING::set_param(Module_Param& param) {
+boolean UNIVERSAL_CHARSTRING::set_param_internal(Module_Param& param, boolean allow_pattern) {
+  boolean is_pattern = FALSE;
   param.basic_check(Module_Param::BC_VALUE|Module_Param::BC_LIST, "universal charstring value");
-  
-  switch (param.get_type()) {
+  Module_Param_Ptr mp = &param;
+  if (param.get_type() == Module_Param::MP_Reference) {
+    mp = param.get_referenced_param();
+  }
+  switch (mp->get_type()) {
   case Module_Param::MP_Charstring: {
     switch (param.get_operation_type()) {
     case Module_Param::OT_ASSIGN:
@@ -943,7 +948,7 @@ void UNIVERSAL_CHARSTRING::set_param(Module_Param& param) {
       // no break
     case Module_Param::OT_CONCAT: {
       TTCN_Buffer buff;
-      buff.put_s(param.get_string_size(), (unsigned char*)param.get_string_data());
+      buff.put_s(mp->get_string_size(), (unsigned char*)mp->get_string_data());
       if (is_bound()) {
         *this = *this + from_UTF8_buffer(buff);
       } else {
@@ -959,60 +964,61 @@ void UNIVERSAL_CHARSTRING::set_param(Module_Param& param) {
     case Module_Param::OT_ASSIGN:
       clean_up();
       // no break
-    case Module_Param::OT_CONCAT: {
-      const Module_Param_Universal_Charstring* ucs_param = dynamic_cast<const Module_Param_Universal_Charstring*>(&param);
-      if (0 != ucs_param) {
-        // The Module_Param_Universal_Charstring class also contains the positions
-        // of all characters added in quadruple form (in char(g,p,r,c) form)
-        // The strings between these positions need to be decoded if they are
-        // in UTF-8 format (the quad characters shouldn't be decoded).
-        int nof_quads = ucs_param->get_nof_quads();
-        universal_char* uchars = (universal_char*)ucs_param->get_string_data();
-        for (int i = 0; i < nof_quads + 1; ++i) {
-          // Each iteration processes the string before a quad and the quad itself
-          // the last iteration processes the string after the last quad
-          // ex.         "ccccccQccccccccQcccccccc" => 2 quads at positions 6 and 15
-          // iterations:  <-1st-><--2nd--><--3rd->  
-          int start_pos = (i == 0) ? 0 : ucs_param->get_quad_pos(i - 1) + 1;
-          int end_pos = (i == nof_quads) ? ucs_param->get_string_size() : ucs_param->get_quad_pos(i);
-          if (end_pos > start_pos) {
-            TTCN_Buffer buff;
-            for (int j = start_pos; j < end_pos; ++j) {
-              buff.put_c(uchars[j].uc_cell);
-            }
-            if (is_bound()) {
-              // Add the string before the quad character
-              *this = *this + from_UTF8_buffer(buff);
-            } else {
-              *this = from_UTF8_buffer(buff);
-            }
-          }
-          if (i != nof_quads) {
-            // Add the quad character itself
-            if (is_bound()) {
-              *this = *this + uchars[end_pos];
-            } else {
-              *this = UNIVERSAL_CHARSTRING(uchars[end_pos]);
-            }
-          }
-        }
+    case Module_Param::OT_CONCAT:
+      if (is_bound()) {
+        *this = *this + UNIVERSAL_CHARSTRING(mp->get_string_size(), (universal_char*)mp->get_string_data());
       } else {
-        // plan B (should never happen)
-        if (is_bound()) {
-          *this = *this + UNIVERSAL_CHARSTRING(param.get_string_size(), (universal_char*)param.get_string_data());
-        } else {
-          init_struct(param.get_string_size());
-          memcpy(val_ptr->uchars_ptr, param.get_string_data(), val_ptr->n_uchars * sizeof(universal_char));
-        }
+        *this = UNIVERSAL_CHARSTRING(mp->get_string_size(), (universal_char*)mp->get_string_data());
       }
-      break; }
+      break;
     default:
       TTCN_error("Internal error: UNIVERSAL_CHARSTRING::set_param()");
     }
     break; }
+  case Module_Param::MP_Expression:
+    if (mp->get_expr_type() == Module_Param::EXPR_CONCATENATE) {
+      UNIVERSAL_CHARSTRING operand1, operand2;
+      is_pattern = operand1.set_param_internal(*mp->get_operand1(), allow_pattern);
+      operand2.set_param(*mp->get_operand2());
+      if (param.get_operation_type() == Module_Param::OT_CONCAT) {
+        *this = *this + operand1 + operand2;
+      }
+      else {
+        *this = operand1 + operand2;
+      }
+    }
+    else {
+      param.expr_type_error("a universal charstring");
+    }
+    break;
+  case Module_Param::MP_Pattern:
+    if (allow_pattern) {
+      *this = CHARSTRING(mp->get_pattern());
+      is_pattern = TRUE;
+      break;
+    }
+    // else fall through
   default:
     param.type_error("universal charstring value");
   }
+  return is_pattern;
+}
+
+void UNIVERSAL_CHARSTRING::set_param(Module_Param& param) {
+  set_param_internal(param, FALSE);
+}
+
+Module_Param* UNIVERSAL_CHARSTRING::get_param(Module_Param_Name& param_name) const
+{
+  if (!is_bound()) {
+    return new Module_Param_Unbound();
+  }
+  if (charstring) {
+    return cstr.get_param(param_name);
+  }
+  universal_char* val_cpy = (universal_char*)Malloc(val_ptr->n_uchars * sizeof(universal_char));
+  memcpy(val_cpy, val_ptr->uchars_ptr, val_ptr->n_uchars * sizeof(universal_char));
+  return new Module_Param_Universal_Charstring(val_ptr->n_uchars, val_cpy);
 }
 
 void UNIVERSAL_CHARSTRING::encode_text(Text_Buf& text_buf) const
@@ -1068,6 +1074,13 @@ void UNIVERSAL_CHARSTRING::encode(const TTCN_Typedescriptor_t& p_td,
     TTCN_EncDec_ErrorContext::error_internal
       ("No RAW descriptor available for type '%s'.", p_td.name);
     break;}
+  case TTCN_EncDec::CT_TEXT: {
+    TTCN_EncDec_ErrorContext ec("While TEXT-encoding type '%s': ", p_td.name);
+    if(!p_td.text)
+      TTCN_EncDec_ErrorContext::error_internal
+        ("No TEXT descriptor available for type '%s'.", p_td.name);
+    TEXT_encode(p_td,p_buf);
+    break;}
   case TTCN_EncDec::CT_XER: {
     TTCN_EncDec_ErrorContext ec("While XER-encoding type '%s': ", p_td.name);
     unsigned XER_coding=va_arg(pvar, unsigned);
@@ -1116,6 +1129,24 @@ void UNIVERSAL_CHARSTRING::decode(const TTCN_Typedescriptor_t& p_td,
     TTCN_EncDec_ErrorContext ec("While RAW-decoding type '%s': ", p_td.name);
     TTCN_EncDec_ErrorContext::error_internal
       ("No RAW descriptor available for type '%s'.", p_td.name);
+    break;}
+  case TTCN_EncDec::CT_TEXT: {
+    Limit_Token_List limit;
+    TTCN_EncDec_ErrorContext ec("While TEXT-decoding type '%s': ", p_td.name);
+    if(!p_td.text)
+      TTCN_EncDec_ErrorContext::error_internal
+        ("No TEXT descriptor available for type '%s'.", p_td.name);
+    const unsigned char *b=p_buf.get_data();
+    if(b[p_buf.get_len()-1]!='\0'){
+      p_buf.set_pos(p_buf.get_len());
+      p_buf.put_zero(8,ORDER_LSB);
+      p_buf.rewind();
+    }
+    if(TEXT_decode(p_td,p_buf,limit)<0)
+      ec.error(TTCN_EncDec::ET_INCOMPL_MSG,
+               "Can not decode type '%s', because invalid or incomplete"
+               " message was received"
+               , p_td.name);
     break;}
   case TTCN_EncDec::CT_XER : {
     unsigned XER_coding=va_arg(pvar, unsigned);
@@ -1199,6 +1230,198 @@ UNIVERSAL_CHARSTRING::BER_encode_TLV(const TTCN_Typedescriptor_t& p_td,
   }
   new_tlv=ASN_BER_V2TLV(new_tlv, p_td, p_coding);
   return new_tlv;
+}
+int UNIVERSAL_CHARSTRING::TEXT_decode(const TTCN_Typedescriptor_t& p_td,
+  TTCN_Buffer& buff, Limit_Token_List& limit, boolean no_err, boolean /*first_call*/)
+{
+  int decoded_length = 0;
+  int str_len = 0;
+  clean_up();
+  if (p_td.text->begin_decode) {
+    int tl;
+    if ((tl = p_td.text->begin_decode->match_begin(buff)) < 0) {
+      if (no_err) return -1;
+      TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_TOKEN_ERR,
+        "The specified token '%s' not found for '%s': ",
+        (const char*) *(p_td.text->begin_decode), p_td.name);
+      return 0;
+    }
+    decoded_length += tl;
+    buff.increase_pos(tl);
+  }
+  //  never return "not enough bits"
+  //  if(buff.get_read_len()<=1 && no_err) return -TTCN_EncDec::ET_LEN_ERR;
+
+  if (p_td.text->select_token) {
+    int tl;
+    if ((tl = p_td.text->select_token->match_begin(buff)) < 0) {
+      if (no_err) return -1;
+      else tl = 0;
+    }
+    str_len = tl;
+  }
+  // The length restriction needs some more work
+/*  else if (   p_td.text->val.parameters
+    &&        p_td.text->val.parameters->decoding_params.min_length != -1) {
+    str_len = p_td.text->val.parameters->decoding_params.min_length;
+  }*/
+  else if (p_td.text->end_decode) {
+    int tl;
+    if ((tl = p_td.text->end_decode->match_first(buff)) < 0) {
+      if (no_err) return -1;
+      else tl = 0;
+    }
+    str_len = tl;
+  }
+  else if (limit.has_token()) {
+    int tl;
+    if ((tl = limit.match(buff)) < 0) tl = buff.get_read_len() - 1;
+    str_len = tl;
+  }
+  else {
+    str_len = buff.get_read_len() - 1;
+  }
+
+// only utf8 is supported now.
+  decode_utf8(str_len,buff.get_read_data());
+
+  decoded_length += str_len;
+  buff.increase_pos(str_len);
+
+// Case conversion is an another study
+// and it is locale dependent
+/*  if (  p_td.text->val.parameters
+    &&  p_td.text->val.parameters->decoding_params.convert != 0) {
+    if (p_td.text->val.parameters->decoding_params.convert == 1) {
+      for (int a = 0; a < str_len; a++) {
+        val_ptr->chars_ptr[a] = toupper(val_ptr->chars_ptr[a]);
+      }
+    }
+    else {
+      for (int a = 0; a < str_len; a++) {
+        val_ptr->chars_ptr[a] = tolower(val_ptr->chars_ptr[a]);
+      }
+    }
+  }*/
+  if (p_td.text->end_decode) {
+    int tl;
+    if ((tl = p_td.text->end_decode->match_begin(buff)) < 0) {
+      if (no_err) return -1;
+      TTCN_EncDec_ErrorContext::error(TTCN_EncDec::ET_TOKEN_ERR,
+        "The specified token '%s' not found for '%s': ",
+        (const char*) *(p_td.text->end_decode), p_td.name);
+      return 0;
+    }
+    decoded_length += tl;
+    buff.increase_pos(tl);
+  }
+  return decoded_length;
+}
+
+int UNIVERSAL_CHARSTRING::TEXT_encode(const TTCN_Typedescriptor_t& p_td,
+                 TTCN_Buffer& buff) const{
+  int encoded_length=0;
+  if(p_td.text->begin_encode){
+    buff.put_cs(*p_td.text->begin_encode);
+    encoded_length+=p_td.text->begin_encode->lengthof();
+  }
+  if(!is_bound()) {
+    TTCN_EncDec_ErrorContext::error
+      (TTCN_EncDec::ET_UNBOUND, "Encoding an unbound value.");
+    if(p_td.text->end_encode){
+      buff.put_cs(*p_td.text->end_encode);
+      encoded_length+=p_td.text->end_encode->lengthof();
+    }
+    return encoded_length;
+  }
+
+// The length restriction and case conversion will be added later
+//  if(p_td.text->val.parameters==NULL){
+
+    int base_size=buff.get_len(); // strore the current length of the data 
+                                   // in the buffer
+    
+    encode_utf8(buff);
+    
+    encoded_length+=buff.get_len()-base_size;  // calculate the number of the
+                                               // stored octets
+
+/*  } else {
+    int chars_before=0;
+    int chars_after=0;
+    if(val_ptr->n_chars<p_td.text->val.parameters->coding_params.min_length){
+      switch(p_td.text->val.parameters->coding_params.just){
+        case -1: //left
+          chars_after=p_td.text->
+              val.parameters->coding_params.min_length-val_ptr->n_chars;
+          break;
+        case 0:{  // center
+          int pad=p_td.text->
+              val.parameters->coding_params.min_length-val_ptr->n_chars;
+          chars_after=pad/2;
+          chars_before=pad-chars_after;
+          break;
+          }
+        case 1:  // right
+        default:
+          chars_before=p_td.text->
+              val.parameters->coding_params.min_length-val_ptr->n_chars;
+          break;
+      }
+    }
+    if(chars_before){
+      unsigned char* p=NULL;
+      size_t len=chars_before;
+      buff.get_end(p,len);
+      for(int a=0;a<chars_before;a++) p[a]=(unsigned char)' ';
+      buff.increase_length(chars_before);
+      encoded_length+=chars_before;
+    }
+
+    switch(p_td.text->val.parameters->coding_params.convert){
+      case -1:{ //lower_case
+        unsigned char* p=NULL;
+        size_t len=val_ptr->n_chars;
+        buff.get_end(p,len);
+        for(int a=0;a<val_ptr->n_chars;a++)
+            p[a]=(unsigned char)tolower(val_ptr->chars_ptr[a]);
+        buff.increase_length(val_ptr->n_chars);
+        break;
+        }
+      case 0:{  // no conversion
+        buff.put_cs(*this);
+        break;
+        }
+      case 1:  // upper_case
+      default:
+        {
+        unsigned char* p=NULL;
+        size_t len=val_ptr->n_chars;
+        buff.get_end(p,len);
+        for(int a=0;a<val_ptr->n_chars;a++)
+            p[a]=(unsigned char)toupper(val_ptr->chars_ptr[a]);
+        buff.increase_length(val_ptr->n_chars);
+        break;
+        }
+    }
+    encoded_length+=val_ptr->n_chars;
+
+    if(chars_after){
+      unsigned char* p=NULL;
+      size_t len=chars_after;
+      buff.get_end(p,len);
+      for(int a=0;a<chars_after;a++) p[a]=(unsigned char)' ';
+      buff.increase_length(chars_after);
+      encoded_length+=chars_after;
+    }
+  }
+*/
+
+  if(p_td.text->end_encode){
+    buff.put_cs(*p_td.text->end_encode);
+    encoded_length+=p_td.text->end_encode->lengthof();
+  }
+  return encoded_length;
 }
 
 void UNIVERSAL_CHARSTRING::encode_utf8(TTCN_Buffer& buf, bool addBOM /*= false*/) const
@@ -1414,6 +1637,14 @@ int UNIVERSAL_CHARSTRING::encode_raw(TTCN_Buffer& p_buf) const
   size_t len_before = p_buf.get_len();
   encode_utf8(p_buf);
   return p_buf.get_len() - len_before;
+}
+
+int UNIVERSAL_CHARSTRING::JSON_encode_negtest_raw(JSON_Tokenizer& p_tok) const
+{
+  TTCN_Buffer tmp_buf;
+  encode_utf8(tmp_buf);
+  p_tok.put_raw_data((const char*)tmp_buf.get_data(), tmp_buf.get_len());
+  return tmp_buf.get_len();
 }
 #endif
 
@@ -2214,7 +2445,9 @@ void UNIVERSAL_CHARSTRING::decode_utf8(int n_octets,
     // count all octets except the continuing octets (10xxxxxx)
     if ((octets_ptr[i] & 0xC0) != 0x80) n_uchars++;
   }
-  // allocate enough memory
+  // allocate enough memory, start from clean state
+  clean_up();
+  charstring=false;
   init_struct(n_uchars);
   n_uchars = 0;
 
@@ -2676,22 +2909,13 @@ UNIVERSAL_CHARSTRING_ELEMENT& UNIVERSAL_CHARSTRING_ELEMENT::operator=
 {
   other_value.must_bound("Assignment of an unbound universal charstring value "
     "to a universal charstring element.");
-  if (other_value.val_ptr->n_uchars != 1)
+  int other_value_size = other_value.charstring ? other_value.cstr.val_ptr->n_chars :
+    other_value.val_ptr->n_uchars;
+  if (other_value_size != 1)
     TTCN_error("Assignment of a universal charstring value with length other "
       "than 1 to a universal charstring element.");
   bound_flag = TRUE;
-  const universal_char& uchar = other_value.val_ptr->uchars_ptr[0];
-  if (str_val.charstring) {
-    if (uchar.is_char())
-      str_val.cstr.val_ptr->chars_ptr[uchar_pos] = uchar.uc_cell;
-    else {
-      str_val.convert_cstr_to_uni();
-      str_val.val_ptr->uchars_ptr[uchar_pos] = uchar;
-    }
-  } else {
-    str_val.copy_value();
-    str_val.val_ptr->uchars_ptr[uchar_pos] = uchar;
-  }
+  *this = other_value[0];
   return *this;
 }
 
@@ -3589,7 +3813,7 @@ const UNIVERSAL_CHARSTRING_ELEMENT UNIVERSAL_CHARSTRING_template::operator[](con
 }
 
 boolean UNIVERSAL_CHARSTRING_template::match
-  (const UNIVERSAL_CHARSTRING& other_value) const
+  (const UNIVERSAL_CHARSTRING& other_value, boolean /* legacy */) const
 {
   if (!other_value.is_bound()) return FALSE;
   int value_length = other_value.lengthof();
@@ -3850,7 +4074,7 @@ void UNIVERSAL_CHARSTRING_template::log() const
 }
 
 void UNIVERSAL_CHARSTRING_template::log_match
-  (const UNIVERSAL_CHARSTRING& match_value) const
+  (const UNIVERSAL_CHARSTRING& match_value, boolean /* legacy */) const
 {
   if (TTCN_Logger::VERBOSITY_COMPACT == TTCN_Logger::get_matching_verbosity()
   &&  TTCN_Logger::get_logmatch_buffer_len() != 0) {
@@ -3866,7 +4090,11 @@ void UNIVERSAL_CHARSTRING_template::log_match
 
 void UNIVERSAL_CHARSTRING_template::set_param(Module_Param& param) {
   param.basic_check(Module_Param::BC_TEMPLATE|Module_Param::BC_LIST, "universal charstring template");
-  switch (param.get_type()) {
+  Module_Param_Ptr mp = &param;
+  if (param.get_type() == Module_Param::MP_Reference) {
+    mp = param.get_referenced_param();
+  }
+  switch (mp->get_type()) {
   case Module_Param::MP_Omit:
     *this = OMIT_VALUE;
     break;
@@ -3877,21 +4105,24 @@ void UNIVERSAL_CHARSTRING_template::set_param(Module_Param& param) {
     *this = ANY_OR_OMIT;
     break;
   case Module_Param::MP_List_Template:
-  case Module_Param::MP_ComplementList_Template:
-    set_type(param.get_type()==Module_Param::MP_List_Template ? VALUE_LIST : COMPLEMENTED_LIST, param.get_size());
-    for (size_t i=0; i<param.get_size(); i++) {
-      list_item(i).set_param(*param.get_elem(i));
+  case Module_Param::MP_ComplementList_Template: {
+    UNIVERSAL_CHARSTRING_template temp;
+    temp.set_type(mp->get_type() == Module_Param::MP_List_Template ?
+      VALUE_LIST : COMPLEMENTED_LIST, mp->get_size());
+    for (size_t i=0; i<mp->get_size(); i++) {
+      temp.list_item(i).set_param(*mp->get_elem(i));
     }
-    break;
+    *this = temp;
+    break; }
   case Module_Param::MP_Charstring:
-    *this = CHARSTRING(param.get_string_size(), (char*)param.get_string_data());
+    *this = CHARSTRING(mp->get_string_size(), (char*)mp->get_string_data());
     break;
   case Module_Param::MP_Universal_Charstring:
-    *this = UNIVERSAL_CHARSTRING(param.get_string_size(), (universal_char*)param.get_string_data());
+    *this = UNIVERSAL_CHARSTRING(mp->get_string_size(), (universal_char*)mp->get_string_data());
     break;
   case Module_Param::MP_StringRange: {
-    universal_char lower_uchar = param.get_lower_uchar();
-    universal_char upper_uchar = param.get_upper_uchar();
+    universal_char lower_uchar = mp->get_lower_uchar();
+    universal_char upper_uchar = mp->get_upper_uchar();
     clean_up();
     set_selection(VALUE_RANGE);
     value_range.min_is_set = TRUE;
@@ -3901,15 +4132,92 @@ void UNIVERSAL_CHARSTRING_template::set_param(Module_Param& param) {
   } break;
   case Module_Param::MP_Pattern:
     clean_up();
-    pattern_string = new CHARSTRING(param.get_pattern());
+    pattern_string = new CHARSTRING(mp->get_pattern());
     pattern_value.regexp_init = FALSE;
     set_selection(STRING_PATTERN);
+    break;
+  case Module_Param::MP_Expression:
+    if (mp->get_expr_type() == Module_Param::EXPR_CONCATENATE) {
+      UNIVERSAL_CHARSTRING operand1, operand2, result;
+      boolean is_pattern = operand1.set_param_internal(*mp->get_operand1(), TRUE);
+      operand2.set_param(*mp->get_operand2());
+      result = operand1 + operand2;
+      if (is_pattern) {
+        clean_up();
+        if (result.charstring) {
+          pattern_string = new CHARSTRING(result.cstr);
+        }
+        else {
+          pattern_string = new CHARSTRING(result.get_stringRepr_for_pattern());
+        }
+        pattern_value.regexp_init = FALSE;
+        set_selection(STRING_PATTERN);
+      }
+      else {
+        *this = result;
+      }
+    }
+    else {
+      param.expr_type_error("a charstring");
+    }
     break;
   default:
     param.type_error("universal charstring template");
   }
-  is_ifpresent = param.get_ifpresent();
-  set_length_range(param);
+  is_ifpresent = param.get_ifpresent() || mp->get_ifpresent();
+  if (param.get_length_restriction() != NULL) {
+    set_length_range(param);
+  }
+  else {
+    set_length_range(*mp);
+  }
+}
+
+Module_Param* UNIVERSAL_CHARSTRING_template::get_param(Module_Param_Name& param_name) const
+{
+  Module_Param* mp = NULL;
+  switch (template_selection) {
+  case UNINITIALIZED_TEMPLATE:
+    mp = new Module_Param_Unbound();
+    break;
+  case OMIT_VALUE:
+    mp = new Module_Param_Omit();
+    break;
+  case ANY_VALUE:
+    mp = new Module_Param_Any();
+    break;
+  case ANY_OR_OMIT:
+    mp = new Module_Param_AnyOrNone();
+    break;
+  case SPECIFIC_VALUE:
+    mp = single_value.get_param(param_name);
+    break;
+  case VALUE_LIST:
+  case COMPLEMENTED_LIST: {
+    if (template_selection == VALUE_LIST) {
+      mp = new Module_Param_List_Template();
+    }
+    else {
+      mp = new Module_Param_ComplementList_Template();
+    }
+    for (size_t i = 0; i < value_list.n_values; ++i) {
+      mp->add_elem(value_list.list_value[i].get_param(param_name));
+    }
+    break; }
+  case VALUE_RANGE:
+    mp = new Module_Param_StringRange(value_range.min_value, value_range.max_value);
+    break;
+  case STRING_PATTERN:
+    mp = new Module_Param_Pattern(mcopystr(*pattern_string));
+    break;
+  default:
+    break;
+  }
+  if (is_ifpresent) {
+    mp->set_ifpresent();
+  }
+  mp->set_length_restriction(get_length_range());
+  return mp;
 }
 
 void UNIVERSAL_CHARSTRING_template::encode_text(Text_Buf& text_buf) const
@@ -3994,13 +4302,13 @@ void UNIVERSAL_CHARSTRING_template::decode_text(Text_Buf& text_buf)
   }
 }
 
-boolean UNIVERSAL_CHARSTRING_template::is_present() const
+boolean UNIVERSAL_CHARSTRING_template::is_present(boolean legacy /* = FALSE */) const
 {
   if (template_selection==UNINITIALIZED_TEMPLATE) return FALSE;
-  return !match_omit();
+  return !match_omit(legacy);
 }
 
-boolean UNIVERSAL_CHARSTRING_template::match_omit() const
+boolean UNIVERSAL_CHARSTRING_template::match_omit(boolean legacy /* = FALSE */) const
 {
   if (is_ifpresent) return TRUE;
   switch (template_selection) {
@@ -4009,10 +4317,14 @@ boolean UNIVERSAL_CHARSTRING_template::match_omit() const
     return TRUE;
   case VALUE_LIST:
   case COMPLEMENTED_LIST:
-    for (unsigned int i=0; i<value_list.n_values; i++)
-      if (value_list.list_value[i].match_omit())
-        return template_selection==VALUE_LIST;
-    return template_selection==COMPLEMENTED_LIST;
+    if (legacy) {
+      // legacy behavior: 'omit' can appear in the value/complement list
+      for (unsigned int i=0; i<value_list.n_values; i++)
+        if (value_list.list_value[i].match_omit())
+          return template_selection==VALUE_LIST;
+      return template_selection==COMPLEMENTED_LIST;
+    }
+    // else fall through
   default:
     return FALSE;
   }
@@ -4021,7 +4333,7 @@ boolean UNIVERSAL_CHARSTRING_template::match_omit() const
 
 #ifndef TITAN_RUNTIME_2
 void UNIVERSAL_CHARSTRING_template::check_restriction(template_res t_res,
-  const char* t_name) const
+  const char* t_name, boolean legacy) const
 {
   if (template_selection==UNINITIALIZED_TEMPLATE) return;
   switch ((t_name&&(t_res==TR_VALUE))?TR_OMIT:t_res) {
@@ -4033,7 +4345,7 @@ void UNIVERSAL_CHARSTRING_template::check_restriction(template_res t_res,
         template_selection==SPECIFIC_VALUE)) return;
     break;
   case TR_PRESENT:
-    if (!match_omit()) return;
+    if (!match_omit(legacy)) return;
     break;
   default:
     return;

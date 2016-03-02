@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@
 #include "../common/version.h"
 #include "CodeGenHelper.hh"
 #include <limits.h>
+#include "ttcn3/profiler.h"
 
 reffer::reffer(const char*) {}
 
@@ -31,6 +32,8 @@ namespace Common {
   // =================================
   // ===== Modules
   // =================================
+  
+  vector<Modules::type_enc_t> Modules::delayed_type_enc_v;
 
   Modules::Modules()
     : Node(), mods_v(), mods_m()
@@ -149,6 +152,14 @@ namespace Common {
 	mods_v[i]->chk_recursive(checked_modules);
     }
     checked_modules.clear();
+    // run delayed Type::chk_coding() calls
+    if (!delayed_type_enc_v.empty()) {
+      for (size_t i = 0; i < delayed_type_enc_v.size(); ++i) {
+        delayed_type_enc_v[i]->t->chk_coding(delayed_type_enc_v[i]->enc, true);
+        delete delayed_type_enc_v[i];
+      }
+      delayed_type_enc_v.clear();
+    }
   }
 
   void Modules::chk_top_level_pdus()
@@ -268,6 +279,14 @@ namespace Common {
     for(size_t i = 0; i < mods_v.size(); ++i) {
       mods_v[i]->generate_json_schema(json, json_refs);
     }
+  }
+  
+  void Modules::delay_type_encode_check(Type* p_type, bool p_encode)
+  {
+    type_enc_t* elem = new type_enc_t;
+    elem->t = p_type;
+    elem->enc = p_encode;
+    delayed_type_enc_v.add(elem);
   }
 
 
@@ -774,7 +793,9 @@ namespace Common {
     }
     // pre_init function
     bool has_pre_init = false;
-    if (output->functions.pre_init) {
+    bool profiled = MOD_TTCN == get_moduletype() && is_file_profiled(get_filename());
+    // always generate pre_init_module if the file is profiled
+    if (output->functions.pre_init || profiled) {
       output->source.static_function_prototypes =
 	mputstr(output->source.static_function_prototypes,
 	  "static void pre_init_module();\n");
@@ -800,11 +821,11 @@ namespace Common {
               mputprintf(effective_module_functions, "%s\"%s\"",
               		   (effective_module_functions ? ", " : ""), get_modid().get_dispname().c_str());
         }
-        if (profiler_enabled && MOD_TTCN == get_moduletype()) {
+        if (profiled) {
           output->source.static_function_bodies = mputprintf(output->source.static_function_bodies,
+            "%s::init_ttcn3_profiler();\n"
             "TTCN3_Stack_Depth stack_depth;\n"
-            "ttcn3_prof.enter_function(\"%s\", 0, \"%s\");\n",
-            get_filename(), get_modid().get_dispname().c_str());
+            "ttcn3_prof.execute_line(\"%s\", 0);\n", get_modid().get_name().c_str(), get_filename());
         }
       }
       output->source.static_function_bodies =
@@ -843,11 +864,10 @@ namespace Common {
             mputprintf(effective_module_functions, "%s\"%s\"",
             		   (effective_module_functions ? ", " : ""), get_modid().get_dispname().c_str());
         }
-        if (profiler_enabled && MOD_TTCN == get_moduletype()) {
+        if (MOD_TTCN == get_moduletype() && is_file_profiled(get_filename())) {
           output->source.static_function_bodies = mputprintf(output->source.static_function_bodies,
             "TTCN3_Stack_Depth stack_depth;\n"
-            "ttcn3_prof.enter_function(\"%s\", 0, \"%s\");\n",
-            get_filename(), get_modid().get_dispname().c_str());
+            "ttcn3_prof.execute_line(\"%s\", 0);\n", get_filename());
         }
       }
       output->source.static_function_bodies =
@@ -876,6 +896,24 @@ namespace Common {
       output->functions.set_param = NULL;
       has_set_param = true;
     } else has_set_param = false;
+    // get_param function
+    bool has_get_param;
+    if (output->functions.get_param) {
+      output->source.static_function_prototypes = mputstr(output->source.static_function_prototypes,
+        "static Module_Param* get_module_param(Module_Param_Name& param_name);\n");
+      output->source.static_function_bodies = mputstr(output->source.static_function_bodies,
+        "static Module_Param* get_module_param(Module_Param_Name& param_name)\n"
+        "{\n"
+           "const char* const par_name = param_name.get_current_name();\n");
+      output->source.static_function_bodies =
+        mputstr(output->source.static_function_bodies, output->functions.get_param);
+      output->source.static_function_bodies =
+	mputstr(output->source.static_function_bodies, "return NULL;\n"
+	  "}\n\n");
+      Free(output->functions.get_param);
+      output->functions.get_param = NULL;
+      has_get_param = true;
+    } else has_get_param = false;
     // log_param function
     bool has_log_param;
     if (output->functions.log_param) {
@@ -1027,12 +1065,13 @@ namespace Common {
       }
       string extra_str = extra ? ( string('"') + extra + string('"') ) : string("NULL");
       output->source.global_vars = mputprintf(output->source.global_vars,
-	", %uU, %uU, %uU, %uU, %s, %luLU, %s, %s, %s, %s, %s, %s, %s",
+	", %uU, %uU, %uU, %uU, %s, %luLU, %s, %s, %s, %s, %s, %s, %s, %s",
         suffix, release, patch, build, extra_str.c_str(),
         (unsigned long)num_xml_namespaces,
         ((num_xml_namespaces || (control_ns && control_ns_prefix)) ? "xml_namespaces" : "0"),
 	has_post_init ? "post_init_module" : "NULL",
 	has_set_param ? "set_module_param" : "NULL",
+  has_get_param ? "get_module_param" : "NULL",
 	has_log_param ? "log_module_param" : "NULL",
 	has_init_comp ? "init_comp_type" : "NULL",
 	has_start ? "start_ptc_function" : "NULL",
@@ -1043,6 +1082,8 @@ namespace Common {
 	FATAL_ERROR("Module::generate_functions(): post_init function in ASN.1 module");
       if (has_set_param)
 	FATAL_ERROR("Module::generate_functions(): set_param function in ASN.1 module");
+      if (has_get_param)
+	FATAL_ERROR("Module::generate_functions(): get_param function in ASN.1 module");
       if (has_log_param)
 	FATAL_ERROR("Module::generate_functions(): log_param function in ASN.1 module");
       if (has_init_comp)
@@ -1482,13 +1523,38 @@ namespace Common {
     // language specific parts (definitions, imports, etc.)
     //generate_code_internal(&target);  <- needed to pass cgh
     generate_code_internal(cgh);
+    
+    output_struct* output = cgh.get_current_outputstruct();
 
     // string literals
-    generate_literals(cgh.get_current_outputstruct());
+    generate_literals(output);
     // module level entry points
-    generate_functions(cgh.get_current_outputstruct());
+    generate_functions(output);
     // type conversion functions for type compatibility
-    generate_conversion_functions(cgh.get_current_outputstruct());
+    generate_conversion_functions(output);
+    
+    /* generate the initializer function for the TTCN-3 profiler
+     * (this is done at the end of the code generation, to make sure all code 
+     * lines have been added to the profiler database) */
+    if (is_file_profiled(get_filename())) {
+      output->source.global_vars = mputstr(output->source.global_vars,
+        "\n/* Initializing TTCN-3 profiler */\n"
+        "void init_ttcn3_profiler()\n"
+        "{\n");
+      char* function_name = 0;
+      int line_no = -1;
+      while(get_profiler_code_line(get_filename(), &function_name, &line_no)) {
+        output->source.global_vars = mputprintf(output->source.global_vars,
+          "  ttcn3_prof.create_line(ttcn3_prof.get_element(\"%s\"), %d);\n",
+          get_filename(), line_no);
+        if (0 != function_name) {
+          output->source.global_vars = mputprintf(output->source.global_vars,
+            "  ttcn3_prof.create_function(ttcn3_prof.get_element(\"%s\"), %d, \"%s\");\n",
+            get_filename(), line_no, function_name);
+        }
+      }
+      output->source.global_vars = mputstr(output->source.global_vars, "}\n\n");
+    }
   }
 
   void Module::dump(unsigned level) const

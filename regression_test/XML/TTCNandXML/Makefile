@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (c) 2000-2014 Ericsson Telecom AB
+# Copyright (c) 2000-2015 Ericsson Telecom AB
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License v1.0
 # which accompanies this distribution, and is available at
@@ -41,7 +41,7 @@ CPPFLAGS += -D$(PLATFORM)
 CXXFLAGS += -g -W -Wformat=2
 
 # Flags for the linker:
-LDFLAGS += -g -rdynamic
+#LDFLAGS += -g -rdynamic
 WIN32_LIBS += -liconv
 FREEBSD_LIBS += -liconv
 

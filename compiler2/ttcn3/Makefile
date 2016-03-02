@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (c) 2000-2014 Ericsson Telecom AB
+# Copyright (c) 2000-2015 Ericsson Telecom AB
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License v1.0
 # which accompanies this distribution, and is available at
@@ -38,7 +38,7 @@ GENERATED_OTHERS := compiler.output rawAST.output coding_attrib_p.output lex.bac
 
 STATIC_SOURCES := ArrayDimensions.cc AST_ttcn3.cc Attributes.cc ILT.cc PatternString.cc \
 RawAST.cc Statement.cc TtcnTemplate.cc Templatestuff.cc TextAST.cc Ttcnstuff.cc \
-compiler.c port.c signature.c BerAST.cc JsonAST.cc Ttcn2Json.cc
+compiler.c port.c signature.c BerAST.cc JsonAST.cc Ttcn2Json.cc profiler.c
 
 SOURCES := $(STATIC_SOURCES) $(GENERATED_SOURCES)
 	

@@ -1,3 +1,11 @@
+///////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2000-2015 Ericsson Telecom AB
+// All rights reserved. This program and the accompanying materials
+// are made available under the terms of the Eclipse Public License v1.0
+// which accompanies this distribution, and is available at
+// http://www.eclipse.org/legal/epl-v10.html
+///////////////////////////////////////////////////////////////////////////////
+
 #ifndef JSON_TOKENIZER_HH
 #define	JSON_TOKENIZER_HH
 
@@ -150,10 +158,23 @@ public:
     * @return The number of characters added to the JSON document */
   int put_next_token(json_token_t p_token, const char* p_token_str = 0);
   
+  /** Adds raw data to the end of the buffer.
+    * @param p_data [in] Pointer to the beginning of the data
+    * @param p_len [in] Length of the data in bytes */
+  void put_raw_data(const char* p_data, size_t p_len);
+  
 }; // class JSON_Tokenizer
 
 // A dummy JSON tokenizer, use when there is no actual JSON document
 static JSON_Tokenizer DUMMY_BUFFER;
+
+/** Converts a string into a JSON string by replacing all control characters
+  * with JSON escape sequences, if available, or with the \uHHHH escape sequence.
+  * The string is also wrapped inside a set of double quotes and all double quotes
+  * and backslash characters are double-escaped.
+  *
+  * Returns an expstring, that needs to be freed. */
+extern char* convert_to_json_string(const char* str);
 
 
 #endif	/* JSON_TOKENIZER_HH */

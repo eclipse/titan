@@ -1,5 +1,5 @@
 .******************************************************************************
-.* Copyright (c) 2000-2014 Ericsson Telecom AB
+.* Copyright (c) 2000-2015 Ericsson Telecom AB
 .* All rights reserved. This program and the accompanying materials
 .* are made available under the terms of the Eclipse Public License v1.0
 .* which accompanies this distribution, and is available at
@@ -14,9 +14,9 @@
 
 .* Document header information
 :docname.Test Description
-:docno. Uen
-:rev.PA1
-:date.2005.02.03.
+:docno. 12/15291-CRL200/5 Uen
+:rev.A
+:date.2015-04-27
 
 :prep.ETH/RZD Endre Szalai (+36 1 437 7796)
 :appr.ETH/RZ (Zsolt Szendrei)

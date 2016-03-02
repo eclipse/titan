@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -30,6 +30,8 @@
 #include "ttcn3/Statement.hh"
 
 #include "ttcn3/Attributes.hh"
+#include "../common/JSON_Tokenizer.hh"
+#include "ttcn3/Ttcn2Json.hh"
 
 #include <math.h>
 #include <regex.h>
@@ -143,6 +145,7 @@ namespace Common {
       case OPTYPE_TMR_RUNNING_ANY:
       case OPTYPE_GETVERDICT:
       case OPTYPE_TESTCASENAME:
+      case OPTYPE_PROF_RUNNING:
         break;
       case OPTYPE_UNARYPLUS: // v1
       case OPTYPE_UNARYMINUS:
@@ -446,6 +449,7 @@ namespace Common {
     case OPTYPE_TMR_RUNNING_ANY:
     case OPTYPE_GETVERDICT:
     case OPTYPE_TESTCASENAME:
+    case OPTYPE_PROF_RUNNING:
       break;
     case OPTYPE_UNARYPLUS: // v1
     case OPTYPE_UNARYMINUS:
@@ -809,6 +813,7 @@ namespace Common {
     case OPTYPE_TMR_RUNNING_ANY:
     case OPTYPE_GETVERDICT:
     case OPTYPE_TESTCASENAME:
+    case OPTYPE_PROF_RUNNING:
       break;
     default:
       FATAL_ERROR("Value::Value()");
@@ -1388,6 +1393,7 @@ namespace Common {
     case OPTYPE_TMR_RUNNING_ANY:
     case OPTYPE_GETVERDICT:
     case OPTYPE_TESTCASENAME:
+    case OPTYPE_PROF_RUNNING:
       break;
     case OPTYPE_UNARYPLUS: // v1
     case OPTYPE_UNARYMINUS:
@@ -1567,6 +1573,7 @@ namespace Common {
     case OPTYPE_TMR_RUNNING_ANY:
     case OPTYPE_GETVERDICT:
     case OPTYPE_TESTCASENAME:
+    case OPTYPE_PROF_RUNNING:
       break;
     case OPTYPE_UNARYPLUS: // v1
     case OPTYPE_UNARYMINUS:
@@ -1876,6 +1883,7 @@ namespace Common {
       case OPTYPE_TMR_RUNNING_ANY:
       case OPTYPE_GETVERDICT:
       case OPTYPE_TESTCASENAME:
+      case OPTYPE_PROF_RUNNING:
         break;
       case OPTYPE_UNARYPLUS: // v1
       case OPTYPE_UNARYMINUS:
@@ -2765,6 +2773,7 @@ namespace Common {
       case OPTYPE_ISCHOSEN_T:
       case OPTYPE_ISVALUE:
       case OPTYPE_ISBOUND:
+      case OPTYPE_PROF_RUNNING:
         return Type::T_BOOL;
       case OPTYPE_GETVERDICT:
         return Type::T_VERDICT;
@@ -3448,6 +3457,8 @@ namespace Common {
       return "log2str()";
     case OPTYPE_TTCN2STRING:
       return "ttcn2string()";
+    case OPTYPE_PROF_RUNNING:
+      return "@profiler.running";
     default:
       FATAL_ERROR("Value::get_opname()");
     } // switch
@@ -4366,7 +4377,7 @@ void Value::chk_expr_operand_execute_refd(Value *v1,
     }
     switch (exp_val) {
     case Type::EXPECTED_CONSTANT:
-      error("An evaluatable constant value was expected instead of operation "
+      error("An evaluable constant value was expected instead of operation "
         "`apply()'");
       set_valuetype(V_ERROR);
       break;
@@ -5627,7 +5638,7 @@ error:
     case Assignment::A_MODULEPAR:
     case Assignment::A_MODULEPAR_TEMP:
       if(exp_val==Type::EXPECTED_CONSTANT) {
-        u.expr.ti1->error("Reference to an (evaluatable) constant value was "
+        u.expr.ti1->error("Reference to an (evaluable) constant value was "
                    "expected instead of %s", t_ass->get_description().c_str());
         goto error;
       }
@@ -5970,7 +5981,7 @@ error:
     Ttcn::StatementBlock *my_sb;
     switch (exp_val) {
     case Type::EXPECTED_CONSTANT:
-      error("An evaluatable constant value was expected instead of operation "
+      error("An evaluable constant value was expected instead of operation "
 	"`%s'", get_opname());
       goto error;
     case Type::EXPECTED_STATIC_VALUE:
@@ -6038,6 +6049,7 @@ error:
     switch (u.expr.v_optype) {
     case OPTYPE_COMP_NULL:
     case OPTYPE_TESTCASENAME:
+    case OPTYPE_PROF_RUNNING:
       break;
     case OPTYPE_COMP_MTC:
     case OPTYPE_COMP_SYSTEM:
@@ -6998,6 +7010,7 @@ error:
     case OPTYPE_COMP_ALIVE_ALL:
     case OPTYPE_TMR_RUNNING_ANY:
     case OPTYPE_GETVERDICT:
+    case OPTYPE_PROF_RUNNING:
     case OPTYPE_RNDWITHVAL: // v1
     case OPTYPE_COMP_RUNNING: // v1
     case OPTYPE_COMP_ALIVE:
@@ -8294,6 +8307,7 @@ error:
       case OPTYPE_TMR_RUNNING_ANY:
       case OPTYPE_GETVERDICT:
       case OPTYPE_TESTCASENAME:
+      case OPTYPE_PROF_RUNNING:
       case OPTYPE_RNDWITHVAL: // v1
       case OPTYPE_MATCH: // v1 t2
       case OPTYPE_UNDEF_RUNNING: // v1
@@ -9070,6 +9084,25 @@ error:
     if (valuetype != V_CHOICE) FATAL_ERROR("Value::get_alt_value()");
     return u.choice.alt_value;
   }
+  
+  void Value::set_alt_name_to_lowercase()
+  {
+    if (valuetype != V_CHOICE) FATAL_ERROR("Value::set_alt_name_to_lowercase()");
+    string new_name = u.choice.alt_name->get_name();
+    if (isupper(new_name[0])) {
+      new_name[0] = tolower(new_name[0]);
+      if (new_name[new_name.size() - 1] == '_') {
+        // an underscore is inserted at the end of the alternative name if it's
+        // a basic type's name (since it would conflict with the class generated
+        // for that type)
+        // remove the underscore, it won't conflict with anything if its name
+        // starts with a lowercase letter
+        new_name.replace(new_name.size() - 1, 1, "");
+      }
+      delete u.choice.alt_name;
+      u.choice.alt_name = new Identifier(Identifier::ID_NAME, new_name);
+    }
+  }
 
   bool Value::has_oid_error()
   {
@@ -9754,8 +9787,8 @@ error:
     case Ttcn::Template::TEMPLATE_INVOKE:
       break; // assume self-ref can't happen
     case Ttcn::Template::TEMPLATE_ERROR:
-      FATAL_ERROR("Value::chk_expr_self_ref_templ()");
-      break; // not reached
+      //FATAL_ERROR("Value::chk_expr_self_ref_templ()");
+      break;
 //    default:
 //      FATAL_ERROR("todo ttype %d", t->get_templatetype());
 //      break; // and hope for the best
@@ -9797,6 +9830,7 @@ error:
     case OPTYPE_COMP_ALIVE_ALL: // -
     case OPTYPE_TMR_RUNNING_ANY: // -
     case OPTYPE_GETVERDICT: // -
+    case OPTYPE_PROF_RUNNING: // -
       break; // nothing to do
 
     case OPTYPE_MATCH: // v1 t2
@@ -10496,6 +10530,8 @@ error:
         }
         ret_val += ')';
         return ret_val; }
+      case OPTYPE_PROF_RUNNING:
+        return string("@profiler.running");
       default:
         return string("<unsupported optype>");
       } // switch u.expr.v_optype
@@ -11078,15 +11114,13 @@ error:
       Ttcn::ActualParList *parlist = u.ref.ref->get_parlist();
       if (parlist) {
 	str = parlist->rearrange_init_code(str,
-	  u.ref.ref->get_refd_assignment()->get_my_scope()->get_scope_mod_gen()
-	  == my_scope->get_scope_mod_gen());
+	  u.ref.ref->get_refd_assignment()->get_my_scope()->get_scope_mod_gen());
       }
       break; }
     case V_INVOKE: {
       str = u.invoke.v->rearrange_init_code(str);
-      bool type_is_local = u.invoke.v->get_expr_governor_last()->get_my_scope()
-	->get_scope_mod_gen() == my_scope->get_scope_mod_gen();
-      str = u.invoke.ap_list->rearrange_init_code(str, type_is_local);
+      str = u.invoke.ap_list->rearrange_init_code(str,
+        u.invoke.v->get_expr_governor_last()->get_my_scope()->get_scope_mod_gen());
       break; }
     case V_EXPR:
       switch (u.expr.v_optype) {
@@ -11132,15 +11166,11 @@ error:
       case OPTYPE_DECODE: {
         Ttcn::ActualParList *parlist = u.expr.r1->get_parlist();
         Common::Assignment *ass = u.expr.r1->get_refd_assignment();
-        bool rearrange = (ass->get_my_scope()->get_scope_mod_gen() ==
-          my_scope->get_scope_mod_gen());
-        if (parlist) str = parlist->rearrange_init_code(str, rearrange);
+        if (parlist) str = parlist->rearrange_init_code(str, ass->get_my_scope()->get_scope_mod_gen());
 
         parlist = u.expr.r2->get_parlist();
         ass = u.expr.r2->get_refd_assignment();
-        rearrange = (ass->get_my_scope()->get_scope_mod_gen() ==
-          my_scope->get_scope_mod_gen());
-        if (parlist) str = parlist->rearrange_init_code(str, rearrange);
+        if (parlist) str = parlist->rearrange_init_code(str, ass->get_my_scope()->get_scope_mod_gen());
         break; }
       case OPTYPE_ADD:
       case OPTYPE_SUBTRACT:
@@ -11179,13 +11209,13 @@ error:
         if (u.expr.v2) str = u.expr.v2->rearrange_init_code(str);
         break;
       case OPTYPE_SUBSTR:
-        str = u.expr.ti1->rearrange_init_code(str);
+        str = u.expr.ti1->rearrange_init_code(str, my_scope->get_scope_mod_gen());
         str = u.expr.v2->rearrange_init_code(str);
         str = u.expr.v3->rearrange_init_code(str);
         break;
       case OPTYPE_REGEXP:
-        str = u.expr.ti1->rearrange_init_code(str);
-        str = u.expr.t2->rearrange_init_code(str);
+        str = u.expr.ti1->rearrange_init_code(str, my_scope->get_scope_mod_gen());
+        str = u.expr.t2->rearrange_init_code(str, my_scope->get_scope_mod_gen());
         str = u.expr.v3->rearrange_init_code(str);
         break;
       case OPTYPE_DECOMP:
@@ -11194,10 +11224,10 @@ error:
         str = u.expr.v3->rearrange_init_code(str);
         break;
       case OPTYPE_REPLACE:
-        str = u.expr.ti1->rearrange_init_code(str);
+        str = u.expr.ti1->rearrange_init_code(str, my_scope->get_scope_mod_gen());
         str = u.expr.v2->rearrange_init_code(str);
         str = u.expr.v3->rearrange_init_code(str);
-        str = u.expr.ti4->rearrange_init_code(str);
+        str = u.expr.ti4->rearrange_init_code(str, my_scope->get_scope_mod_gen());
         break;
       case OPTYPE_LENGTHOF:
       case OPTYPE_SIZEOF:
@@ -11205,14 +11235,14 @@ error:
       case OPTYPE_ENCODE:
       case OPTYPE_ISPRESENT:
       case OPTYPE_TTCN2STRING:
-        str = u.expr.ti1->rearrange_init_code(str);
+        str = u.expr.ti1->rearrange_init_code(str, my_scope->get_scope_mod_gen());
         break;
       case OPTYPE_ISCHOSEN_T:
-        str = u.expr.t1->rearrange_init_code(str);
+        str = u.expr.t1->rearrange_init_code(str, my_scope->get_scope_mod_gen());
         break;
       case OPTYPE_MATCH:
         str = u.expr.v1->rearrange_init_code(str);
-        str = u.expr.t2->rearrange_init_code(str);
+        str = u.expr.t2->rearrange_init_code(str, my_scope->get_scope_mod_gen());
         break;
       default:
         // other kinds of expressions cannot appear within templates
@@ -11328,7 +11358,7 @@ error:
     }
     expr->expr = mputstr(expr->expr, ".log_match(");
     u.expr.v1->generate_code_expr(expr);
-    expr->expr = mputc(expr->expr, ')');
+    expr->expr = mputprintf(expr->expr, "%s)", omit_in_value_list ? ", TRUE" : "");
   }
 
   void Value::generate_code_expr_expr(expression_struct *expr)
@@ -11642,7 +11672,8 @@ error:
         expr->expr=mputstr(expr->expr, ".is_bound()");
         break;
       case OPTYPE_ISPRESENT:
-        expr->expr=mputstr(expr->expr, ".is_present()");
+        expr->expr=mputprintf(expr->expr, ".is_present(%s)",
+          omit_in_value_list ? "TRUE" : "");
         break;
       case OPTYPE_SIZEOF:
         expr->expr=mputstr(expr->expr, ".size_of()");
@@ -11665,7 +11696,7 @@ error:
       u.expr.t2->generate_code(expr);
       expr->expr = mputstr(expr->expr, ".match(");
       u.expr.v1->generate_code_expr(expr);
-      expr->expr = mputc(expr->expr, ')');
+      expr->expr = mputprintf(expr->expr, "%s)", omit_in_value_list ? ", TRUE" : "");
       break;
     case OPTYPE_UNDEF_RUNNING:
       // it is resolved during semantic check
@@ -11771,6 +11802,9 @@ error:
       }
       expr->expr = mputstr(expr->expr, ")"); 
     } break;
+    case OPTYPE_PROF_RUNNING:
+      expr->expr = mputstr(expr->expr, "ttcn3_prof.is_running()");
+      break;
     default:
       FATAL_ERROR("Value::generate_code_expr_expr()");
     }
@@ -12028,7 +12062,7 @@ error:
       Value* v4_last = v4->get_value_refd_last();
       if ((v4_last->valuetype == V_SEQOF || v4_last->valuetype == V_SETOF)
           && !v4_last->u.val_vs->is_indexed() && v4_last->u.val_vs->get_nof_vs() == 0) {
-        expr->expr = mputprintf(expr->expr, "(%s)", v4->my_governor->get_stringRepr().c_str());
+        expr->expr = mputprintf(expr->expr, "(%s)", v4->my_governor->get_genname_value(my_scope).c_str());
       }
       v4->generate_code_expr_mandatory(expr);
     }
@@ -12273,8 +12307,9 @@ error:
       if (expr2.postamble)
         expr->postamble = mputstr(expr->postamble, expr2.postamble);
     } else
-      expr->expr = mputprintf(expr->expr, "%s(%s)",
-        gov_last->get_coding(true).c_str(), expr2.expr);
+      expr->expr = mputprintf(expr->expr, "%s(%s%s)",
+        gov_last->get_coding(true).c_str(), expr2.expr,
+        is_templ ? ".valueof()" : "");
     Code::free_expr(&expr2);
   }
 
@@ -12592,6 +12627,161 @@ error:
     }
     return str;
   }
+  
+  void Value::generate_json_value(JSON_Tokenizer& json,
+                                  bool allow_special_float, /* = true */
+                                  bool union_value_list, /* = false */
+                                  Ttcn::JsonOmitCombination* omit_combo /* = NULL */)
+  {
+    switch (valuetype) {
+    case V_INT:
+      json.put_next_token(JSON_TOKEN_NUMBER, get_val_Int()->t_str().c_str());
+      break;
+    case V_REAL: {
+      Real r = get_val_Real();
+      if (r == REAL_INFINITY) {
+        if (allow_special_float) {
+          json.put_next_token(JSON_TOKEN_STRING, "\"infinity\"");
+        }
+      }
+      else if (r == -REAL_INFINITY) {
+        if (allow_special_float) {
+          json.put_next_token(JSON_TOKEN_STRING, "\"-infinity\"");
+        }
+      }
+      else if (r != r) {
+        if (allow_special_float) {
+          json.put_next_token(JSON_TOKEN_STRING, "\"not_a_number\"");
+        }
+      }
+      else {
+        // true if decimal representation possible (use %f format)
+        bool decimal_repr = (r == 0.0)
+          || (r > -MAX_DECIMAL_FLOAT && r <= -MIN_DECIMAL_FLOAT)
+          || (r >= MIN_DECIMAL_FLOAT && r < MAX_DECIMAL_FLOAT);
+        char* number_str = mprintf(decimal_repr ? "%f" : "%e", r);
+        json.put_next_token(JSON_TOKEN_NUMBER, number_str);
+        Free(number_str);
+      }
+      break; }
+    case V_BOOL:
+      json.put_next_token(get_val_bool() ? JSON_TOKEN_LITERAL_TRUE : JSON_TOKEN_LITERAL_FALSE);
+      break;
+    case V_BSTR:
+    case V_HSTR:
+    case V_OSTR:
+    case V_CSTR: {
+      char* str = convert_to_json_string(get_val_str().c_str());
+      json.put_next_token(JSON_TOKEN_STRING, str);
+      Free(str);
+      break; }
+    case V_USTR: {
+      char* str = convert_to_json_string(ustring_to_uft8(get_val_ustr()).c_str());
+      json.put_next_token(JSON_TOKEN_STRING, str);
+      Free(str);
+      break; }
+    case V_VERDICT:
+    case V_ENUM:
+      json.put_next_token(JSON_TOKEN_STRING,
+        (string('\"') + create_stringRepr() + string('\"')).c_str());
+      break;
+    case V_SEQOF:
+    case V_SETOF:
+      json.put_next_token(JSON_TOKEN_ARRAY_START);
+      if (!u.val_vs->is_indexed()) {
+        for (size_t i = 0; i < u.val_vs->get_nof_vs(); ++i) {
+          u.val_vs->get_v_byIndex(i)->generate_json_value(json, allow_special_float,
+            union_value_list, omit_combo);
+        }
+      }
+      else {
+        for (size_t i = 0; i < u.val_vs->get_nof_ivs(); ++i) {
+          // look for the entry with index equal to i
+          for (size_t j = 0; j < u.val_vs->get_nof_ivs(); ++j) {
+            if (u.val_vs->get_iv_byIndex(j)->get_index()->get_val_Int()->get_val() == (Int)i) {
+              u.val_vs->get_iv_byIndex(j)->get_value()->generate_json_value(json,
+                allow_special_float, union_value_list, omit_combo);
+              break;
+            }
+          }
+        }
+      }
+      json.put_next_token(JSON_TOKEN_ARRAY_END);
+      break;
+    case V_SEQ:
+    case V_SET: {
+      // omitted fields have 2 possible JSON values (the field is absent, or it's
+      // present with value 'null'), each combination of omitted values must be
+      // generated
+      if (omit_combo == NULL) {
+        FATAL_ERROR("Value::generate_json_value - no combo");
+      }
+      size_t len = get_nof_comps();
+      // generate the JSON object from the present combination
+      json.put_next_token(JSON_TOKEN_OBJECT_START);
+      for (size_t i = 0; i < len; ++i) {
+        Ttcn::JsonOmitCombination::omit_state_t state = omit_combo->get_state(this, i);
+        if (state == Ttcn::JsonOmitCombination::OMITTED_ABSENT) {
+          // the field is absent, don't insert anything
+          continue;
+        }
+        // use the field's alias, if it has one
+        const char* alias = NULL;
+        if (my_governor != NULL) {
+          JsonAST* field_attrib = my_governor->get_comp_byName(
+            get_se_comp_byIndex(i)->get_name())->get_type()->get_json_attributes();
+          if (field_attrib != NULL) {
+            alias = field_attrib->alias;
+          }
+        }
+        json.put_next_token(JSON_TOKEN_NAME, (alias != NULL) ? alias :
+          get_se_comp_byIndex(i)->get_name().get_ttcnname().c_str());
+        if (state == Ttcn::JsonOmitCombination::OMITTED_NULL) {
+          json.put_next_token(JSON_TOKEN_LITERAL_NULL);
+        }
+        else {
+          get_se_comp_byIndex(i)->get_value()->generate_json_value(json,
+            allow_special_float, union_value_list, omit_combo);
+        }
+      }
+      json.put_next_token(JSON_TOKEN_OBJECT_END);
+      break; }
+    case V_CHOICE: {
+      bool as_value = !union_value_list && my_governor != NULL && 
+        my_governor->get_type_refd_last()->get_json_attributes() != NULL &&
+        my_governor->get_type_refd_last()->get_json_attributes()->as_value;
+      if (!as_value) {
+        // no 'as value' coding instruction, insert an object with one field
+        json.put_next_token(JSON_TOKEN_OBJECT_START);
+        // use the field's alias, if it has one
+        const char* alias = NULL;
+        if (my_governor != NULL) {
+          JsonAST* field_attrib = my_governor->get_comp_byName(
+            get_alt_name())->get_type()->get_json_attributes();
+          if (field_attrib != NULL) {
+            alias = field_attrib->alias;
+          }
+        }
+        json.put_next_token(JSON_TOKEN_NAME, (alias != NULL) ? alias :
+          get_alt_name().get_ttcnname().c_str());
+      }
+      get_alt_value()->generate_json_value(json, allow_special_float,
+        union_value_list, omit_combo);
+      if (!as_value) {
+        json.put_next_token(JSON_TOKEN_OBJECT_END);
+      }
+      break; }
+    case V_REFD: {
+      Value* v = get_value_refd_last();
+      if (this != v) {
+        v->generate_json_value(json, allow_special_float, union_value_list, omit_combo);
+        return;
+      }
+    } // no break
+    default:
+      FATAL_ERROR("Value::generate_json_value - %d", valuetype);
+    }
+  }
 
   bool Value::explicit_cast_needed(bool forIsValue)
   {
@@ -12857,6 +13047,7 @@ error:
     case OPTYPE_TMR_RUNNING_ANY:
     case OPTYPE_GETVERDICT:
     case OPTYPE_TESTCASENAME:
+    case OPTYPE_PROF_RUNNING:
       return true;
     case OPTYPE_ENCODE:
     case OPTYPE_DECODE:
@@ -13178,13 +13369,16 @@ error:
     if (t_subrefs) {
       // the evaluation of the reference does not have side effects
       // (i.e. false shall be returned) only if all sub-references point to
-      // mandatory fields of record/set types
+      // mandatory fields of record/set types, and neither sub-reference points
+      // to a field of a union type
       Type *t_type = t_ass->get_Type();
       for (size_t i = 0; i < t_subrefs->get_nof_refs(); i++) {
 	Ttcn::FieldOrArrayRef *t_fieldref = t_subrefs->get_ref(i);
 	if (t_fieldref->get_type() == Ttcn::FieldOrArrayRef::FIELD_REF) {
 	  CompField *t_cf = t_type->get_comp_byName(*t_fieldref->get_id());
-	  if (t_cf->get_is_optional()) return true;
+	  if (Type::T_CHOICE_T == t_type->get_type_refd_last()->get_typetype() ||
+        Type::T_CHOICE_A == t_type->get_type_refd_last()->get_typetype() ||
+        t_cf->get_is_optional()) return true;
 	  t_type = t_cf->get_type();
 	} else return true;
       }

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -19,6 +19,11 @@ class Base_Type;
 #ifdef TITAN_RUNTIME_2
 class Record_Of_Type;
 class Erroneous_descriptor_t;
+#else
+namespace PreGenRecordOf {
+  class PREGEN__RECORD__OF__UNIVERSAL__CHARSTRING;
+  class PREGEN__RECORD__OF__UNIVERSAL__CHARSTRING__OPTIMIZED;
+}
 #endif
 class TTCN_Module;
 
@@ -39,6 +44,7 @@ class TTCN_Module;
  * change the encoding of all components).
  */
 enum XER_flavor {
+  XER_NONE            = 0,
   XER_BASIC           = 1U << 0, /**< Basic XER with indentation */
   XER_CANONICAL       = 1U << 1, /**< Canonical XER, no indentation */
   XER_EXTENDED        = 1U << 2, /**< Extended XER */
@@ -84,8 +90,10 @@ enum XER_flavor {
   as empty elements in BXER only. This also influences them in record-of */
   ANY_FROM       = 1U << 27, // 0x8000000 anyElement from ... or anyAttributes from ...
   ANY_EXCEPT     = 1U << 28, // 0x10000000 anyElement except ... or anyAttributes except ...
-  EXIT_ON_ERROR  = 1U << 29  /* 0x20000000 clean up and exit instead of throwing
+  EXIT_ON_ERROR  = 1U << 29, /* 0x20000000 clean up and exit instead of throwing
   a decoding error, used on alternatives of a union with USE-UNION */
+  XER_OPTIONAL   = 1U << 30, // 0x40000000 is an optional field of a record or set
+  BLOCKED        = 1U << 31  // 0x80000000 either ABSTRACT or BLOCK
 };
 
 /** WHITESPACE actions.
@@ -255,6 +263,9 @@ struct XERdescriptor_t
     * or invalid ("anyElement except ...") namespace URIs. 
     * The unqualified namespace is marked by an empty string ("").*/
   const char** ns_uris; 
+  
+  /** Points to the element type's XER descriptor in case of 'record of' and 'set of' types */
+  const XERdescriptor_t* oftype_descr;
 };
 
 /** Information related to the embedded values in XML encoding
@@ -273,11 +284,10 @@ struct embed_values_enc_struct_t
   /** Erroneous descriptor index for the embedded values (for negative tests) */
   int embval_err_descr_idx;
 #else
-  /** Stores the array of embedded values as a Base_Type (use get_embedded_value
-    * to retrieve values - temporarily disabled) */
-  const Base_Type* embval_array;
-  /** Stores the size of the embedded value array */
-  int embval_size;
+  /** Stores the array of embedded values (regular record-of) */
+  const PreGenRecordOf::PREGEN__RECORD__OF__UNIVERSAL__CHARSTRING* embval_array_reg;
+  /** Stores the array of embedded values (optimized record-of) */
+  const PreGenRecordOf::PREGEN__RECORD__OF__UNIVERSAL__CHARSTRING__OPTIMIZED* embval_array_opt;
 #endif
   /** Stores the index of the next embedded value to be read */
   int embval_index;
@@ -293,9 +303,10 @@ struct embed_values_dec_struct_t
   /** Stores the array of embedded values */
   Record_Of_Type* embval_array;
 #else
-  /** Stores the array of embedded values as a Base_type (use set_embedded_value
-    * to insert new values - temporarily disabled) */
-  Base_Type* embval_array;
+  /** Stores the array of embedded values (regular record-of) */
+  PreGenRecordOf::PREGEN__RECORD__OF__UNIVERSAL__CHARSTRING* embval_array_reg;
+  /** Stores the array of embedded values (optimized record-of) */
+  PreGenRecordOf::PREGEN__RECORD__OF__UNIVERSAL__CHARSTRING__OPTIMIZED* embval_array_opt;
 #endif
   /** Stores the number of embedded values that are currently in the array,
     * and the index where the next one should be inserted */
@@ -367,6 +378,16 @@ class TTCN_Buffer;
  */
 void write_ns_prefix(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf);
 
+/** Return the namespace referred to by a prefix
+ *
+ * Finds the namespace specified by \a prefix in the module's namespace table
+ * and returns its URI. Returns NULL if the namespace is not found.
+ *
+ * @param prefix namespace prefix to be found
+ * @param p_td XER descriptor (contains the module to search in)
+ */
+const char* get_ns_uri_from_prefix(const char *prefix, const XERdescriptor_t& p_td);
+
 /** Output the beginning of an XML attribute.
  *
  * Writes a space, the attribute name (from \p p_td), and the string "='".
@@ -414,7 +435,7 @@ void check_namespace_restrictions(const XERdescriptor_t& p_td, const char* p_xml
   extern const XERdescriptor_t type_name##_xer_ = { \
     { xmlname ">\n", xmlname ">\n" }, \
     { 2+sizeof(xmlname)-1, 2+sizeof(xmlname)-1 }, \
-    0UL, WHITESPACE_PRESERVE, NULL, NULL, 0, 0, NULL }
+    0UL, WHITESPACE_PRESERVE, NULL, NULL, 0, 0, NULL, NULL }
 // The compiler should fold the two identical strings into one
 
 # define XER_STRUCT_COPY(cpy,original) \

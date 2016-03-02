@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -108,6 +108,7 @@ static void yyerror(const char *str);
 %token <str> ErrorBehaviorString
 %token <id> IDentifier "Identifier"
 %token <number> Number
+%token <str> CustomEncoding
 
 /*********************************************************************
  * Tokens without semantic value
@@ -223,6 +224,7 @@ VersionAttribute
 RequiresAttribute
 PrintingAttribute
 PrintingType
+CustomEncoding
 
 %destructor { delete $$.encoding_options; }
 DecodeAttribute
@@ -542,6 +544,11 @@ EncDecAttributeBody:
   {
     $$.encoding_type = $2;
     $$.encoding_options = $4;
+  }
+| '(' CustomEncoding ')'
+  {
+    $$.encoding_type = Type::CT_CUSTOM;
+    $$.encoding_options = $2;
   }
 ;
 

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -113,7 +113,7 @@ void Type::chk()
       textattrib = new TextAST;
     if(!xerattrib && hasVariantAttrs() &&  hasNeedofXerAttrs())
       xerattrib = new XerAttributes;
-    if (!jsonattrib && (hasVariantAttrs() || hasEncodeAttr(CT_JSON) || hasNeedofJsonAttrs())) {
+    if (!jsonattrib && (hasVariantAttrs() || hasEncodeAttr(get_encoding_name(CT_JSON)) || hasNeedofJsonAttrs())) {
       jsonattrib = new JsonAST;
     }
     break;
@@ -1034,7 +1034,7 @@ void Type::chk_xer_embed_values(int num_attributes)
 {
   Type * const last = get_type_refd_last();
 
-  enum complaint_type { ALL_GOOD, OPTIONAL_OR_DEFAULT, UNTAGGED_EMBEDVAL,
+  enum complaint_type { ALL_GOOD, HAVE_DEFAULT, UNTAGGED_EMBEDVAL,
     NOT_SEQUENCE, EMPTY_SEQUENCE, FIRST_NOT_SEQOF, SEQOF_NOT_STRING,
     SEQOF_BAD_LENGTH, UNTAGGED_OTHER } ;
   complaint_type complaint = ALL_GOOD;
@@ -1050,9 +1050,9 @@ void Type::chk_xer_embed_values(int num_attributes)
     }
     CompField *cf0 = last->get_comp_byIndex(0);
     cf0t = cf0->get_type()->get_type_refd_last();
-    if (cf0->get_is_optional() || cf0->has_default()) {
-      complaint = OPTIONAL_OR_DEFAULT;
-      break; // 25.2.1 first component cannot be optional or have default
+    if (cf0->has_default()) {
+      complaint = HAVE_DEFAULT;
+      break; // 25.2.1 first component cannot have default
     }
 
     switch (cf0t->get_typetype()) { // check the first component
@@ -1119,10 +1119,10 @@ void Type::chk_xer_embed_values(int num_attributes)
     case EMPTY_SEQUENCE:
     case FIRST_NOT_SEQOF:
     case SEQOF_NOT_STRING:
-    case OPTIONAL_OR_DEFAULT:
+    case HAVE_DEFAULT:
       error("A type with EMBED-VALUES must be a sequence type. "
         "The first component of the sequence shall be SEQUENCE OF UTF8String "
-        "and shall not be marked OPTIONAL or DEFAULT");
+        "and shall not be marked DEFAULT");
       break;
     case SEQOF_BAD_LENGTH:
       cf0t->error("Wrong length of SEQUENCE-OF for EMBED-VALUES, should be %lu",
@@ -1139,7 +1139,6 @@ void Type::chk_xer_embed_values(int num_attributes)
     } // switch(complaint)
   } // if complaint and embedValues
 }
-
 /** Wraps a C string but compares by contents, not by pointer */
 class stringval {
   const char * str;
@@ -1522,7 +1521,7 @@ void Type::chk_xer_untagged()
         // found the component
         if (cf->get_is_optional() || cf->get_defval() != 0) {
           error("Type with final encoding attribute UNTAGGED"
-            " shall not have OPIONAL or DEFAULT");
+            " shall not have OPTIONAL or DEFAULT");
         }
         break;
       }
@@ -1559,11 +1558,14 @@ void Type::chk_xer_use_nil()
 
   enum complaint_type { ALL_GOOD, NO_CONTROLNS, NOT_SEQUENCE, EMPTY_SEQUENCE,
     UNTAGGED_USENIL, COMPONENT_NOT_ATTRIBUTE, LAST_IS_ATTRIBUTE,
-    LAST_NOT_OPTIONAL, INCOMPATIBLE, WRONG_OPTIONAL_TYPE, EMBED_CHARENC };
+    LAST_NOT_OPTIONAL, INCOMPATIBLE, WRONG_OPTIONAL_TYPE, EMBED_CHARENC,
+    NOT_COMPATIBLE_WITH_USEORDER, BAD_ENUM, FIRST_OPTIONAL, NOTHING_TO_ORDER,
+    FIRST_NOT_RECORD_OF_ENUM, ENUM_GAP };
   complaint_type complaint = ALL_GOOD;
   CompField *cf = 0;
   CompField *cf_last = 0;
   const char *ns, *prefix;
+  Type *the_enum = 0;
   my_scope->get_scope_mod()->get_controlns(ns, prefix);
 
   if (!prefix) complaint = NO_CONTROLNS; // don't bother checking further
@@ -1605,6 +1607,57 @@ void Type::chk_xer_use_nil()
     if (!cf_last->get_is_optional()) {
       complaint = LAST_NOT_OPTIONAL;
     }
+    
+    if(xerattrib->useOrder_ && cft->get_type_refd_last()->get_typetype() != T_SEQ_A
+       && cft->get_type_refd_last()->get_typetype() != T_SEQ_T){
+      complaint = NOT_COMPATIBLE_WITH_USEORDER;
+    }else if(xerattrib->useOrder_) {
+      //This check needed, because if the record that has useOrder only
+      //has one field that is a sequence type, then the useNilPossible
+      //would be always true, that would lead to incorrect code generation.
+      Type * inner = cft->get_type_refd_last();
+      size_t useorder_index = xerattrib->embedValues_;
+      CompField *uo_field = last->get_comp_byIndex(useorder_index);
+      Type *uot = uo_field->get_type();
+      if (uot->get_type_refd_last()->typetype == T_SEQOF) {
+        the_enum = uot->get_ofType()->get_type_refd_last();
+        if(the_enum->typetype != T_ENUM_A && the_enum->typetype != T_ENUM_T){
+          complaint = FIRST_NOT_RECORD_OF_ENUM;
+          break;
+        }else if (uo_field->get_is_optional() || uo_field->get_defval() != 0) {
+          complaint = FIRST_OPTIONAL;
+          break;
+        }
+
+        size_t expected_enum_items = inner->get_nof_comps();
+        size_t enum_index = 0;
+        if (expected_enum_items == 0)
+          complaint = NOTHING_TO_ORDER;
+        else if (the_enum->u.enums.eis->get_nof_eis() != expected_enum_items)
+          complaint = BAD_ENUM;
+        else for (size_t i = 0; i < expected_enum_items; ++i) {
+          CompField *inner_cf = inner->get_comp_byIndex(i);
+          Type *inner_cft = inner_cf->get_type();
+          if (inner_cft->xerattrib && inner_cft->xerattrib->attribute_) continue;
+          // Found a non-attribute component. Its name must match an enumval
+          const Identifier& field_name = inner_cf->get_name();
+          const EnumItem *ei = the_enum->get_ei_byIndex(enum_index);
+          const Identifier& enum_name  = ei->get_name();
+          if (field_name != enum_name) {// X.693amd1 35.2.2.1 and 35.2.2.2
+            complaint = BAD_ENUM;
+            break;
+          }
+          Value *v = ei->get_value();
+          const int_val_t *ival = v->get_val_Int();
+          const Int enumval = ival->get_val();
+          if ((size_t)enumval != enum_index) {
+            complaint = ENUM_GAP; // 35.2.2.3
+            break;
+          }
+          ++enum_index;
+        }
+      }
+    }
 
     if (cft->xerattrib) {
       if ( cft->xerattrib->attribute_
@@ -1615,9 +1668,10 @@ void Type::chk_xer_use_nil()
 
       if (has_ae(cft->xerattrib)
         ||has_aa(cft->xerattrib)
-        ||cft->xerattrib->defaultForEmpty_     != 0
-        ||cft->xerattrib->embedValues_ ||cft->xerattrib->untagged_
-        ||cft->xerattrib->useNil_      ||cft->xerattrib->useOrder_
+        ||cft->xerattrib->defaultForEmpty_ != 0
+        ||cft->xerattrib->untagged_
+        ||cft->xerattrib->useNil_
+        ||cft->xerattrib->useOrder_
         ||cft->xerattrib->useType_) { // or PI-OR-COMMENT
         complaint = INCOMPATIBLE; // 33.2.3
       }
@@ -1683,7 +1737,7 @@ void Type::chk_xer_use_nil()
     case INCOMPATIBLE:
       cf_last->error("The OPTIONAL component of USE-NIL cannot have any of the "
         "following encoding instructions: ANY-ATTRIBUTES, ANY-ELEMENT, "
-        "DEFAULT-FOR-EMPTY, EMBED-VALUES, PI-OR-COMMENT, UNTAGGED, "
+        "DEFAULT-FOR-EMPTY, PI-OR-COMMENT, UNTAGGED, "
         "USE-NIL, USE-ORDER, USE-TYPE.");
       break;
     case WRONG_OPTIONAL_TYPE:
@@ -1695,6 +1749,33 @@ void Type::chk_xer_use_nil()
       cf_last->error("In a sequence type with EMBED-VALUES and USE-NIL, "
         "the optional component supporting USE-NIL shall not be "
         "a character-encodable type.");
+      break;
+    case NOT_COMPATIBLE_WITH_USEORDER:
+      cf_last->error("The OTIONAL component of USE-NIL must be "
+        "a SEQUENCE/record when USE-ORDER is set for the parent type.");
+      break;
+    case BAD_ENUM:
+      if (!the_enum) FATAL_ERROR("Type::chk_xer_use_order()");
+      the_enum->error("Enumeration items should match the"
+        " non-attribute components of the field %s",
+        cf_last->get_name().get_dispname().c_str());
+      break;
+    case FIRST_OPTIONAL:
+      error("The record-of for USE-ORDER shall not be marked"
+        " OPTIONAL or DEFAULT"); // X.693amd1 35.2.3
+      break;
+    case NOTHING_TO_ORDER:
+      error("The component (%s) should have at least one non-attribute"
+        " component if USE-ORDER is present",
+        cf_last->get_name().get_dispname().c_str());
+      break;
+    case FIRST_NOT_RECORD_OF_ENUM:
+      error("The type with USE-ORDER should have a component "
+        "which is a record-of enumerated");
+      break;
+    case ENUM_GAP:
+      if (!the_enum) FATAL_ERROR("Type::chk_xer_use_order()");
+      the_enum->error("Enumeration values must start at 0 and have no gaps");
       break;
     } // switch
   } // if USE-NIL
@@ -1740,7 +1821,7 @@ void Type::chk_xer_use_order(int num_attributes)
       if (xerattrib->useNil_) { // useNil in addition to useOrder
         // This is an additional complication because USE-ORDER
         // will affect the optional component, rather than the type itself
-        CompField *cf = get_comp_byIndex(ncomps-1);
+        CompField *cf = last->get_comp_byIndex(ncomps-1);
         sequence_type = cf->get_type()->get_type_refd_last();
         if (sequence_type->typetype == T_SEQ_T
           ||sequence_type->typetype == T_SEQ_A) {
@@ -2301,6 +2382,27 @@ void Type::chk_xer() { // XERSTUFF semantic check
     }
     empties.clear();
   } // if secho
+  
+  if (xerattrib->abstract_ || xerattrib->block_) {
+    switch (ownertype) {
+    case OT_COMP_FIELD:
+      if (parent_type->typetype == T_CHOICE_A ||
+          parent_type->typetype == T_CHOICE_T) {
+        if (parent_type->xerattrib != NULL && parent_type->xerattrib->useUnion_) {
+          error("ABSTRACT and BLOCK cannot be used on fields of a union with "
+            "attribute USE-UNION.");
+        }
+        break;
+      }
+      // else fall through
+    case OT_RECORD_OF:
+    case OT_TYPE_DEF:
+      warning("ABSTRACT and BLOCK only affects union fields.");
+      break;
+    default:
+      break;
+    }
+  }
 
 }
 
@@ -3215,7 +3317,7 @@ bool Type::chk_this_refd_value(Value *value, Common::Assignment *lhs, expected_v
 #endif
   case Assignment::A_EXT_CONST:
     if (expected_value == EXPECTED_CONSTANT) {
-      value->error("Reference to an (evaluatable) constant value was "
+      value->error("Reference to an (evaluable) constant value was "
                    "expected instead of %s",
                    ass->get_description().c_str());
       error_flag = true;
@@ -3938,6 +4040,10 @@ bool Type::chk_this_value_Choice(Value *value, Common::Assignment *lhs,
     }
     // no break
   case Value::V_CHOICE: {
+    if (!value->is_asn1() && typetype == T_OPENTYPE) {
+      // allow the alternatives of open types as both lower and upper identifiers
+      value->set_alt_name_to_lowercase();
+    }
     const Identifier& alt_name = value->get_alt_name();
     if(!has_comp_withName(alt_name)) {
       if (value->is_asn1()) {
@@ -5354,7 +5460,8 @@ bool Type::chk_this_template_generic(Template *t, namedbool incomplete_allowed,
       t_comp->set_my_governor(this);
       chk_this_template_ref(t_comp);
       self_ref |= chk_this_template_generic(t_comp, INCOMPLETE_NOT_ALLOWED,
-        allow_omit, ANY_OR_OMIT_ALLOWED, sub_chk, implicit_omit, lhs);
+        omit_in_value_list ? OMIT_ALLOWED : OMIT_NOT_ALLOWED,
+        ANY_OR_OMIT_ALLOWED, sub_chk, implicit_omit, lhs);
       if(temptype==Ttcn::Template::COMPLEMENTED_LIST &&
          t_comp->get_template_refd_last()->get_templatetype() ==
          Ttcn::Template::ANY_OR_OMIT)
@@ -5724,10 +5831,10 @@ void Type::chk_this_template_Int_Real(Template *t)
         FATAL_ERROR("Type::chk_this_template_Int_Real()");
       }
     }
-    if (v_lower && !v_upper) {
+    if (v_lower && !vr->get_max_v()) {
       chk_range_boundary_infinity(v_lower, true);
     }
-    if (!v_lower && v_upper) {
+    if (!vr->get_min_v() && v_upper) {
       chk_range_boundary_infinity(v_upper, false);
     }
     break;}
@@ -5761,6 +5868,10 @@ bool Type::chk_this_template_Choice(Template *t, namedbool is_modified,
     // to have more than one here.
     for (size_t i = 0; i < nof_nts; i++) {
       Ttcn::NamedTemplate *nt = t->get_namedtemp_byIndex(i);
+      if (typetype == T_OPENTYPE) {
+        // allow the alternatives of open types as both lower and upper identifiers
+        nt->set_name_to_lowercase();
+      }
       const Identifier& nt_name = nt->get_name();
 
       if (!has_comp_withName(nt_name)) {

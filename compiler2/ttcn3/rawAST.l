@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -172,7 +172,7 @@ omit	RETURN(XOmitKeyword);
   current_column += 2;
   bool backslash_flag = false;
   yylval.str = memptystr();
-  for (int i = 2; i < yyleng - 2; ) {
+  for (size_t i = 2; i < yyleng - 2; ) {
     if (!backslash_flag && (yytext[i] == '\\' || yytext[i] == '"') &&
 	yytext[i + 1] == '"' &&
 	(yytext[i + 2] == '\\' || yytext[i + 2] == '"') &&
@@ -284,6 +284,9 @@ BITORDERINFIELD    { BEGIN(rawcodec); RETURN(XBitOrderInFieldKeyword); }
 BITORDERINOCTET    { BEGIN(rawcodec); RETURN(XBitOrderInOctetKeyword); }
 HEXORDER    { BEGIN(rawcodec); RETURN(XHexOrderKeyword); }
 TOPLEVEL    { BEGIN(rawcodec); RETURN(XToplevelKeyword); }
+IntX        { RETURN(XIntXKeyword); }
+bit         { RETURN(XBitKeyword); }
+unsigned    { RETURN(XUnsignedKeyword); }
 
 <rawcodec>{
 yes         { yylval.enumval = XDEFYES; RETURN(XYes); }
@@ -330,10 +333,12 @@ TEXT_CODING { BEGIN(textcodec);RETURN(XCodingKeyword); }
          * when to return to INITIAL) */
 
 	/* First, the "starter" attributes */
+abstract RETURN(XKWabstract);
 anyAttributes	RETURN(XKWanyAttributes);
 anyElement	RETURN(XKWanyElement);
 attribute	RETURN(XKWattribute);
 attributeFormQualified RETURN(XKWattributeFormQualified);
+block RETURN(XKWblock);
 controlNamespace RETURN(XKWcontrolNamespace);
 defaultForEmpty	RETURN(XKWdefaultForEmpty);
 element 	RETURN(XKWelement);
@@ -434,16 +439,24 @@ null          RETURN(XKWnull);
 name          RETURN(XKWname);
 value         RETURN(XKWvalue);
 default       RETURN(XKWdefault);
+extend        RETURN(XKWextend);
+metainfo      RETURN(XKWmetainfo);
+for           RETURN(XKWfor);
+unbound       RETURN(XKWunbound);
 [(]           { BEGIN(jsonvalue); RETURN(XJsonValueStart); }
 {IDENTIFIER}  { yylval.str = mcopystr(yytext); RETURN(XAliasToken); }
 [^: \t]       { rawAST_error("invalid JSON token"); }
 }
 
 <jsonvalue>{
-[\\]. {
+[\\][\\][)] { /* \\) -> \) would not work with the other rules */
+  yylval.str = mcopystr("\\)");
+  RETURN(XJsonValueSegment);
+}
+[\\]. { /* \) -> ), all others are treated literally */
   if (yytext[1] == ')') yylval.str = mcopystr(")");
   else yylval.str = mcopystr(yytext);
-  RETURN(XJsonValueSegment); 
+  RETURN(XJsonValueSegment);
 }
 [)]           { BEGIN(jsoncodec); RETURN(XJsonValueEnd); }
 [\"][\"]      { yylval.str = mcopystr("\\\""); RETURN(XJsonValueSegment); }
@@ -466,7 +479,7 @@ definite   RETURN(XKWdefinite);
   current_column++;
   bool backslash_flag = false;
   yylval.str = memptystr();
-  for (int i = 1; i < yyleng - 1; ) {
+  for (size_t i = 1; i < yyleng - 1; ) {
     if (!backslash_flag && (yytext[i] == '\'' || yytext[i] == '"') &&
         yytext[i + 1] == yytext[i]) {
       /* transform '' -> \' and "" -> \" */
@@ -667,10 +680,10 @@ void rawAST_error(const char *str)
   Location loc(infile, yylloc);
   if (*yytext) {
     // the most recently parsed token is known
-    loc.error("in variant attribute, at or before token `%s': %s", yytext, str);
+    loc.warning("in variant attribute, at or before token `%s': %s", yytext, str);
   } else {
     // the most recently parsed token is unknown
-    loc.error("in variant attribute: %s", str);
+    loc.warning("in variant attribute: %s", str);
   }
 }
 

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -360,9 +360,10 @@ namespace Ttcn {
   private:
     /** helper functions used by chk_restriction() */
     bool chk_restriction_named_list(const char* definition_name,
-      map<string, void>& checked_map, size_t needed_checked_cnt);
+      map<string, void>& checked_map, size_t needed_checked_cnt,
+      const Location* usage_loc);
     bool chk_restriction_refd(const char* definition_name,
-      template_restriction_t template_restriction);
+      template_restriction_t template_restriction, const Location* usage_loc);
   public:
     /** Checks if this template conforms to the restriction, return value:
      *  false = always satisfies restriction -> no runtime check needed or
@@ -371,9 +372,12 @@ namespace Ttcn {
      *          time -> runtime check needed and compiler warning given when
      *          inadequate restrictions are used, in other cases there's
      *          no warning
-     *  The return value is used by code generation to avoid useless checks */
+     *  The return value is used by code generation to avoid useless checks
+     *  @param usage_loc contains the location, where the template is used
+     *  (errors are issued here, instead of where the template is declared) */
     bool chk_restriction(const char* definition_name,
-                         template_restriction_t template_restriction);
+                         template_restriction_t template_restriction,
+                         const Location* usage_loc);
 
     /** Public entry points for code generation. */
     /** Generates the equivalent C++ code for the template. It is used
@@ -390,10 +394,10 @@ namespace Ttcn {
     char *generate_code_init(char *str, const char *name);
     /** Walks through the template recursively and appends the C++
      *  initialization sequence of all (directly or indirectly)
-     *  referenced non-parameterized templates to \a str and returns
-     *  the resulting string.  Templates imported from other modules
-     *  are not visited. */
-    char *rearrange_init_code(char *str);
+     *  referenced non-parameterized templates and the default values of all
+     *  parameterized templates to \a str and returns the resulting string. 
+     *  Only objects belonging to module \a usage_mod are initialized. */
+    char *rearrange_init_code(char *str, Common::Module* usage_mod);
 
   private:
     /** Private helper functions for code generation. */
@@ -457,8 +461,8 @@ namespace Ttcn {
 
     /** Helper function for \a rearrange_init_code(). It handles the
      *  referenced templates (i.e. it does the real work). */
-    char *rearrange_init_code_refd(char *str);
-    char *rearrange_init_code_invoke(char *str);
+    char *rearrange_init_code_refd(char *str, Common::Module* usage_mod);
+    char *rearrange_init_code_invoke(char *str, Common::Module* usage_mod);
 
     /** Returns whether the C++ initialization sequence requires a
      *  temporary variable reference to be introduced for efficiency
@@ -541,7 +545,7 @@ namespace Ttcn {
     bool is_string_type(Type::expected_value_t exp_val);
 
     bool chk_restriction(const char* definition_name,
-      template_restriction_t template_restriction);
+      template_restriction_t template_restriction, const Location* usage_loc);
 
     /** Returns whether the template instance can be represented by an in-line
      *  C++ expression. */
@@ -551,9 +555,9 @@ namespace Ttcn {
     void generate_code(expression_struct *expr,
                        template_restriction_t template_restriction = TR_NONE);
     /** Appends the initialization sequence of the referred templates
-     *  to \a str.  Only those templates are considered that are in
-     *  the same module as \a this. */
-    char *rearrange_init_code(char *str);
+     *  and their default values to \a str.  Only templates from module
+     *  \a usage_mod are considered. */
+    char *rearrange_init_code(char *str, Common::Module* usage_mod);
 
     /** Appends the string representation of the template instance to
      *  \a str. */

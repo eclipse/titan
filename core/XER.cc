@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -127,6 +127,19 @@ void write_ns_prefix(const XERdescriptor_t& p_td, TTCN_Buffer& p_buf)
       p_buf.put_c(':');
     }
   }
+}
+
+const char* get_ns_uri_from_prefix(const char *prefix, const XERdescriptor_t& p_td)
+{
+  if (p_td.my_module != 0 && prefix != NULL && prefix[0] != 0) {
+    for (size_t i = 0; i < p_td.my_module->get_num_ns(); ++i) {
+      const namespace_t *ns = p_td.my_module->get_ns(i);
+      if (ns->px != NULL && strcmp(ns->px, prefix) == 0) {
+        return ns->ns;
+      }
+    }
+  }
+  return NULL;
 }
 
 void check_namespace_restrictions(const XERdescriptor_t& p_td, const char* p_xmlns)

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -119,12 +119,11 @@ namespace Ttcn {
      * aliasing problems with other out/inout parameters. */
     void generate_code(expression_struct *expr, bool copy_needed, bool lazy_param=false, bool used_as_lvalue=false) const;
     /** Appends the initialization sequence of all (directly or indirectly)
-     * referred non-parameterized templates to \a str and returns the resulting
-     * string. Flag \a is_local indicates whether the respective formal
-     * parameter is in the same module as \a this. It is considered only if
-     * \a selection is AP_DEFAULT. */
-    char *rearrange_init_code(char *str, bool is_local);
-    char *rearrange_init_code_defval(char *str);
+     * referred non-parameterized templates and the default values of all
+     *  parameterized templates to \a str and returns the resulting string. 
+     *  Only objects belonging to module \a usage_mod are initialized. */
+    char *rearrange_init_code(char *str, Common::Module* usage_mod);
+    char *rearrange_init_code_defval(char *str, Common::Module* usage_mod);
     /** Appends the string representation of the actual parameter to \a str. */
     void append_stringRepr(string& str) const;
     virtual void dump(unsigned level) const;
@@ -171,10 +170,10 @@ namespace Ttcn {
       Type *p_comptype, bool p_compself);
     /** Walks through the parameter list and appends the initialization
      * sequence of all (directly or indirectly) referred non-parameterized
-     * templates to \a str and returns the resulting string. Flag \a is_local
-     * indicates whether the respective formal parameter list is in the same
-     * module as \a this. */
-    char *rearrange_init_code(char *str, bool is_local);
+     * templates and the default values of all parameterized templates to
+     * \a str and returns the resulting string. 
+     * Only objects belonging to module \a usage_mod are initialized. */
+    char *rearrange_init_code(char *str, Common::Module* usage_mod);
     virtual void dump(unsigned level) const;
   };
 
@@ -209,6 +208,12 @@ namespace Ttcn {
     Value* get_val() const;
     /** Appends the string representation of the sub-reference to \a str. */
     void append_stringRepr(string& str) const;
+    /** Sets the first letter in the name of the field to lowercase if it's an
+      * uppercase letter.
+      * Used on open types (the name of their alternatives can be given with both
+      * an uppercase or a lowercase first letter, and the generated code will need
+      * to use the lowercase version). */
+    void set_field_name_to_lowercase();
   };
 
   /** A vector of FieldOrArrayRef objects */
@@ -328,6 +333,8 @@ namespace Ttcn {
      * and the referred objects are bound or not.*/
     void generate_code_ispresentbound(expression_struct_t *expr,
       bool is_template, const bool isbound);
+    /** If the referenced object is a formal parameter, it is marked as used. */
+    void refd_param_usage_found();
   private:
     /** Detects whether the first identifier in subrefs is a module id */
     void detect_modid();
@@ -1582,6 +1589,12 @@ namespace Ttcn {
     template_restriction_t template_restriction;
     /** normal or lazy evaluation parametrization should be used */
     bool lazy_eval;
+    /** Flag that indicates whether the C++ code for the parameter's default
+      * value has been generated or not. */
+    bool defval_generated;
+    /** Flag that indicates whether the parameter is used in the function/
+     * altstep/testcase/parameterized template body. */
+    bool usage_found;
 
     /// Copy constructor disabled
     FormalPar(const FormalPar& p);
@@ -1636,12 +1649,19 @@ namespace Ttcn {
      * reporting. */
     virtual void use_as_lvalue(const Location& p_loc);
     bool get_used_as_lvalue() const { return used_as_lvalue; }
-    /** Generates the C++ objects that represent the default value for the
+    /** Partially generates the C++ object that represents the default value for
+      * the parameter (if present). The object's declaration is not generated,
+      * only its value assignment. */
+    char* generate_code_defval(char* str);
+    /** Generates the C++ object that represents the default value for the
      * parameter (if present). */
     virtual void generate_code_defval(output_struct *target, bool clean_up = false);
     /** Generates the C++ equivalent of the formal parameter, appends it to
-     * \a str and returns the resulting string. */
-    char *generate_code_fpar(char *str);
+     * \a str and returns the resulting string.
+     * The name of the parameter is not displayed if the parameter is unused
+     * (unless forced).
+     * @param display_unused forces the display of the parameter name */
+    char *generate_code_fpar(char *str, bool display_unused = false);
     /** Generates a C++ statement that defines an object (variable) for the
      * formal parameter, appends it to \a str and returns the resulting
      * string. The name of the object is constructed from \a p_prefix and the
@@ -1663,7 +1683,9 @@ namespace Ttcn {
     virtual bool get_lazy_eval() const { return lazy_eval; }
     // code generation: get the C++ string that refers to the formal parameter
     // adds a casting to data type if wrapped into a lazy param
-    string get_reference_name(Scope* scope) const; 
+    string get_reference_name(Scope* scope) const;
+    /** Indicates that the parameter is used at least once. */
+    void set_usage_found() { usage_found = true; }
   };
 
   /** Class to represent a list of formal parameters. Owned by a
@@ -1742,8 +1764,15 @@ namespace Ttcn {
                                const char* p_description);
     void set_genname(const string& p_prefix);
     /** Generates the C++ equivalent of the formal parameter list, appends it
-     * to \a str and returns the resulting string. */
-    char *generate_code(char *str);
+     * to \a str and returns the resulting string.
+     * The names of unused parameters are not displayed (unless forced).
+     * @param display_unused forces the display of parameter names (an amount
+     * equal to this parameter are forced, starting from the first) */
+    char *generate_code(char *str, size_t display_unused = 0);
+    /** Partially generates the C++ objects that represent the default value for
+      * the parameters (if present). The objects' declarations are not generated,
+      * only their value assignments. */
+    char* generate_code_defval(char* str);
     /** Generates the C++ objects that represent the default values for the
      * parameters (if present). */
     void generate_code_defval(output_struct *target);

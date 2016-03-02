@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2000-2014 Ericsson Telecom AB
+// Copyright (c) 2000-2015 Ericsson Telecom AB
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the Eclipse Public License v1.0
 // which accompanies this distribution, and is available at
@@ -36,7 +36,11 @@ extern unsigned int get_timer_array_index(const INTEGER& index_value,
  *
  * */
 template <typename T_type, unsigned int array_size, int index_offset>
-class TIMER_ARRAY {
+class TIMER_ARRAY 
+#ifdef TITAN_RUNTIME_2
+  : public RefdIndexInterface
+#endif
+{
   T_type array_elements[array_size];
   char * names[array_size];
 
@@ -85,13 +89,6 @@ public:
     }
     TTCN_Logger::log_event_str(" }");
   }
-  
-#ifdef TITAN_RUNTIME_2
-  // Dummy functions, only used in record of/set of in RT2 (the referenced indices
-  // cannot be deleted, since arrays have a fixed size)
-  void add_refd_index(int) {}
-  void remove_refd_index(int) {}
-#endif
 };
 
 extern unsigned int get_port_array_index(int index_value,
@@ -100,7 +97,11 @@ extern unsigned int get_port_array_index(const INTEGER& index_value,
   unsigned int array_size, int index_offset);
 
 template <typename T_type, unsigned int array_size, int index_offset>
-class PORT_ARRAY {
+class PORT_ARRAY
+#ifdef TITAN_RUNTIME_2
+  : public RefdIndexInterface
+#endif
+{
   T_type array_elements[array_size];
   char * names[array_size];
 
@@ -152,13 +153,6 @@ public:
     }
     TTCN_Logger::log_event_str(" }");
   }
-  
-#ifdef TITAN_RUNTIME_2
-  // Dummy functions, only used in record of/set of in RT2 (the referenced indices
-  // cannot be deleted, since arrays have a fixed size)
-  void add_refd_index(int) {}
-  void remove_refd_index(int) {}
-#endif
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -170,6 +164,9 @@ extern unsigned int get_array_index(const INTEGER& index_value,
 
 template <typename T_type, unsigned int array_size, int index_offset>
 class VALUE_ARRAY : public Base_Type
+#ifdef TITAN_RUNTIME_2
+  , public RefdIndexInterface
+#endif
 {
   T_type array_elements[array_size];
 public:
@@ -214,6 +211,7 @@ public:
   int lengthof() const;
 
   void set_param(Module_Param& param);
+  Module_Param* get_param(Module_Param_Name& param_name) const;
 
 #ifdef TITAN_RUNTIME_2
   boolean is_equal(const Base_Type* other_value) const { return *this == *(static_cast<const VALUE_ARRAY*>(other_value)); }
@@ -233,6 +231,8 @@ public:
   virtual const TTCN_Typedescriptor_t* get_elem_descr() const 
   { TTCN_error("Internal error: VALUE_ARRAY<>::get_elem_descr() called."); }
   
+  virtual ~VALUE_ARRAY() { } // just to avoid warnings
+  
   /** Encodes accordingly to the JSON encoding rules.
     * Returns the length of the encoded data. */
   int JSON_encode(const TTCN_Typedescriptor_t&, JSON_Tokenizer&) const;
@@ -240,13 +240,6 @@ public:
   /** Decodes accordingly to the JSON encoding rules.
     * Returns the length of the decoded data. */
   int JSON_decode(const TTCN_Typedescriptor_t&, JSON_Tokenizer&, boolean);
-  
-#ifdef TITAN_RUNTIME_2
-  // Dummy functions, only used in record of/set of in RT2 (the referenced indices
-  // cannot be deleted, since arrays have a fixed size)
-  void add_refd_index(int) {}
-  void remove_refd_index(int) {}
-#endif
 };
 
 template <typename T_type, unsigned int array_size, int index_offset>
@@ -383,28 +376,64 @@ void VALUE_ARRAY<T_type,array_size,index_offset>::set_param(
     return;
   }
   
-  param.basic_check(Module_Param::BC_VALUE, "array value");  
-  switch (param.get_type()) {
+  param.basic_check(Module_Param::BC_VALUE, "array value");
+  Module_Param_Ptr mp = &param;
+  if (param.get_type() == Module_Param::MP_Reference) {
+    mp = param.get_referenced_param();
+  }
+  switch (mp->get_type()) {
   case Module_Param::MP_Value_List:
-    if (param.get_size()!=array_size) {
-      param.error("The array value has incorrect number of elements: %lu was expected instead of %lu.", (unsigned long)param.get_size(), (unsigned long)array_size);
+    if (mp->get_size()!=array_size) {
+      param.error("The array value has incorrect number of elements: %lu was expected instead of %lu.", (unsigned long)mp->get_size(), (unsigned long)array_size);
     }
-    for (size_t i=0; i<param.get_size(); ++i) {
-      Module_Param* const curr = param.get_elem(i);
+    for (size_t i=0; i<mp->get_size(); ++i) {
+      Module_Param* const curr = mp->get_elem(i);
       if (curr->get_type()!=Module_Param::MP_NotUsed) {
         array_elements[i].set_param(*curr);
       }
     }
     break;
   case Module_Param::MP_Indexed_List:
-    for (size_t i=0; i<param.get_size(); ++i) {
-      Module_Param* const curr = param.get_elem(i);
+    for (size_t i=0; i<mp->get_size(); ++i) {
+      Module_Param* const curr = mp->get_elem(i);
       array_elements[curr->get_id()->get_index()].set_param(*curr);
     }
     break;
   default:
     param.type_error("array value");
   }
+}
+
+template <typename T_type, unsigned int array_size, int index_offset>
+Module_Param* VALUE_ARRAY<T_type,array_size,index_offset>::get_param
+  (Module_Param_Name& param_name) const
+{
+  if (!is_bound()) {
+    return new Module_Param_Unbound();
+  }
+  if (param_name.next_name()) {
+    // Haven't reached the end of the module parameter name
+    // => the name refers to one of the elements, not to the whole array
+    char* param_field = param_name.get_current_name();
+    if (param_field[0] < '0' || param_field[0] > '9') {
+      TTCN_error("Unexpected record field name in module parameter reference, "
+        "expected a valid array index");
+    }
+    unsigned int param_index = -1;
+    sscanf(param_field, "%u", &param_index);
+    if (param_index >= array_size) {
+      TTCN_error("Invalid array index: %u. The array only has %u elements.", param_index, array_size);
+    }
+    return array_elements[param_index].get_param(param_name);
+  }
+  Vector<Module_Param*> values;
+  for (int i = 0; i < array_size; ++i) {
+    values.push_back(array_elements[i].get_param(param_name));
+  }
+  Module_Param_Value_List* mp = new Module_Param_Value_List();
+  mp->add_list_with_implicit_ids(&values);
+  values.clear();
+  return mp;
 }
 
 template <typename T_type, unsigned int array_size, int index_offset>
@@ -632,10 +661,11 @@ public:
 private:
   static boolean match_function_specific(
     const Base_Type *value_ptr, int value_index,
-    const Restricted_Length_Template *template_ptr, int template_index);
+    const Restricted_Length_Template *template_ptr, int template_index,
+    boolean legacy);
 public:
   boolean match(const VALUE_ARRAY<T_value_type, array_size, index_offset>&
-                other_value) const;
+                other_value, boolean legacy = FALSE) const;
 
   boolean is_value() const;
   VALUE_ARRAY<T_value_type, array_size, index_offset> valueof() const;
@@ -645,15 +675,16 @@ public:
 
   void log() const;
   void log_match(const VALUE_ARRAY<T_value_type, array_size, index_offset>&
-                 match_value) const;
+                 match_value, boolean legacy = FALSE) const;
 
   void set_param(Module_Param& param);
+  Module_Param* get_param(Module_Param_Name& param_name) const;
 
   void encode_text(Text_Buf& text_buf) const;
   void decode_text(Text_Buf& text_buf);
 
-  boolean is_present() const;
-  boolean match_omit() const;
+  boolean is_present(boolean legacy = FALSE) const;
+  boolean match_omit(boolean legacy = FALSE) const;
 
 #ifdef TITAN_RUNTIME_2
   void valueofv(Base_Type* value) const { *(static_cast<VALUE_ARRAY<T_value_type, array_size, index_offset>*>(value)) = valueof(); }
@@ -661,10 +692,10 @@ public:
   void copy_value(const Base_Type* other_value) { *this = *(static_cast<const VALUE_ARRAY<T_value_type, array_size, index_offset>*>(other_value)); }
   Base_Template* clone() const { return new TEMPLATE_ARRAY(*this); }
   const TTCN_Typedescriptor_t* get_descriptor() const { TTCN_error("Internal error: TEMPLATE_ARRAY<>::get_descriptor() called."); }
-  boolean matchv(const Base_Type* other_value) const { return match(*(static_cast<const VALUE_ARRAY<T_value_type, array_size, index_offset>*>(other_value))); }
-  void log_matchv(const Base_Type* match_value) const  { log_match(*(static_cast<const VALUE_ARRAY<T_value_type, array_size, index_offset>*>(match_value))); }
+  boolean matchv(const Base_Type* other_value, boolean legacy) const { return match(*(static_cast<const VALUE_ARRAY<T_value_type, array_size, index_offset>*>(other_value)), legacy); }
+  void log_matchv(const Base_Type* match_value, boolean legacy) const  { log_match(*(static_cast<const VALUE_ARRAY<T_value_type, array_size, index_offset>*>(match_value)), legacy); }
 #else
-  void check_restriction(template_res t_res, const char* t_name=NULL) const;
+  void check_restriction(template_res t_res, const char* t_name=NULL, boolean legacy = FALSE) const;
 #endif
 };
 
@@ -1222,14 +1253,14 @@ template <typename T_value_type, typename T_template_type,
 boolean TEMPLATE_ARRAY<T_value_type,T_template_type,array_size,index_offset>::
 match_function_specific(const Base_Type *value_ptr, int value_index,
                         const Restricted_Length_Template *template_ptr,
-                        int template_index)
+                        int template_index, boolean legacy)
 {
   if (value_index >= 0)
     return ((const TEMPLATE_ARRAY*)template_ptr)->
       single_value.value_elements[template_index]->
         match(
           ((const VALUE_ARRAY<T_value_type,array_size,index_offset>*)value_ptr)
-            ->array_element(value_index));
+            ->array_element(value_index), legacy);
   else
     return ((const TEMPLATE_ARRAY*)template_ptr)->
       single_value.value_elements[template_index]->is_any_or_omit();
@@ -1239,14 +1270,14 @@ template <typename T_value_type, typename T_template_type,
           unsigned int array_size, int index_offset>
 boolean TEMPLATE_ARRAY<T_value_type,T_template_type,array_size,index_offset>::
 match(const VALUE_ARRAY<T_value_type, array_size, index_offset>&
-      other_value) const
+      other_value, boolean legacy) const
 {
   if (!match_length(array_size)) return FALSE;
   switch (template_selection)
   {
   case SPECIFIC_VALUE:
     return match_permutation_array(&other_value, array_size, this, single_value.n_elements,
-                       match_function_specific);
+                       match_function_specific, legacy);
   case OMIT_VALUE:
     return FALSE;
   case ANY_VALUE:
@@ -1256,7 +1287,7 @@ match(const VALUE_ARRAY<T_value_type, array_size, index_offset>&
   case COMPLEMENTED_LIST:
     for (unsigned int list_count = 0; list_count < value_list.n_values;
          list_count++)
-      if (value_list.list_value[list_count].match(other_value))
+      if (value_list.list_value[list_count].match(other_value, legacy))
         return template_selection == VALUE_LIST;
     return template_selection == COMPLEMENTED_LIST;
   default:
@@ -1378,10 +1409,10 @@ template <typename T_value_type, typename T_template_type,
           unsigned int array_size, int index_offset>
 void TEMPLATE_ARRAY<T_value_type,T_template_type,array_size,index_offset>::
 log_match(const VALUE_ARRAY<T_value_type, array_size, index_offset>&
-          match_value) const
+          match_value, boolean legacy) const
 {
   if(TTCN_Logger::VERBOSITY_COMPACT == TTCN_Logger::get_matching_verbosity()){
-    if(match(match_value)){
+    if(match(match_value, legacy)){
       TTCN_Logger::print_logmatch_buffer();
       TTCN_Logger::log_event_str(" matched");
     }else{
@@ -1391,10 +1422,10 @@ log_match(const VALUE_ARRAY<T_value_type, array_size, index_offset>&
         for (unsigned int elem_count = 0; elem_count < array_size;
           elem_count++) {
           if(!single_value.value_elements[elem_count]->
-              match(match_value.array_element(elem_count))){
+              match(match_value.array_element(elem_count), legacy)){
             TTCN_Logger::log_logmatch_info("[%d]", elem_count);
             single_value.value_elements[elem_count]->
-              log_match(match_value.array_element(elem_count));
+              log_match(match_value.array_element(elem_count), legacy);
             TTCN_Logger::set_logmatch_buffer_len(previous_size);
           }
         }
@@ -1414,7 +1445,8 @@ log_match(const VALUE_ARRAY<T_value_type, array_size, index_offset>&
     TTCN_Logger::log_event_str("{ ");
     for (unsigned int elem_count = 0; elem_count < array_size; elem_count++) {
       if (elem_count > 0) TTCN_Logger::log_event_str(", ");
-      single_value.value_elements[elem_count]->log_match(match_value.array_element(elem_count));
+      single_value.value_elements[elem_count]->log_match(
+        match_value.array_element(elem_count), legacy);
     }
     TTCN_Logger::log_event_str(" }");
     log_match_length(array_size);
@@ -1422,7 +1454,7 @@ log_match(const VALUE_ARRAY<T_value_type, array_size, index_offset>&
     match_value.log();
     TTCN_Logger::log_event_str(" with ");
     log();
-    if (match(match_value)) TTCN_Logger::log_event_str(" matched");
+    if (match(match_value, legacy)) TTCN_Logger::log_event_str(" matched");
     else TTCN_Logger::log_event_str(" unmatched");
   }
 }
@@ -1449,7 +1481,13 @@ void TEMPLATE_ARRAY<T_value_type,T_template_type,array_size,index_offset>::set_p
   }
   
   param.basic_check(Module_Param::BC_TEMPLATE, "array template");
-  switch (param.get_type()) {
+  
+  Module_Param_Ptr mp = &param;
+  if (param.get_type() == Module_Param::MP_Reference) {
+    mp = param.get_referenced_param();
+  }
+  
+  switch (mp->get_type()) {
   case Module_Param::MP_Omit:
     *this = OMIT_VALUE;
     break;
@@ -1460,31 +1498,98 @@ void TEMPLATE_ARRAY<T_value_type,T_template_type,array_size,index_offset>::set_p
     *this = ANY_OR_OMIT;
     break;
   case Module_Param::MP_List_Template:
-  case Module_Param::MP_ComplementList_Template:
-    set_type(param.get_type()==Module_Param::MP_List_Template ? VALUE_LIST : COMPLEMENTED_LIST, param.get_size());
-    for (size_t i=0; i<param.get_size(); i++) {
-      list_item(i).set_param(*param.get_elem(i));
+  case Module_Param::MP_ComplementList_Template: {
+    TEMPLATE_ARRAY<T_value_type,T_template_type,array_size,index_offset> temp;
+    temp.set_type(mp->get_type() == Module_Param::MP_List_Template ?
+      VALUE_LIST : COMPLEMENTED_LIST, mp->get_size());
+    for (size_t i=0; i<mp->get_size(); i++) {
+      temp.list_item(i).set_param(*mp->get_elem(i));
     }
-    break;
+    *this = temp;
+    break; }
   case Module_Param::MP_Value_List:
-    set_size(param.get_size());
-    for (size_t i=0; i<param.get_size(); ++i) {
-      Module_Param* const curr = param.get_elem(i);
+    set_size(mp->get_size());
+    for (size_t i=0; i<mp->get_size(); ++i) {
+      Module_Param* const curr = mp->get_elem(i);
       if (curr->get_type()!=Module_Param::MP_NotUsed) {
         (*this)[(int)i+index_offset].set_param(*curr);
       }
     }
     break;
   case Module_Param::MP_Indexed_List:
-    for (size_t i=0; i<param.get_size(); ++i) {
-      Module_Param* const curr = param.get_elem(i);
+    for (size_t i=0; i<mp->get_size(); ++i) {
+      Module_Param* const curr = mp->get_elem(i);
       (*this)[curr->get_id()->get_index()].set_param(*curr);
     }
     break;
   default:
     param.type_error("array template");
   }
-  is_ifpresent = param.get_ifpresent();
+  is_ifpresent = param.get_ifpresent() || mp->get_ifpresent();
+}
+
+template <typename T_value_type, typename T_template_type,
+          unsigned int array_size, int index_offset>
+Module_Param* TEMPLATE_ARRAY<T_value_type,T_template_type,array_size,index_offset>::
+  get_param(Module_Param_Name& param_name) const
+{
+  if (param_name.next_name()) {
+    // Haven't reached the end of the module parameter name
+    // => the name refers to one of the elements, not to the whole record of
+    char* param_field = param_name.get_current_name();
+    if (param_field[0] < '0' || param_field[0] > '9') {
+      TTCN_error("Unexpected record field name in module parameter reference, "
+        "expected a valid array index");
+    }
+    unsigned int param_index = -1;
+    sscanf(param_field, "%u", &param_index);
+    if (param_index >= array_size) {
+      TTCN_error("Invalid array index: %u. The array only has %u elements.", param_index, array_size);
+    }
+    return single_value.value_elements[param_index]->get_param(param_name);
+  }
+  Module_Param* mp = NULL;
+  switch (template_selection) {
+  case UNINITIALIZED_TEMPLATE:
+    mp = new Module_Param_Unbound();
+    break;
+  case OMIT_VALUE:
+    mp = new Module_Param_Omit();
+    break;
+  case ANY_VALUE:
+    mp = new Module_Param_Any();
+    break;
+  case ANY_OR_OMIT:
+    mp = new Module_Param_AnyOrNone();
+    break;
+  case SPECIFIC_VALUE: {
+    Vector<Module_Param*> values;
+    for (int i = 0; i < array_size; ++i) {
+      values.push_back(single_value.value_elements[i]->get_param(param_name));
+    }
+    mp = new Module_Param_Value_List();
+    mp->add_list_with_implicit_ids(&values);
+    values.clear();
+    break; }
+  case VALUE_LIST:
+  case COMPLEMENTED_LIST: {
+    if (template_selection == VALUE_LIST) {
+      mp = new Module_Param_List_Template();
+    }
+    else {
+      mp = new Module_Param_ComplementList_Template();
+    }
+    for (size_t i = 0; i < value_list.n_values; ++i) {
+      mp->add_elem(value_list.list_value[i].get_param(param_name));
+    }
+    break; }
+  default:
+    break;
+  }
+  if (is_ifpresent) {
+    mp->set_ifpresent();
+  }
+  return mp;
 }
 
 template <typename T_value_type, typename T_template_type,
@@ -1560,16 +1665,16 @@ decode_text(Text_Buf& text_buf)
 template <typename T_value_type, typename T_template_type,
           unsigned int array_size, int index_offset>
 boolean TEMPLATE_ARRAY<T_value_type,T_template_type,array_size,index_offset>::
-is_present() const
+is_present(boolean legacy /* = FALSE */) const
 {
   if (template_selection==UNINITIALIZED_TEMPLATE) return FALSE;
-  return !match_omit();
+  return !match_omit(legacy);
 }
 
 template <typename T_value_type, typename T_template_type,
           unsigned int array_size, int index_offset>
 boolean TEMPLATE_ARRAY<T_value_type,T_template_type,array_size,index_offset>::
-match_omit() const
+match_omit(boolean legacy /* = FALSE */) const
 {
   if (is_ifpresent) return TRUE;
   switch (template_selection) {
@@ -1578,10 +1683,14 @@ match_omit() const
     return TRUE;
   case VALUE_LIST:
   case COMPLEMENTED_LIST:
-    for (unsigned int i=0; i<value_list.n_values; i++)
-      if (value_list.list_value[i].match_omit())
-        return template_selection==VALUE_LIST;
-    return template_selection==COMPLEMENTED_LIST;
+    if (legacy) {
+      // legacy behavior: 'omit' can appear in the value/complement list
+      for (unsigned int i=0; i<value_list.n_values; i++)
+        if (value_list.list_value[i].match_omit())
+          return template_selection==VALUE_LIST;
+      return template_selection==COMPLEMENTED_LIST;
+    }
+    // else fall through
   default:
     return FALSE;
   }
@@ -1592,7 +1701,7 @@ match_omit() const
 template <typename T_value_type, typename T_template_type,
           unsigned int array_size, int index_offset>
 void TEMPLATE_ARRAY<T_value_type,T_template_type,array_size,index_offset>::
-check_restriction(template_res t_res, const char* t_name) const
+check_restriction(template_res t_res, const char* t_name, boolean legacy /* = FALSE */) const
 {
   if (template_selection==UNINITIALIZED_TEMPLATE) return;
   switch ((t_name&&(t_res==TR_VALUE))?TR_OMIT:t_res) {
@@ -1604,7 +1713,7 @@ check_restriction(template_res t_res, const char* t_name) const
       single_value.value_elements[i]->check_restriction(t_res, t_name ? t_name : "array");
     return;
   case TR_PRESENT:
-    if (!match_omit()) return;
+    if (!match_omit(legacy)) return;
     break;
   default:
     return;
@@ -1624,7 +1733,8 @@ answer recursive_permutation_match(const Base_Type *value_ptr,
   unsigned int template_size,
   unsigned int permutation_index,
   match_function_t match_function,
-  unsigned int& shift_size)
+  unsigned int& shift_size,
+  boolean legacy)
 {
   unsigned int nof_permutations = template_ptr->get_number_of_permutations();
   if (permutation_index > nof_permutations)
@@ -1659,7 +1769,7 @@ answer recursive_permutation_match(const Base_Type *value_ptr,
       template_ptr->get_permutation_start(permutation_index);
 
   if (permutation_begins ||
-    match_function(value_ptr, -1, template_ptr, template_start_index))
+    match_function(value_ptr, -1, template_ptr, template_start_index, legacy))
   {
     unsigned int smallest_possible_size;
     unsigned int largest_possible_size;
@@ -1681,7 +1791,7 @@ answer recursive_permutation_match(const Base_Type *value_ptr,
       for(unsigned int i = 0; i < permutation_size; i++)
       {
         if(match_function(value_ptr, -1, template_ptr,
-          i + template_start_index))
+          i + template_start_index, legacy))
         {
           has_asterisk = TRUE;
         }else{
@@ -1753,7 +1863,7 @@ answer recursive_permutation_match(const Base_Type *value_ptr,
         boolean found = match_set_of_internal(value_ptr, value_start_index,
           temp_size, template_ptr,
           template_start_index, permutation_size,
-          match_function, SUPERSET, &x, pair_list,old_temp_size);
+          match_function, SUPERSET, &x, pair_list, old_temp_size, legacy);
 
         if(found)
         {
@@ -1809,7 +1919,7 @@ answer recursive_permutation_match(const Base_Type *value_ptr,
           template_size -
           permutation_size,
           permutation_index,
-          match_function, shift_size);
+          match_function, shift_size, legacy);
       }else{
         //try with the next permutation
         result = recursive_permutation_match(value_ptr,value_start_index+i,
@@ -1818,7 +1928,7 @@ answer recursive_permutation_match(const Base_Type *value_ptr,
           permutation_size,
           template_size - permutation_size,
           permutation_index + 1,
-          match_function, shift_size);
+          match_function, shift_size, legacy);
       }
 
       if(result == SUCCESS)
@@ -1867,19 +1977,19 @@ answer recursive_permutation_match(const Base_Type *value_ptr,
     unsigned int i = 0;
     do{
       good = match_function(value_ptr, value_start_index + i,
-        template_ptr, template_start_index + i);
+        template_ptr, template_start_index + i, legacy);
       i++;
       //bad stop: something can't be matched
       //half bad half good stop: the end of values is reached
       //good stop: matching on the full distance or till an asterisk
     }while(good && i < value_size && i < distance &&
       !match_function(value_ptr, -1, template_ptr,
-        template_start_index + i));
+        template_start_index + i, legacy));
 
     //if we matched on the full distance or till an asterisk
     if(good && (i == distance ||
       match_function(value_ptr, -1, template_ptr,
-        template_start_index + i)))
+        template_start_index + i, legacy)))
     {
       //reached the end of the templates
       if(i == template_size)
@@ -1901,7 +2011,7 @@ answer recursive_permutation_match(const Base_Type *value_ptr,
           template_start_index + i,
           template_size - i,
           permutation_index,
-          match_function, shift_size);
+          match_function, shift_size, legacy);
       }
     }else{
       //something bad happened, so we have to check how bad the situation is
@@ -1920,7 +2030,7 @@ answer recursive_permutation_match(const Base_Type *value_ptr,
         do{
           good = match_function(value_ptr,
             value_start_index + i + shift_size,
-            template_ptr, template_start_index + i);
+            template_ptr, template_start_index + i, legacy);
           shift_size++;
         }while(!good && i + shift_size < value_size);
 
@@ -1943,7 +2053,8 @@ boolean match_permutation_array(const Base_Type *value_ptr,
   int value_size,
   const TEMPLATE_ARRAY<T_value_type,T_template_type,array_size,index_offset>* template_ptr,
   int template_size,
-  match_function_t match_function)
+  match_function_t match_function,
+  boolean legacy)
 {
   if (value_ptr == NULL || value_size < 0 ||
     template_ptr == NULL || template_size < 0 ||
@@ -1954,18 +2065,18 @@ boolean match_permutation_array(const Base_Type *value_ptr,
   // use the simplified algorithm if the template does not contain permutation
   if (nof_permutations == 0)
     return match_array(value_ptr, value_size,
-      template_ptr, template_size, match_function);
+      template_ptr, template_size, match_function, legacy);
   // use 'set of' matching if all template elements are grouped into one
   // permutation
   if (nof_permutations == 1 && template_ptr->get_permutation_start(0) == 0 &&
     template_ptr->get_permutation_end(0) ==
       (unsigned int)(template_size - 1))
     return match_set_of(value_ptr, value_size, template_ptr, template_size,
-      match_function);
+      match_function, legacy);
 
   unsigned int shift_size = 0;
   return recursive_permutation_match(value_ptr, 0, value_size, template_ptr,
-    0, template_size, 0, match_function, shift_size) == SUCCESS;
+    0, template_size, 0, match_function, shift_size, legacy) == SUCCESS;
 }
 
 #endif
