@@ -9,7 +9,6 @@
 #define EVENT_HANDLER_HH
 
 #include "Types.h"
-
 #include <sys/select.h>
 
 /**
