@@ -94,7 +94,7 @@ boolean generate_skeleton = FALSE, force_overwrite = FALSE,
   check_subtype = TRUE, suppress_context = FALSE, display_up_to_date = FALSE,
   implicit_json_encoding = FALSE, json_refs_for_all_types = TRUE,
   force_gen_seof = FALSE, omit_in_value_list = FALSE,
-  warnings_for_bad_variants = FALSE;
+  warnings_for_bad_variants = FALSE, allow_hyphen_in_filename = FALSE;
 
 // Default code splitting mode is set to 'no splitting'.
 CodeGenHelper::split_type code_splitting_mode = CodeGenHelper::SPLIT_NONE;
@@ -374,6 +374,8 @@ static boolean is_valid_asn1_filename(const char* file_name)
 {
   // only check the actual file name, not the whole path
   const char* file_name_start = strrchr(file_name, '/');
+  if (allow_hyphen_in_filename)
+    return TRUE;
   if (0 == strchr(file_name_start != NULL ? file_name_start : file_name, '-' )) {
     return TRUE;
   }
@@ -398,6 +400,7 @@ static void usage()
     "	-f:		force overwriting of output files\n"
     "	-g:		emulate GCC error/warning message format\n"
     "	-i:		use only line numbers in error/warning messages\n"
+    "	-h:		allow hyphen in file name\n"
     "	-j:		disable JSON encoder/decoder functions\n"
     "	-K file:	enable selective code coverage\n"
     "	-l:		include source line info in C++ code\n"
@@ -473,7 +476,7 @@ int main(int argc, char *argv[])
   bool
     Aflag = false,  Lflag = false, Yflag = false,
     Pflag = false, Tflag = false, Vflag = false, bflag = false,
-    cflag = false, fflag = false, iflag = false, lflag = false,
+    cflag = false, fflag = false, hflag = false, iflag = false, lflag = false,
     oflag = false, pflag = false, qflag = false, rflag = false, sflag = false,
     tflag = false, uflag = false, vflag = false, wflag = false, xflag = false,
     dflag = false, Xflag = false, Rflag = false, gflag = false, aflag = false,
@@ -572,7 +575,7 @@ int main(int argc, char *argv[])
 
   if (!ttcn2json) {
     for ( ; ; ) {
-      int c = getopt(argc, argv, "aA:bcC:dEfFgijK:lLMo:pP:qQ:rRsStT:uU:vV:wxXyYz:0-");
+      int c = getopt(argc, argv, "aA:bcC:dEfFghijK:lLMo:pP:qQ:rRsStT:uU:vV:wxXyYz:0-");
       if (c == -1) break;
       switch (c) {
       case 'a':
@@ -637,6 +640,10 @@ int main(int argc, char *argv[])
       case 'g':
         SET_FLAG(g);
         gcc_compat = TRUE;
+        break;
+      case 'h':
+        SET_FLAG(h);
+        allow_hyphen_in_filename = TRUE;
         break;
       case 'i':
         SET_FLAG(i);
