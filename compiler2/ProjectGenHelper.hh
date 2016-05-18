@@ -150,8 +150,8 @@ private:
   bool Zflag; // the makefilegen switch wether to use this option at all
   bool Wflag; // prefix woring directory
   bool Hflag; // hierarchical make structure
-  std::map<const std::string, ProjectDescriptor> projs;
-  std::map<const std::string, const ProjectDescriptor*> checkedProjs;
+  std::map<std::string, ProjectDescriptor> projs;
+  std::map<std::string, const ProjectDescriptor*> checkedProjs;
 };
 
 #endif // _LIB_GEN_HELPER_HH
