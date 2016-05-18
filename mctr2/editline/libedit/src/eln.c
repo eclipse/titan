@@ -1,4 +1,4 @@
-/*	$NetBSD: eln.c,v 1.7 2010/04/15 00:52:48 christos Exp $	*/
+/*	$NetBSD: eln.c,v 1.18 2015/03/24 21:26:50 christos Exp $	*/
 
 /*-
  * Copyright (c) 2009 The NetBSD Foundation, Inc.
@@ -34,7 +34,7 @@
  */
 #include "config.h"
 #if !defined(lint) && !defined(SCCSID)
-__RCSID("$NetBSD: eln.c,v 1.7 2010/04/15 00:52:48 christos Exp $");
+__RCSID("$NetBSD: eln.c,v 1.18 2015/03/24 21:26:50 christos Exp $");
 #endif /* not lint && not SCCSID */
 
 #include "histedit.h"
@@ -57,7 +57,7 @@ el_getc(EditLine *el, char *cp)
 		el->el_flags &= ~IGNORE_EXTCHARS;
 
 	if (num_read > 0)
-		*cp = (unsigned char)wc;
+		*cp = (char)wc;
 	return num_read;
 }
 
@@ -76,9 +76,11 @@ el_gets(EditLine *el, int *nread)
 {
 	const wchar_t *tmp;
 
-	el->el_flags |= IGNORE_EXTCHARS;
+	if (!(el->el_flags & CHARSET_IS_UTF8))
+		el->el_flags |= IGNORE_EXTCHARS;
 	tmp = el_wgets(el, nread);
-	el->el_flags &= ~IGNORE_EXTCHARS;
+	if (!(el->el_flags & CHARSET_IS_UTF8))
+		el->el_flags &= ~IGNORE_EXTCHARS;
 	return ct_encode_string(tmp, &el->el_lgcyconv);
 }
 
@@ -118,6 +120,29 @@ el_set(EditLine *el, int op, ...)
 		break;
 	}
 
+	case EL_RESIZE: {
+		el_zfunc_t p = va_arg(ap, el_zfunc_t);
+		void *arg = va_arg(ap, void *);
+		ret = ch_resizefun(el, p, arg);
+		break;
+	}
+
+	case EL_ALIAS_TEXT: {
+		el_afunc_t p = va_arg(ap, el_afunc_t);
+		void *arg = va_arg(ap, void *);
+		ret = ch_aliasfun(el, p, arg);
+		break;
+	}
+
+	case EL_PROMPT_ESC:
+	case EL_RPROMPT_ESC: {
+		el_pfunc_t p = va_arg(ap, el_pfunc_t);
+		int c = va_arg(ap, int);
+
+		ret = prompt_set(el, p, c, op, 0);
+		break;
+	}
+
 	case EL_TERMINAL:       /* const char * */
 		ret = el_wset(el, op, va_arg(ap, char *));
 		break;
@@ -142,12 +167,12 @@ el_set(EditLine *el, int op, ...)
 		const char *argv[20];
 		int i;
 		const wchar_t **wargv;
-		for (i = 1; i < (int)__arraycount(argv); ++i)
-			if ((argv[i] = va_arg(ap, char *)) == NULL)
+		for (i = 1; i < (int)__arraycount(argv) - 1; ++i)
+			if ((argv[i] = va_arg(ap, const char *)) == NULL)
 			    break;
-		argv[0] = NULL;
+		argv[0] = argv[i] = NULL;
 		wargv = (const wchar_t **)
-		    ct_decode_argv(i, argv, &el->el_lgcyconv);
+		    ct_decode_argv(i + 1, argv, &el->el_lgcyconv);
 		if (!wargv) {
 		    ret = -1;
 		    goto out;
@@ -164,15 +189,15 @@ el_set(EditLine *el, int op, ...)
 			break;
 		case EL_TELLTC:
 			wargv[0] = STR("telltc");
-			ret = term_telltc(el, i, wargv);
+			ret = terminal_telltc(el, i, wargv);
 			break;
 		case EL_SETTC:
 			wargv[0] = STR("settc");
-			ret = term_settc(el, i, wargv);
+			ret = terminal_settc(el, i, wargv);
 			break;
 		case EL_ECHOTC:
 			wargv[0] = STR("echotc");
-			ret = term_echotc(el, i, wargv);
+			ret = terminal_echotc(el, i, wargv);
 			break;
 		case EL_SETTY:
 			wargv[0] = STR("setty");
@@ -208,33 +233,36 @@ el_set(EditLine *el, int op, ...)
 	}
 	case EL_HIST: {           /* hist_fun_t, const char * */
 		hist_fun_t fun = va_arg(ap, hist_fun_t);
-		ptr_t ptr = va_arg(ap, ptr_t);
+		void *ptr = va_arg(ap, void *);
 		ret = hist_set(el, fun, ptr);
-		if (!(el->el_flags & CHARSET_IS_UTF8))
-			el->el_flags |= NARROW_HISTORY;
+		el->el_flags |= NARROW_HISTORY;
 		break;
 	}
+
 	/* XXX: do we need to change el_rfunc_t? */
 	case EL_GETCFN:         /* el_rfunc_t */
 		ret = el_wset(el, op, va_arg(ap, el_rfunc_t));
 		el->el_flags |= NARROW_READ;
 		break;
+
 	case EL_CLIENTDATA:     /* void * */
 		ret = el_wset(el, op, va_arg(ap, void *));
 		break;
+
 	case EL_SETFP: {          /* int, FILE * */
 		int what = va_arg(ap, int);
 		FILE *fp = va_arg(ap, FILE *);
 		ret = el_wset(el, op, what, fp);
 		break;
 	}
-	case EL_PROMPT_ESC: /* el_pfunc_t, char */
-	case EL_RPROMPT_ESC: {
-		el_pfunc_t p = va_arg(ap, el_pfunc_t);
-		char c = va_arg(ap, int);
-		ret = prompt_set(el, p, c, op, 0);
+
+	case EL_REFRESH:
+		re_clear_display(el);
+		re_refresh(el);
+		terminal__flush(el);
+		ret = 0;
 		break;
-	}
+
 	default:
 		ret = -1;
 		break;
@@ -269,9 +297,9 @@ el_get(EditLine *el, int op, ...)
 	case EL_RPROMPT_ESC: {
 		el_pfunc_t *p = va_arg(ap, el_pfunc_t *);
 		char *c = va_arg(ap, char *);
-		wchar_t wc;
+		wchar_t wc = 0;
 		ret = prompt_get(el, p, &wc, op);
-		*c = (unsigned char)wc;
+		*c = (char)wc;
 		break;
 	}
 
@@ -304,7 +332,7 @@ el_get(EditLine *el, int op, ...)
 			if ((argv[i] = va_arg(ap, char *)) == NULL)
 				break;
 		argv[0] = gettc;
-		ret = term_gettc(el, i, argv);
+		ret = terminal_gettc(el, i, argv);
 		break;
 	}
 

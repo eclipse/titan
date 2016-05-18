@@ -1,4 +1,4 @@
-/*	$NetBSD: histedit.h,v 1.46 2010/04/15 00:50:03 christos Exp $	*/
+/*	$NetBSD: histedit.h,v 1.53 2014/06/18 18:12:28 christos Exp $	*/
 
 /*-
  * Copyright (c) 1992, 1993
@@ -43,12 +43,6 @@
 #define	LIBEDIT_MAJOR 2
 #define	LIBEDIT_MINOR 11
 
-#  if defined(HAVE_STDINT_H)
-#    include <stdint.h>
-#  elif defined(HAVE_INTTYPES_H)
-#    include <inttypes.h>
-#  endif
-
 #include <sys/types.h>
 #include <stdio.h>
 
@@ -90,6 +84,8 @@ typedef struct lineinfo {
  * Initialization, cleanup, and resetting
  */
 EditLine	*el_init(const char *, FILE *, FILE *, FILE *);
+EditLine	*el_init_fd(const char *, FILE *, FILE *, FILE *,
+    int, int, int);
 void		 el_end(EditLine *);
 void		 el_reset(EditLine *);
 
@@ -146,7 +142,7 @@ unsigned char	_el_fn_complete(EditLine *, int);
 #define	EL_SETTY	8	/* , const Char *, ..., NULL);        set     */
 #define	EL_ADDFN	9	/* , const Char *, const Char,        set     */
 				/*   el_func_t);		 	      */
-#define	EL_HIST		10	/* , hist_fun_t, const ptr_t);	      set     */
+#define	EL_HIST		10	/* , hist_fun_t, const void *);	      set     */
 #define	EL_EDITMODE	11	/* , int);			      set/get */
 #define	EL_RPROMPT	12	/* , prompt_func);		      set/get */
 #define	EL_GETCFN	13	/* , el_rfunc_t);		      set/get */
@@ -159,6 +155,8 @@ unsigned char	_el_fn_complete(EditLine *, int);
 #define	EL_REFRESH	20	/* , void);			      set     */
 #define	EL_PROMPT_ESC	21	/* , prompt_func, Char);	      set/get */
 #define	EL_RPROMPT_ESC	22	/* , prompt_func, Char);	      set/get */
+#define	EL_RESIZE	23	/* , el_zfunc_t, void *);	      set     */
+#define	EL_ALIAS_TEXT	24	/* , el_afunc_t, void *);	      set     */
 
 #define	EL_BUILTIN_GETCFN	(NULL)
 
@@ -227,6 +225,7 @@ int		history(History *, HistEvent *, int, ...);
 #define	H_NEXT_EVDATA	23	/* , const int, histdata_t *);	*/
 #define	H_DELDATA	24	/* , int, histdata_t *);*/
 #define	H_REPLACE	25	/* , const char *, histdata_t);	*/
+#define	H_SAVE_FP	26	/* , FILE *);		*/
 
 
 
@@ -282,6 +281,7 @@ int		 el_wparse(EditLine *, int, const wchar_t **);
 int		 el_wset(EditLine *, int, ...);
 int		 el_wget(EditLine *, int, ...);
 
+int		 el_cursor(EditLine *, int);
 const LineInfoW	*el_wline(EditLine *);
 int		 el_winsertstr(EditLine *, const wchar_t *);
 #define          el_wdeletestr  el_deletestr
