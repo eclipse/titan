@@ -64,6 +64,8 @@
   #define PLATFORM_STRING "FREEBSD"
 #elif defined (INTERIX)
   #define PLATFORM_STRING "INTERIX"
+#elif defined (DARWIN)
+  #define PLATFORM_STRING "DARWIN"
 /* TODO more */
 #endif
 
@@ -71,7 +73,7 @@
 #ifndef PLATFORM_STRING
 /* Just to suppress error later */
   #define PLATFORM_STRING "UNKNOWN"
-  #error "No supported platform has been defined in the Makefile. The supported ones: SOLARIS, SOLARIS8, LINUX, WIN32"
+  #error "No supported platform has been defined in the Makefile. The supported ones: SOLARIS, SOLARIS8, LINUX, WIN32, DARWIN"
 #endif
 
 #define STRINGIFY(x) #x
@@ -94,9 +96,14 @@
   /* Ignore __GNUC_PATCHLEVEL__ */
 #define COMPILER_VERSION_STRING " GCC: (GNU) " STR(__GNUC__) "." STR(__GNUC_MINOR__) GCC_PATCHLEVEL_STRING
 
-
+#ifndef DARWIN
   static const char titan_[] __attribute__ ((section (".titan"))) = \
   "TITAN: " STR(TTCN3_VERSION) " PLATFORM: " PLATFORM_STRING COMPILER_VERSION_STRING;
+#else
+  static const char titan_[] = \
+  "TITAN: " STR(TTCN3_VERSION) " PLATFORM: " PLATFORM_STRING COMPILER_VERSION_STRING;
+  /* TODO Darwin equivalent of section */
+#endif
 
 #ifdef __cplusplus
   struct reffer {

@@ -148,6 +148,8 @@ static const char *get_platform_string(void)
 #define get_platform_string() "WIN32"
 #elif defined INTERIX
 #define get_platform_string() "INTERIX"
+#elif defined DARWIN
+#define get_platform_string() "DARWIN"
 #else
 #error Platform was not set.
 #endif

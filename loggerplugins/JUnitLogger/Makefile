@@ -32,6 +32,7 @@ SHARED_LIB              := libjunitlogger.so
 SHARED_LIB_RT2          := libjunitlogger-rt2.so
 SHARED_LIB_PARALLEL     := libjunitlogger-parallel.so
 SHARED_LIB_PARALLEL_RT2 := libjunitlogger-parallel-rt2.so
+# FIXME s/\.so/.sylib/ for Darwin ?
 
 CPPFLAGS += -I../../core -I$(ABS_SRC)/../../common -I$(ABS_SRC)/../../core
 # RT2 needs core2 (for RT2/TitanLoggerAPI.hh) in addition to core
@@ -39,10 +40,16 @@ CPPFLAGS_RT2 := $(CPPFLAGS) -I$(ABS_SRC)/../../core2 -DTITAN_RUNTIME_2
 
 CXXFLAGS += -Werror
 
-LDFLAGS              += -g -L$(ABS_SRC)/../../core  -Wl,-soname,$(SHARED_LIB).$(MAJOR)              -o $(SHARED_LIB).$(MAJOR).$(MINOR)
-LDFLAGS_RT2          += -g -L$(ABS_SRC)/../../core2 -Wl,-soname,$(SHARED_LIB_RT2).$(MAJOR)          -o $(SHARED_LIB_RT2).$(MAJOR).$(MINOR)
-LDFLAGS_PARALLEL     += -g -L$(ABS_SRC)/../../core  -Wl,-soname,$(SHARED_LIB_PARALLEL).$(MAJOR)     -o $(SHARED_LIB_PARALLEL).$(MAJOR).$(MINOR)
-LDFLAGS_PARALLEL_RT2 += -g -L$(ABS_SRC)/../../core2 -Wl,-soname,$(SHARED_LIB_PARALLEL_RT2).$(MAJOR) -o $(SHARED_LIB_PARALLEL_RT2).$(MAJOR).$(MINOR)
+ifeq (${PLATFORM},DARWIN)
+SONAME := -install_name
+else
+SONAME := -soname
+endif
+
+LDFLAGS              += -g -L$(ABS_SRC)/../../core  -Wl,${SONAME},$(SHARED_LIB).$(MAJOR)              -o $(SHARED_LIB).$(MAJOR).$(MINOR)
+LDFLAGS_RT2          += -g -L$(ABS_SRC)/../../core2 -Wl,${SONAME},$(SHARED_LIB_RT2).$(MAJOR)          -o $(SHARED_LIB_RT2).$(MAJOR).$(MINOR)
+LDFLAGS_PARALLEL     += -g -L$(ABS_SRC)/../../core  -Wl,${SONAME},$(SHARED_LIB_PARALLEL).$(MAJOR)     -o $(SHARED_LIB_PARALLEL).$(MAJOR).$(MINOR)
+LDFLAGS_PARALLEL_RT2 += -g -L$(ABS_SRC)/../../core2 -Wl,${SONAME},$(SHARED_LIB_PARALLEL_RT2).$(MAJOR) -o $(SHARED_LIB_PARALLEL_RT2).$(MAJOR).$(MINOR)
 
 LIBS              := -lttcn3-dynamic
 LIBS_RT2          := -lttcn3-rt2-dynamic
