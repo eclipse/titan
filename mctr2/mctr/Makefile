@@ -89,6 +89,7 @@ LINUX_CLI_LIBS := -lncurses
 FREEBSD_CLI_LIBS := -lncurses
 WIN32_CLI_LIBS := -lncurses
 INTERIX_CLI_LIBS := -lncurses
+DARWIN_CLI_LIBS := -lncurses
 
 all run: $(TARGETS)
 

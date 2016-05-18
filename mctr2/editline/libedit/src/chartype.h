@@ -1,4 +1,4 @@
-/*	$NetBSD: chartype.h,v 1.6 2010/04/20 02:01:13 christos Exp $	*/
+/*	$NetBSD: chartype.h,v 1.13 2015/02/22 02:16:19 christos Exp $	*/
 
 /*-
  * Copyright (c) 2009 The NetBSD Foundation, Inc.
@@ -44,7 +44,7 @@
  * supports non-BMP code points without requiring UTF-16, but nothing
  * seems to actually advertise this properly, despite Unicode 3.1 having
  * been around since 2001... */
-#if !defined(__NetBSD__) && !defined(__sun) && !(defined(__APPLE__) && defined(__MACH__))
+#if !defined(__NetBSD__) && !defined(__sun) && !(defined(__APPLE__) && defined(__MACH__)) && !defined(__OpenBSD__)
 #ifndef __STDC_ISO_10646__
 /* In many places it is assumed that the first 127 code points are ASCII
  * compatible, so ensure wchar_t indeed does ISO 10646 and not some other
@@ -65,7 +65,7 @@ wchar_t *wcsdup(const wchar_t *s);
 #endif
 
 #define ct_mbtowc            mbtowc
-#define ct_mbtowc_reset      mbtowc(0,0,0)
+#define ct_mbtowc_reset      mbtowc(0,0,(size_t)0)
 #define ct_wctomb            wctomb
 #define ct_wctomb_reset      wctomb(0,0)
 #define ct_wcstombs          wcstombs
@@ -109,7 +109,12 @@ wchar_t *wcsdup(const wchar_t *s);
 
 #define Strtol(p,e,b)   wcstol(p,e,b)
 
-#define Width(c)	wcwidth(c)
+static inline int
+Width(wchar_t c)
+{
+	int w = wcwidth(c);
+	return w < 0 ? 0 : w;
+}
 
 #else /* NARROW */
 
@@ -176,11 +181,11 @@ typedef struct ct_buffer_t {
 } ct_buffer_t;
 
 #define ct_encode_string __ct_encode_string
-/* Encode a wide character string and return the UTF-8 encoded result. */
+/* Encode a wide-character string and return the UTF-8 encoded result. */
 public char *ct_encode_string(const Char *, ct_buffer_t *);
 
 #define ct_decode_string __ct_decode_string
-/* Decode a (multi)?byte string and return the wide character string result. */
+/* Decode a (multi)?byte string and return the wide-character string result. */
 public Char *ct_decode_string(const char *, ct_buffer_t *);
 
 /* Decode a (multi)?byte argv string array.
@@ -188,7 +193,8 @@ public Char *ct_decode_string(const char *, ct_buffer_t *);
 protected Char **ct_decode_argv(int, const char *[],  ct_buffer_t *);
 
 /* Resizes the conversion buffer(s) if needed. */
-protected void ct_conv_buff_resize(ct_buffer_t *, size_t, size_t);
+protected int ct_conv_cbuff_resize(ct_buffer_t *, size_t);
+protected int ct_conv_wbuff_resize(ct_buffer_t *, size_t);
 protected ssize_t ct_encode_char(char *, size_t, Char);
 protected size_t ct_enc_width(Char);
 
@@ -198,7 +204,8 @@ protected size_t ct_enc_width(Char);
 #define	ct_encode_string(s, b)	(s)
 #define ct_decode_string(s, b)	(s)
 #define ct_decode_argv(l, s, b)	(s)
-#define ct_conv_buff_resize(b, os, ns)
+#define ct_conv_cbuff_resize(b, s) ((s) == (0))
+#define ct_conv_wbuff_resize(b, s) ((s) == (0))
 #define ct_encode_char(d, l, s)	(*d = s, 1)
 #define ct_free_argv(s)
 #endif
@@ -210,7 +217,7 @@ protected size_t ct_enc_width(Char);
 
 /* The maximum buffer size to hold the most unwieldly visual representation,
  * in this case \U+nnnnn. */
-#define VISUAL_WIDTH_MAX 8
+#define VISUAL_WIDTH_MAX ((size_t)8)
 
 /* The terminal is thought of in terms of X columns by Y lines. In the cases
  * where a wide character takes up more than one column, the adjacent 

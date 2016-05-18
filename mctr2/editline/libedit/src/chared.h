@@ -1,4 +1,4 @@
-/*	$NetBSD: chared.h,v 1.20 2010/04/15 00:57:33 christos Exp $	*/
+/*	$NetBSD: chared.h,v 1.22 2014/06/18 18:12:28 christos Exp $	*/
 
 /*-
  * Copyright (c) 1992, 1993
@@ -103,6 +103,9 @@ typedef struct c_kill_t {
 	Char	*mark;
 } c_kill_t;
 
+typedef void (*el_zfunc_t)(EditLine *, void *);
+typedef const char *(*el_afunc_t)(void *, const char *);
+
 /*
  * Note that we use both data structures because the user can bind
  * commands from both editors!
@@ -113,6 +116,10 @@ typedef struct el_chared_t {
 	c_redo_t	c_redo;
 	c_vcmd_t	c_vcmd;
 	c_macro_t	c_macro;
+	el_zfunc_t	c_resizefun;
+	el_afunc_t	c_aliasfun;
+	void *		c_resizearg;
+	void *		c_aliasarg;
 } el_chared_t;
 
 
@@ -160,6 +167,8 @@ protected int	 c_hpos(EditLine *);
 
 protected int	 ch_init(EditLine *);
 protected void	 ch_reset(EditLine *, int);
+protected int	 ch_resizefun(EditLine *, el_zfunc_t, void *);
+protected int	 ch_aliasfun(EditLine *, el_afunc_t, void *);
 protected int	 ch_enlargebufs(EditLine *, size_t);
 protected void	 ch_end(EditLine *);
 

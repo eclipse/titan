@@ -1,8 +1,1 @@
-Makefile
-config.h
-config.log
-config.status
-libedit.pc
-libtool
-stamp-h1
-autom4te.cache
+/autom4te.cache/

@@ -81,6 +81,7 @@ LINUX_LIBS     := -lxml2
 FREEBSD_LIBS   := -lxml2
 WIN32_LIBS     := -lxml2
 INTERIX_LIBS   := -lxml2
+DARWIN_LIBS    := -lxml2
 
 ifeq ($(USAGE_STATS), yes)
   SOLARIS_LIBS  += -lresolv

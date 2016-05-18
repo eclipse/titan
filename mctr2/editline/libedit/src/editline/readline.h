@@ -1,4 +1,4 @@
-/*	$NetBSD: readline.h,v 1.30 2009/09/07 21:24:34 christos Exp $	*/
+/*	$NetBSD: readline.h,v 1.34 2013/05/28 00:10:34 christos Exp $	*/
 
 /*-
  * Copyright (c) 1997 The NetBSD Foundation, Inc.
@@ -75,7 +75,7 @@ typedef KEYMAP_ENTRY *Keymap;
 
 #ifndef CTRL
 #include <sys/ioctl.h>
-#if !defined(__sun) && !defined(__hpux) && !defined(_AIX) && !defined(__CYGWIN__)
+#if !defined(__sun) && !defined(__hpux) && !defined(_AIX)
 #include <sys/ttydefaults.h>
 #endif
 #ifndef CTRL
@@ -109,6 +109,7 @@ extern char		*rl_basic_word_break_characters;
 extern char		*rl_completer_word_break_characters;
 extern char		*rl_completer_quote_characters;
 extern Function		*rl_completion_entry_function;
+extern char		*(*rl_completion_word_break_hook)(void);
 extern CPPFunction	*rl_attempted_completion_function;
 extern int		 rl_attempted_completion_over;
 extern int		rl_completion_type;
@@ -124,6 +125,8 @@ extern char		*rl_prompt;
 /*
  * The following is not implemented
  */
+extern int		rl_catch_signals;
+extern int		rl_catch_sigwinch;
 extern KEYMAP_ENTRY_ARRAY emacs_standard_keymap,
 			emacs_meta_keymap,
 			emacs_ctlx_keymap;
@@ -151,7 +154,6 @@ int		 where_history(void);
 HIST_ENTRY	*current_history(void);
 HIST_ENTRY	*history_get(int);
 HIST_ENTRY	*remove_history(int);
-/*###152 [lint] syntax error 'histdata_t' [249]%%%*/
 HIST_ENTRY	*replace_history_entry(int, const char *, histdata_t);
 int		 history_total_bytes(void);
 int		 history_set_pos(int);
@@ -202,6 +204,7 @@ int		 _rl_qsort_string_compare(char **, char **);
 char 	       **rl_completion_matches(const char *, rl_compentry_func_t *);
 void		 rl_forced_update_display(void);
 int		 rl_set_prompt(const char *);
+int		 rl_on_new_line(void);
 
 /*
  * The following are not implemented
