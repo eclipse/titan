@@ -1977,6 +1977,7 @@ bool ComplexType::hasMatchingFields(const List<ComplexType*>& mainList, const Li
         if(field->Data->getName().convertedValue == field2->Data->getName().convertedValue &&
           field->Data->getType().convertedValue == field2->Data->getType().convertedValue) {
             found = true;
+            break;
         }
       }
       if(!found) {
