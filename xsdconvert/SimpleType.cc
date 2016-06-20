@@ -46,6 +46,7 @@ SimpleType::SimpleType(XMLParser * a_parser, TTCN3Module * a_module, ConstructTy
 , typeSubsGroup(NULL)
 , addedToTypeSubstitution(false)
 , block(not_set)
+, inList(false)
 , parent(NULL) {
 }
 
@@ -70,6 +71,7 @@ SimpleType::SimpleType(const SimpleType& other)
 , typeSubsGroup(other.typeSubsGroup)
 , addedToTypeSubstitution(other.addedToTypeSubstitution)
 , block(other.block)
+, inList(other.inList)
 , parent(NULL) {
   length.parent = this;
   pattern.parent = this;
@@ -93,6 +95,7 @@ void SimpleType::loadWithValues() {
       setMaxOccurs(ULLONG_MAX);
       addVariant(V_list);
       mode = listMode;
+      inList = true;
       break;
     case n_union:
     { // generating complextype from simpletype
@@ -132,7 +135,7 @@ void SimpleType::loadWithValues() {
       break;
     }
     case n_length:
-      if (mode == listMode) {
+      if (inList || (inList && mode != listMode)) {
         setMinOccurs(strtoull(atts.value.c_str(), NULL, 0));
         setMaxOccurs(strtoull(atts.value.c_str(), NULL, 0));
         break;
@@ -142,7 +145,7 @@ void SimpleType::loadWithValues() {
       length.modified = true;
       break;
     case n_minLength:
-      if (mode == listMode) {
+      if (inList || (inList && mode != listMode)) {
         setMinOccurs(strtoull(atts.value.c_str(), NULL, 0));
         break;
       }
@@ -150,7 +153,7 @@ void SimpleType::loadWithValues() {
       length.modified = true;
       break;
     case n_maxLength:
-      if (mode == listMode) {
+      if (inList || (inList && mode != listMode)) {
         setMaxOccurs(strtoull(atts.value.c_str(), NULL, 0));
         break;
       }
@@ -1603,3 +1606,4 @@ void ValueType::printToFile(FILE * file) const {
 
   fputc(')', file);
 }
+
