@@ -948,6 +948,8 @@ namespace Common {
     case OPTYPE_ISBOUND:
     case OPTYPE_ENCODE:
     case OPTYPE_ENCVALUE_UNICHAR:
+      u.expr.v2=NULL;
+      // fall through
     case OPTYPE_ISPRESENT:
     case OPTYPE_TTCN2STRING:
       if(!p_ti1) FATAL_ERROR("Value::Value()");
@@ -1342,6 +1344,7 @@ namespace Common {
       if(!p_r1 || !p_r2) FATAL_ERROR("Value::Value()");
       u.expr.r1=p_r1;
       u.expr.r2=p_r2;
+      u.expr.v3=NULL;
       break;
     default:
       FATAL_ERROR("Value::Value()");
