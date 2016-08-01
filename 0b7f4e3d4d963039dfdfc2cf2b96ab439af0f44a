@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_b4bf0dcf",
+        "filename": "compiler2/CodeGenHelper.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-08-01T12:43:34Z",
+      "side": 1,
+      "message": "comparing an enum with a boolean?\n\nshouldn\u0027t it be split_mode \u003d\u003d SPLIT_TO_SLICES?",
+      "range": {
+        "startLine": 121,
+        "startChar": 6,
+        "endLine": 121,
+        "endChar": 35
+      },
+      "revId": "0b7f4e3d4d963039dfdfc2cf2b96ab439af0f44a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_f498f576",
+        "filename": "compiler2/CodeGenHelper.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-08-01T12:43:34Z",
+      "side": 1,
+      "message": "is",
+      "range": {
+        "startLine": 502,
+        "startChar": 30,
+        "endLine": 502,
+        "endChar": 31
+      },
+      "revId": "0b7f4e3d4d963039dfdfc2cf2b96ab439af0f44a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_547fa114",
+        "filename": "compiler2/CodeGenHelper.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-08-01T12:43:34Z",
+      "side": 1,
+      "message": "put",
+      "range": {
+        "startLine": 528,
+        "startChar": 70,
+        "endLine": 528,
+        "endChar": 73
+      },
+      "revId": "0b7f4e3d4d963039dfdfc2cf2b96ab439af0f44a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_d48a911a",
+        "filename": "compiler2/CodeGenHelper.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-08-01T12:43:34Z",
+      "side": 1,
+      "message": "is",
+      "range": {
+        "startLine": 545,
+        "startChar": 28,
+        "endLine": 545,
+        "endChar": 29
+      },
+      "revId": "0b7f4e3d4d963039dfdfc2cf2b96ab439af0f44a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_b4bb8dc3",
+        "filename": "compiler2/makefile.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 4369,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-08-01T12:43:34Z",
+      "side": 1,
+      "message": "check if it\u0027s a number first",
+      "range": {
+        "startLine": 4369,
+        "startChar": 6,
+        "endLine": 4369,
+        "endChar": 34
+      },
+      "revId": "0b7f4e3d4d963039dfdfc2cf2b96ab439af0f44a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
