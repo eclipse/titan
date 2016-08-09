@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_4170e907",
+        "filename": "compiler2/Value.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6689,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-08-09T11:56:46Z",
+      "side": 1,
+      "message": "u.expr.ti1",
+      "range": {
+        "startLine": 6689,
+        "startChar": 28,
+        "endLine": 6689,
+        "endChar": 32
+      },
+      "revId": "418441dd491aa03d5205af810ecbf92cc32ac6db",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_e157fd57",
+        "filename": "compiler2/Value.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6689,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-08-09T11:56:46Z",
+      "side": 1,
+      "message": "first",
+      "range": {
+        "startLine": 6689,
+        "startChar": 41,
+        "endLine": 6689,
+        "endChar": 42
+      },
+      "revId": "418441dd491aa03d5205af810ecbf92cc32ac6db",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_2162853e",
+        "filename": "compiler2/Value.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6695,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-08-09T11:56:46Z",
+      "side": 1,
+      "message": "u.expr.v2",
+      "range": {
+        "startLine": 6695,
+        "startChar": 26,
+        "endLine": 6695,
+        "endChar": 30
+      },
+      "revId": "418441dd491aa03d5205af810ecbf92cc32ac6db",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_81515164",
+        "filename": "compiler2/Value.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6699,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-08-09T11:56:46Z",
+      "side": 1,
+      "message": "the charstring value could be checked here if it\u0027s known at compile-time",
+      "revId": "418441dd491aa03d5205af810ecbf92cc32ac6db",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_a1dd75e1",
+        "filename": "compiler2/Value.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 8642,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-08-09T11:56:46Z",
+      "side": 1,
+      "message": "could actually be handled at compile-time",
+      "range": {
+        "startLine": 8642,
+        "startChar": 33,
+        "endLine": 8642,
+        "endChar": 34
+      },
+      "revId": "418441dd491aa03d5205af810ecbf92cc32ac6db",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
