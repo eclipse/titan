@@ -275,6 +275,328 @@
       "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_0bcd255d",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/1/Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "correct to \"goodConfig\"",
+      "range": {
+        "startLine": 24,
+        "startChar": 24,
+        "endLine": 24,
+        "endChar": 74
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_b6c57c0b",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/16/c.tpd",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "remove this req! It is the same as \"test14\"",
+      "range": {
+        "startLine": 27,
+        "startChar": 10,
+        "endLine": 30,
+        "endChar": 37
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_766b74f2",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/18/d.tpd",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "Perhaps it is better to be removed",
+      "range": {
+        "startLine": 26,
+        "startChar": 8,
+        "endLine": 31,
+        "endChar": 36
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_567070dc",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/19/Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "This is the same as tc18 (?)",
+      "range": {
+        "startLine": 28,
+        "startChar": 3,
+        "endLine": 28,
+        "endChar": 8
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_f6566429",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/19/Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "b",
+      "range": {
+        "startLine": 42,
+        "startChar": 73,
+        "endLine": 42,
+        "endChar": 75
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_7642546a",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/20/Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "check if there is no error message",
+      "range": {
+        "startLine": 49,
+        "startChar": 1,
+        "endLine": 49,
+        "endChar": 5
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_b19906d3",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/25/Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "not existing config e:1 will not report",
+      "range": {
+        "startLine": 42,
+        "startChar": 1,
+        "endLine": 42,
+        "endChar": 3
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_316736ec",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/25/d.tpd",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "This cause \"Note existing config\" error",
+      "range": {
+        "startLine": 39,
+        "startChar": 24,
+        "endLine": 39,
+        "endChar": 28
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_71a37e01",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/26/Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "It is not implemented in a.tpd. Change a.tpd!",
+      "range": {
+        "startLine": 26,
+        "startChar": 9,
+        "endLine": 26,
+        "endChar": 14
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_d1b48a36",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/27/Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "I don\u0027t think that this is an error. Default can be modified. Let us discuss it!!",
+      "range": {
+        "startLine": 42,
+        "startChar": 1,
+        "endLine": 43,
+        "endChar": 87
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_31717678",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/31/d.tpd",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "it is not mentioned in the Makefile! Perhaps it can be removed",
+      "range": {
+        "startLine": 15,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 60
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_96bdd8d9",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/6/Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "b---c suggested",
+      "range": {
+        "startLine": 30,
+        "startChar": 3,
+        "endLine": 30,
+        "endChar": 12
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_f6c66467",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/7/a.tpd",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "rerquiredConfguration is deprecated! Use requiredConfguration instead!",
+      "range": {
+        "startLine": 33,
+        "startChar": 12,
+        "endLine": 33,
+        "endChar": 36
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_f69d4467",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/8/Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "c is not referred by a!",
+      "range": {
+        "startLine": 27,
+        "startChar": 7,
+        "endLine": 29,
+        "endChar": 11
+      },
+      "revId": "5a58f62ac31eb462eab45c0f84c124870753f30e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
