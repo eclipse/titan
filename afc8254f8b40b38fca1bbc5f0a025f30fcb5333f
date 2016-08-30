@@ -85,6 +85,29 @@
       "revId": "afc8254f8b40b38fca1bbc5f0a025f30fcb5333f",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_a62aeb8e",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/47/Makefile",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T09:45:33Z",
+      "side": 1,
+      "message": "c:Default",
+      "range": {
+        "startLine": 33,
+        "startChar": 39,
+        "endLine": 33,
+        "endChar": 42
+      },
+      "revId": "afc8254f8b40b38fca1bbc5f0a025f30fcb5333f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
