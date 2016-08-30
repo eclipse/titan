@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_e6d8f381",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/18/d.tpd",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "remove! It is handled in tc19",
+      "range": {
+        "startLine": 42,
+        "startChar": 7,
+        "endLine": 47,
+        "endChar": 36
+      },
+      "revId": "afc8254f8b40b38fca1bbc5f0a025f30fcb5333f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_46c8bfa8",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/19/Makefile",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "why c?",
+      "range": {
+        "startLine": 42,
+        "startChar": 72,
+        "endLine": 42,
+        "endChar": 75
+      },
+      "revId": "afc8254f8b40b38fca1bbc5f0a025f30fcb5333f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_c653afe1",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config/32/Makefile",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-08-30T07:55:53Z",
+      "side": 1,
+      "message": "in tc18 and in tc19 the circle caused error. Here it didn\u0027t.Why?",
+      "revId": "afc8254f8b40b38fca1bbc5f0a025f30fcb5333f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
