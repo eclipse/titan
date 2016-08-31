@@ -24,9 +24,9 @@ endif
 #This tests that 'a' references 'b' and 'b' references 'c' and 'a' requires
 #'b''s '1' configuration and 'b''s '1' configuration requires 'c''s '1' config.
 #      a
-#     / \
-# b:1/   \
-#   /     \
+#     / 
+# b:1/   
+#   /     
 #  b------>c
 #   b:1=>c:1
 
@@ -39,11 +39,11 @@ BuildTpd:
 	-t a.tpd -r -c -W -g
 
 CheckTpd: BuildTpd
-	if [ `grep -c "EXECUTABLE = binDefault" ./a_binDefault/Makefile` -ne 1 ]; \
+	if [ ! -e "./a_binDefault/Makefile" ] || [ `grep -c "EXECUTABLE = binDefault" ./a_binDefault/Makefile` -ne 1 ]; \
 	then echo "Makefilegen required config test 8 failed: Overall verdict: fail" && exit 1; fi
-	if [ `grep -c "EXECUTABLE = bin1" ./b_bin1/Makefile` -ne 1 ]; \
+	if [ ! -e "./b_bin1/Makefile" ] || [ `grep -c "EXECUTABLE = bin1" ./b_bin1/Makefile` -ne 1 ]; \
 	then echo "Makefilegen required config test 8 failed: Overall verdict: fail" && exit 1; fi
-	if [ `grep -c "EXECUTABLE = bin1" ./c_bin1/Makefile` -ne 1 ]; \
+	if [ ! -e "./c_bin1/Makefile" ] || [ `grep -c "EXECUTABLE = bin1" ./c_bin1/Makefile` -ne 1 ]; \
 	then echo "Makefilegen required config test 8 failed: Overall verdict: fail" && exit 1; fi
 
 clean:
