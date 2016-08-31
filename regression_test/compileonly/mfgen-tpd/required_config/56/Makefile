@@ -21,22 +21,29 @@ endif
 # If we used ${MAKE} in the rules below, 'make -n' would succeed once,
 # then fail on every subsequent invocation until a 'make clean' is done. 
 
-#This tests that the -b goodConfig exists and it is being used.
-
+# Hierarchy
+#            a--->e------<
+#            |    |(b:1) |
+#            b<---<      |
+#    b:1=>c:1|    |      |
+#            c    |      |d:1=>e:1
+#    c:1=>d:1|    |      |
+#            d>--->------>
+#Result will be: Error
 MAKEPROG := ${MAKE}
 
 all: CheckTpd 
 
 BuildTpd:
 	$(TTCN3_DIR)/bin/ttcn3_makefilegen -f $(MFGEN_FLAGS) $(COVERAGE_FLAG) \
-	-t a.tpd -r -c -b goodConfig
+	-t a.tpd -r -c -W -g 2>&1 | tee output
 
 CheckTpd: BuildTpd
-	if [ `grep -c "EXECUTABLE = binGood" ./binGood/Makefile` -ne 1 ]; \
-	then echo "Makefilegen required config test 1 failed: Overall verdict: fail" && exit 1; fi
+	if [ `grep -c " error: The active build configuration named '1' of project 'e' does not exist" ./output` -ne 1 ]; \
+	then echo "Makefilegen required config test 56 failed: Overall verdict: fail" && exit 1; fi
 
 clean:
-	-rm -rf binGood
+	-rm -rf output a_binDefault b_bin1 c_bin1 d_bin1 e_binDefault
 
 distclean: clean
 	-rm -f *.out

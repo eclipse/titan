@@ -21,16 +21,17 @@ endif
 # If we used ${MAKE} in the rules below, 'make -n' would succeed once,
 # then fail on every subsequent invocation until a 'make clean' is done. 
 
-# Hierarchy
-#            a----->
-#            |     |
-#            b     d
-#    b:1=>c:1|     |
-#            c<----e
-#                
-
-
-#Result will be: a:Default, b:Default, c:Default, d:Default, e:Default
+# Hierarchy   
+#            a--->e-------->
+#            |    |        |
+#            |    |        |
+#            b<---|---<    |
+#            |    |   |    |f:1
+#            c    |   |b:1 |
+#            |    |   |    |
+#            d>--->   <----f
+# d refers both b and e
+#Result will be: a:Default, b:1, c:Default, d:Default, e:Default, f:1
 MAKEPROG := ${MAKE}
 
 all: CheckTpd 
@@ -41,18 +42,20 @@ BuildTpd:
 
 CheckTpd: BuildTpd
 	if [ `grep -c "EXECUTABLE = binDefault" ./a_binDefault/Makefile` -ne 1 ]; \
-	then echo "Makefilegen required config test 47 failed: Overall verdict: fail" && exit 1; fi
-	if [ `grep -c "EXECUTABLE = binDefault" ./b_binDefault/Makefile` -ne 1 ]; \
-	then echo "Makefilegen required config test 47 failed: Overall verdict: fail" && exit 1; fi
+	then echo "Makefilegen required config test 32 failed: Overall verdict: fail" && exit 1; fi
+	if [ `grep -c "EXECUTABLE = bin1" ./b_bin1/Makefile` -ne 1 ]; \
+	then echo "Makefilegen required config test 32 failed: Overall verdict: fail" && exit 1; fi
 	if [ `grep -c "EXECUTABLE = binDefault" ./c_binDefault/Makefile` -ne 1 ]; \
-	then echo "Makefilegen required config test 47 failed: Overall verdict: fail" && exit 1; fi
+	then echo "Makefilegen required config test 32 failed: Overall verdict: fail" && exit 1; fi
 	if [ `grep -c "EXECUTABLE = binDefault" ./d_binDefault/Makefile` -ne 1 ]; \
-	then echo "Makefilegen required config test 47 failed: Overall verdict: fail" && exit 1; fi
+	then echo "Makefilegen required config test 32 failed: Overall verdict: fail" && exit 1; fi
 	if [ `grep -c "EXECUTABLE = binDefault" ./e_binDefault/Makefile` -ne 1 ]; \
-	then echo "Makefilegen required config test 47 failed: Overall verdict: fail" && exit 1; fi
+	then echo "Makefilegen required config test 32 failed: Overall verdict: fail" && exit 1; fi
+	if [ `grep -c "EXECUTABLE = bin1" ./f_bin1/Makefile` -ne 1 ]; \
+	then echo "Makefilegen required config test 32 failed: Overall verdict: fail" && exit 1; fi
 
 clean:
-	-rm -rf a_binDefault b_binDefault c_binDefault d_binDefault e_binDefault
+	-rm -rf a_binDefault b_bin1 c_binDefault d_binDefault e_binDefault f_bin1
 
 distclean: clean
 	-rm -f *.out

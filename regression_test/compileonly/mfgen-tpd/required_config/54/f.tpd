@@ -9,7 +9,7 @@
   Szabo, Bence Janos – initial implementation
 -->
 <TITAN_Project_File_Information version="1.0">
-  <ProjectName>c</ProjectName>
+  <ProjectName>f</ProjectName>
   <ReferencedProjects>
     <ReferencedProject name="b" projectLocationURI="b.tpd"/>
   </ReferencedProjects>
@@ -22,6 +22,16 @@
         </MakefileSettings>
         <LocalBuildSettings>
           <workingDirectory>binDefault</workingDirectory>
+        </LocalBuildSettings>
+      </ProjectProperties>
+    </Configuration>
+    <Configuration name="1">
+      <ProjectProperties>
+        <MakefileSettings>
+          <targetExecutable>bin1</targetExecutable>
+        </MakefileSettings>
+        <LocalBuildSettings>
+          <workingDirectory>bin1</workingDirectory>
         </LocalBuildSettings>
         <ConfigurationRequirements>
           <configurationRequirement>
