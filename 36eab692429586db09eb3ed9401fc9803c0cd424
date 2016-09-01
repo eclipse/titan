@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_f75c14f2",
+        "filename": "regression_test/ttcn2json/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-01T11:36:42Z",
+      "side": 1,
+      "message": "should be added to $TEMP_FILES instead",
+      "range": {
+        "startLine": 60,
+        "startChar": 55,
+        "endLine": 60,
+        "endChar": 69
+      },
+      "revId": "36eab692429586db09eb3ed9401fc9803c0cd424",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
