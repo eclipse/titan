@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_1ff42685",
+        "filename": "regression_test/compileonly/mfgen-tpd/required_config_v2/4/Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-09-05T09:30:45Z",
+      "side": 1,
+      "message": "There is no b:1 in d!",
+      "revId": "66cc022e72db411460f55edfd62a16db628d1c37",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
