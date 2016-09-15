@@ -1,0 +1,395 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_7d70b7a4",
+        "filename": "compiler2/ttcn3/Statement.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 3065,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "the error should be reported from select_union.sus-\u003eget_su_byIndex(i)",
+      "range": {
+        "startLine": 3065,
+        "startChar": 10,
+        "endLine": 3065,
+        "endChar": 27
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_7da7970b",
+        "filename": "compiler2/ttcn3/Statement.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 3074,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "the error should be reported from select_union.sus-\u003eget_su_byIndex(i2)",
+      "range": {
+        "startLine": 3074,
+        "startChar": 14,
+        "endLine": 3074,
+        "endChar": 31
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_1d908b94",
+        "filename": "compiler2/ttcn3/Statement.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6025,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "get_genname_value(my_sb)",
+      "range": {
+        "startLine": 6025,
+        "startChar": 73,
+        "endLine": 6025,
+        "endChar": 90
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_3d910f9b",
+        "filename": "compiler2/ttcn3/Statement.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6381,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "get_genname_value(my_sb)",
+      "range": {
+        "startLine": 6381,
+        "startChar": 73,
+        "endLine": 6381,
+        "endChar": 90
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_7df557eb",
+        "filename": "compiler2/ttcn3/Statement.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 10871,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "generated code is usually not indented, since you don\u0027t know how in this statement is already",
+      "range": {
+        "startLine": 10871,
+        "startChar": 27,
+        "endLine": 10871,
+        "endChar": 29
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_5dddf36e",
+        "filename": "compiler2/ttcn3/Statement.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 10873,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "generated code is usually not indented",
+      "range": {
+        "startLine": 10873,
+        "startChar": 24,
+        "endLine": 10873,
+        "endChar": 26
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_fde1672b",
+        "filename": "compiler2/ttcn3/Statement.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 11011,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "generated code is usually not indented",
+      "range": {
+        "startLine": 11011,
+        "startChar": 27,
+        "endLine": 11011,
+        "endChar": 29
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_fd2e078b",
+        "filename": "compiler2/ttcn3/Statement.hh",
+        "patchSetId": 1
+      },
+      "lineNbr": 1400,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "SelectUnion",
+      "range": {
+        "startLine": 1400,
+        "startChar": 22,
+        "endLine": 1400,
+        "endChar": 32
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_dd4c6378",
+        "filename": "compiler2/ttcn3/Statement.hh",
+        "patchSetId": 1
+      },
+      "lineNbr": 1401,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "SelectUnion",
+      "range": {
+        "startLine": 1401,
+        "startChar": 33,
+        "endLine": 1401,
+        "endChar": 43
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_bd4f5f69",
+        "filename": "compiler2/ttcn3/Statement.hh",
+        "patchSetId": 1
+      },
+      "lineNbr": 1430,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "SelectUnions",
+      "range": {
+        "startLine": 1430,
+        "startChar": 23,
+        "endLine": 1430,
+        "endChar": 34
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_9d56db04",
+        "filename": "compiler2/ttcn3/Statement.hh",
+        "patchSetId": 1
+      },
+      "lineNbr": 1431,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "SelectUnions",
+      "range": {
+        "startLine": 1431,
+        "startChar": 34,
+        "endLine": 1431,
+        "endChar": 45
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_fd704742",
+        "filename": "function_test/Semantic_Analyser/TTCN3_SA_9_TD.script",
+        "patchSetId": 1
+      },
+      "lineNbr": 2707,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "have",
+      "range": {
+        "startLine": 2707,
+        "startChar": 35,
+        "endLine": 2707,
+        "endChar": 38
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_dd8ea326",
+        "filename": "function_test/Semantic_Analyser/TTCN3_SA_9_TD.script",
+        "patchSetId": 1
+      },
+      "lineNbr": 2755,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "have",
+      "range": {
+        "startLine": 2755,
+        "startChar": 35,
+        "endLine": 2755,
+        "endChar": 38
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_bd919f48",
+        "filename": "function_test/Semantic_Analyser/TTCN3_SA_9_TD.script",
+        "patchSetId": 1
+      },
+      "lineNbr": 2803,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "have",
+      "range": {
+        "startLine": 2803,
+        "startChar": 35,
+        "endLine": 2803,
+        "endChar": 38
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_7d9b1767",
+        "filename": "function_test/Semantic_Analyser/TTCN3_SA_9_TD.script",
+        "patchSetId": 1
+      },
+      "lineNbr": 2852,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "have",
+      "range": {
+        "startLine": 2852,
+        "startChar": 35,
+        "endLine": 2852,
+        "endChar": 38
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_5da3b39e",
+        "filename": "function_test/Semantic_Analyser/TTCN3_SA_9_TD.script",
+        "patchSetId": 1
+      },
+      "lineNbr": 2897,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "have",
+      "range": {
+        "startLine": 2897,
+        "startChar": 35,
+        "endLine": 2897,
+        "endChar": 38
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_3d9eaf54",
+        "filename": "function_test/Semantic_Analyser/TTCN3_SA_9_TD.script",
+        "patchSetId": 1
+      },
+      "lineNbr": 2942,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-09-15T15:56:58Z",
+      "side": 1,
+      "message": "have",
+      "range": {
+        "startLine": 2942,
+        "startChar": 35,
+        "endLine": 2942,
+        "endChar": 38
+      },
+      "revId": "d0882e51af96d3b5811a28cecfa42e80f20b8f82",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
