@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_633ff825",
+        "filename": "function_test/Semantic_Analyser/TTCN3_SA_9_TD.script",
+        "patchSetId": 2
+      },
+      "lineNbr": 2973,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-09-16T08:23:19Z",
+      "side": 1,
+      "message": ", ???",
+      "range": {
+        "startLine": 2973,
+        "startChar": 52,
+        "endLine": 2973,
+        "endChar": 53
+      },
+      "revId": "d64306cc556d477d97b3c38a41fd0882e3b94cf8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_03edccb6",
+        "filename": "regression_test/selectUnion/SelectUnion.ttcn",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-09-16T08:23:19Z",
+      "side": 1,
+      "message": "Put the functions before the related testcase",
+      "revId": "d64306cc556d477d97b3c38a41fd0882e3b94cf8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
