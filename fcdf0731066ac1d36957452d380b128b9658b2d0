@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_c8bc756e",
+        "filename": "regression_test/XML/XmlWorkflow/bin/prj2mk.pl",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1007683
+      },
+      "writtenOn": "2016-09-29T12:12:09Z",
+      "side": 1,
+      "message": "close FILE;",
+      "revId": "fcdf0731066ac1d36957452d380b128b9658b2d0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
