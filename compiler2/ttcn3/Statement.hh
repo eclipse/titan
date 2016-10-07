@@ -704,9 +704,8 @@ namespace Ttcn {
      *  signature based on a template instance \a p_ti. */
     static Type *get_outgoing_type(TemplateInstance *p_ti);
     /** Determines and returns the type of the incoming message or
-     *  signature based on a template instance \a p_ti and an optional
-     *  value redirect \a p_val_redir. */
-    Type *get_incoming_type(TemplateInstance *p_ti, ValueRedirect *p_val_redir);
+     *  signature based on a template instance \a p_ti */
+    Type *get_incoming_type(TemplateInstance *p_ti);
     /** Checks the variable reference of a sender redirect.  The type
      *  of the variable (or NULL in case of non-existent sender clause
      *  or error) is returned.  The type of the variable is also

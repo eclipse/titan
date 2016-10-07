@@ -3707,7 +3707,7 @@ error:
 	    msg_type = in_msgs->get_type_byIndex(0);
 	  } else {
 	    // there are more than one incoming message types
-	    msg_type = get_incoming_type(port_op.r.rcvpar, port_op.r.redirect.value);
+	    msg_type = get_incoming_type(port_op.r.rcvpar);
 	    if (msg_type) {
 	      size_t nof_comp_types =
 		in_msgs->get_nof_compatible_types(msg_type);
@@ -3747,11 +3747,16 @@ error:
 	}
       }
       if (!msg_type_determined) {
-	msg_type = get_incoming_type(port_op.r.rcvpar, port_op.r.redirect.value);
+	msg_type = get_incoming_type(port_op.r.rcvpar);
       }
       if (!msg_type) msg_type = Type::get_pooltype(Type::T_ERROR);
       // check the template instance using the message type
       port_op.r.rcvpar->chk(msg_type);
+      if (port_op.r.rcvpar->get_Template()->get_template_refd_last()->
+          get_templatetype() == Template::ANY_OR_OMIT) {
+        port_op.r.rcvpar->error("'*' cannot be used as a matching template "
+          "for a '%s' operation", stmt_name);
+      }
       // check the value redirect if it exists
       if (port_op.r.redirect.value != NULL) {
         port_op.r.redirect.value->chk(msg_type);
@@ -3992,9 +3997,14 @@ error:
       }
       // checking the value match if present
       if (port_op.r.getreply_valuematch) {
-	Error_Context cntxt2(port_op.s.replyval, "In value match");
-	if (!return_type) return_type = Type::get_pooltype(Type::T_ERROR);
-	port_op.r.getreply_valuematch->chk(return_type);
+        Error_Context cntxt2(port_op.s.replyval, "In value match");
+        if (!return_type) return_type = Type::get_pooltype(Type::T_ERROR);
+        port_op.r.getreply_valuematch->chk(return_type);
+        if (port_op.r.getreply_valuematch->get_Template()->get_template_refd_last()->
+            get_templatetype() == Template::ANY_OR_OMIT) {
+          port_op.r.getreply_valuematch->error("'*' cannot be used as a return "
+            "value matching template for a '%s' operation", stmt_name);
+        }
       }
       // checking the value redirect if present
       if (port_op.r.redirect.value != NULL) {
@@ -4098,7 +4108,7 @@ error:
 	    exc_type = exceptions->get_type_byIndex(0);
 	  } else {
 	    // the signature has more than one exception types
-	    exc_type = get_incoming_type(port_op.r.rcvpar, port_op.r.redirect.value);
+	    exc_type = get_incoming_type(port_op.r.rcvpar);
 	    if (exc_type) {
 	      size_t nof_comp_types =
 		exceptions->get_nof_compatible_types(exc_type);
@@ -4125,11 +4135,16 @@ error:
 	}
       }
       if (!exc_type_determined) {
-	exc_type = get_incoming_type(port_op.r.rcvpar, port_op.r.redirect.value);
+	exc_type = get_incoming_type(port_op.r.rcvpar);
       }
       if (!exc_type) exc_type = Type::get_pooltype(Type::T_ERROR);
       // check the template instance using the exception type
       port_op.r.rcvpar->chk(exc_type);
+      if (port_op.r.rcvpar->get_Template()->get_template_refd_last()->
+          get_templatetype() == Template::ANY_OR_OMIT) {
+        port_op.r.rcvpar->error("'*' cannot be used as a matching template for "
+          "a '%s' operation", stmt_name);
+      }
       // check the value redirect if it exists
       if (port_op.r.redirect.value != NULL) {
         port_op.r.redirect.value->chk(exc_type);
@@ -4405,8 +4420,7 @@ error:
     // specific component reference
     if (comp_op.donereturn.donematch) {
       // try to determine the type of the return value
-      Type *return_type = get_incoming_type(comp_op.donereturn.donematch,
-	comp_op.donereturn.redirect);
+      Type *return_type = get_incoming_type(comp_op.donereturn.donematch);
       if (return_type) {
 	bool return_type_correct = false;
 	for (Type *t = return_type; ; t = t->get_type_refd()) {
@@ -4426,6 +4440,11 @@ error:
 	return_type = Type::get_pooltype(Type::T_ERROR);
       }
       comp_op.donereturn.donematch->chk(return_type);
+      if (comp_op.donereturn.donematch->get_Template()->get_template_refd_last()->
+          get_templatetype() == Template::ANY_OR_OMIT) {
+        comp_op.donereturn.donematch->error("'*' cannot be used as a matching "
+          "template for a 'done' operation");
+      }
       if (comp_op.donereturn.redirect != NULL) {
         comp_op.donereturn.redirect->chk(return_type);
       }
@@ -4990,8 +5009,7 @@ error:
     return t_templ->get_expr_governor(Type::EXPECTED_TEMPLATE);
   }
 
-  Type *Statement::get_incoming_type(TemplateInstance *p_ti,
-    ValueRedirect *p_val_redir)
+  Type *Statement::get_incoming_type(TemplateInstance *p_ti)
   {
     // first analyze the template instance
     Type *ret_val = p_ti->get_expr_governor(Type::EXPECTED_TEMPLATE);    
@@ -5001,14 +5019,7 @@ error:
     // a reference because it cannot be an enum value anymore
     Template *t_templ = p_ti->get_Template();
     t_templ->set_lowerid_to_ref();
-    ret_val = t_templ->get_expr_governor(Type::EXPECTED_TEMPLATE);
-    // return if this step was successful
-    if (ret_val) return ret_val;
-    // finally try to determine the type from the value redirect
-    if (p_val_redir != NULL) {
-      ret_val = p_val_redir->get_type();
-    }
-    return ret_val;
+    return t_templ->get_expr_governor(Type::EXPECTED_TEMPLATE);
   }
 
   Type *Statement::chk_sender_redirect(Type *address_type)
