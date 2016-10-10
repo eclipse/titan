@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_6d2d578e",
+        "filename": "usrguide/referenceguide.doc",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-10-10T08:46:52Z",
+      "side": 1,
+      "message": "\"... to tell the compiler is a file is an ASN.1 or a TTCN-3 file.\" -\u003e \"... to tell the compiler that a file is an ASN.1 or a TTCN-3 file.\"",
+      "revId": "a538000ad8788402e6066efc695921ce1f1fe097",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
