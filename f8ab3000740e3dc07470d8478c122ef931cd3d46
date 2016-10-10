@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_d8c41f93",
+        "filename": "regression_test/XML/XmlWorkflow/src/xmlTest.prj",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-10-10T11:52:56Z",
+      "side": 1,
+      "message": "indent!",
+      "range": {
+        "startLine": 168,
+        "startChar": 8,
+        "endLine": 170,
+        "endChar": 13
+      },
+      "revId": "f8ab3000740e3dc07470d8478c122ef931cd3d46",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_b8c15b82",
+        "filename": "regression_test/XML/XmlWorkflow/src/xmlTest.prj",
+        "patchSetId": 2
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-10-10T11:52:56Z",
+      "side": 1,
+      "message": "indent!",
+      "range": {
+        "startLine": 406,
+        "startChar": 0,
+        "endLine": 408,
+        "endChar": 81
+      },
+      "revId": "f8ab3000740e3dc07470d8478c122ef931cd3d46",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
