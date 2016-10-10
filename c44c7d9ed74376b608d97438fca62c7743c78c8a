@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_2d1d0f73",
+        "filename": "xsdconvert/GeneralFunctions.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 734,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-10-10T10:58:23Z",
+      "side": 1,
+      "message": "definitions",
+      "range": {
+        "startLine": 734,
+        "startChar": 16,
+        "endLine": 734,
+        "endChar": 29
+      },
+      "revId": "c44c7d9ed74376b608d97438fca62c7743c78c8a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
