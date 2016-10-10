@@ -1,0 +1,3 @@
+module Module1{
+	const integer module1 := 1;
+}
