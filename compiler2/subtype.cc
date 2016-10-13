@@ -1978,6 +1978,8 @@ void SubType::chk_this_template(Template *templ)
   case Template::USTR_PATTERN:
 	  chk_this_template_pattern("universal charstring", templ);
 	  break;
+  case Template::TEMPLATE_NOTUSED:
+    break;
   case Template::TEMPLATE_ERROR:
     break;
   default:
