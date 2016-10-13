@@ -1116,6 +1116,7 @@ namespace Ttcn {
       * If multiple whole-value-redirects of separate types are found, then an
       * error is displayed. */
     Type* get_type() const;
+    bool chk_RT1_restrictions() const;
     /** Performs semantic analysis on the value redirect without knowing the
       * type of the redirected value. Called when the value's type cannot be
       * determined or is erroneous. */
