@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_f7d7cdbc",
+        "filename": "xsdconvert/RootType.hh",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-10-19T12:17:30Z",
+      "side": 1,
+      "message": "These should be in the .cc file.\nAlso the indenting for checkBuintInTypeReference() is wrong.",
+      "range": {
+        "startLine": 109,
+        "startChar": 2,
+        "endLine": 153,
+        "endChar": 1
+      },
+      "revId": "c5deaf48fae32c44b66bbc6dccb5d4b1e75eb962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
