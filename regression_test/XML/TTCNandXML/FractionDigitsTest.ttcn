@@ -1,0 +1,260 @@
+# 1 "../TTCNandXML/FractionDigitsTest.ttcnpp"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "../TTCNandXML/FractionDigitsTest.ttcnpp"
+# 12 "../TTCNandXML/FractionDigitsTest.ttcnpp"
+module FractionDigitsTest {
+
+modulepar boolean FractionDigitsTest_verbose := false;
+
+
+# 1 "../TTCNandXML/../macros.ttcnin" 1
+# 43 "../TTCNandXML/../macros.ttcnin"
+import from converter all;
+# 18 "../TTCNandXML/FractionDigitsTest.ttcnpp" 2
+
+type float MyFloatDecimal2
+with {
+  variant "XSD:decimal"
+  variant "fractionDigits 2"
+}
+
+type float MyFloatDecimal0
+with {
+  variant "XSD:decimal"
+  variant "fractionDigits 0"
+}
+
+type record MyRec {
+  MyFloatDecimal2 myfloat
+}
+with {
+  variant (myfloat) "fractionDigits 2";
+  variant (myfloat) "attribute";
+};
+
+
+type component FDT {}
+
+
+
+external function bxer_enc_fdec2(in MyFloatDecimal2 par) return octetstring with { extension "prototype(convert) encode (XER:XER_BASIC) errorbehavior(ALL:ERROR)" } external function cxer_enc_fdec2(in MyFloatDecimal2 par) return octetstring with { extension "prototype(convert) encode (XER:XER_CANONICAL) errorbehavior(ALL:ERROR)" } external function bxer_dec_fdec2(in octetstring par) return MyFloatDecimal2 with { extension "prototype(convert) decode (XER:XER_BASIC) errorbehavior(ALL:ERROR)" } external function cxer_dec_fdec2(in octetstring par) return MyFloatDecimal2 with { extension "prototype(convert) decode (XER:XER_CANONICAL) errorbehavior(ALL:ERROR)" }
+external function exer_enc_fdec2(in MyFloatDecimal2 par) return octetstring with { extension "prototype(convert) encode (XER:XER_EXTENDED) errorbehavior(ALL:ERROR)" } external function exer_dec_fdec2(in octetstring par) return MyFloatDecimal2 with { extension "prototype(convert) decode (XER:XER_EXTENDED) errorbehavior(ALL:ERROR)" }
+
+
+
+const MyFloatDecimal2 myfdec2 := 12345.6789;
+const universal charstring c_myfxml2_bxer := "<MyFloatDecimal2>12345.678900</MyFloatDecimal2>\n";
+const universal charstring c_myfxml2_exer := "<MyFloatDecimal2>12345.67</MyFloatDecimal2>\n";
+
+const MyFloatDecimal2 myfdec2_2 := 12345.1;
+const universal charstring c_myfxml2_2_bxer := "<MyFloatDecimal2>12345.100000</MyFloatDecimal2>\n";
+const universal charstring c_myfxml2_2_exer := "<MyFloatDecimal2>12345.10</MyFloatDecimal2>\n";
+
+const MyFloatDecimal2 myfdec2_3 := 12345E-4;
+const universal charstring c_myfxml2_3_bxer := "<MyFloatDecimal2>1.234500</MyFloatDecimal2>\n";
+const universal charstring c_myfxml2_3_exer := "<MyFloatDecimal2>1.23</MyFloatDecimal2>\n";
+
+const MyFloatDecimal2 myfdec2_4 := 12345E-1;
+const universal charstring c_myfxml2_4_bxer := "<MyFloatDecimal2>1234.500000</MyFloatDecimal2>\n";
+const universal charstring c_myfxml2_4_exer := "<MyFloatDecimal2>1234.50</MyFloatDecimal2>\n";
+
+const MyFloatDecimal2 myfdec2_5 := 12345E+0;
+const universal charstring c_myfxml2_5_bxer := "<MyFloatDecimal2>12345.000000</MyFloatDecimal2>\n";
+const universal charstring c_myfxml2_5_exer := "<MyFloatDecimal2>12345.00</MyFloatDecimal2>\n";
+
+const MyFloatDecimal2 myfdec2_6 := 12345E-0;
+const universal charstring c_myfxml2_6_bxer := "<MyFloatDecimal2>12345.000000</MyFloatDecimal2>\n";
+const universal charstring c_myfxml2_6_exer := "<MyFloatDecimal2>12345.00</MyFloatDecimal2>\n";
+
+const MyFloatDecimal2 myfdec2_7 := 12345E+1;
+const universal charstring c_myfxml2_7_bxer := "<MyFloatDecimal2>123450.000000</MyFloatDecimal2>\n";
+const universal charstring c_myfxml2_7_exer := "<MyFloatDecimal2>123450.00</MyFloatDecimal2>\n";
+
+const MyFloatDecimal2 myfdec2_8 := 1234567890.0987654321;
+const universal charstring c_myfxml2_8_bxer := "<MyFloatDecimal2>1234567890.098770</MyFloatDecimal2>\n";
+const universal charstring c_myfxml2_8_exer := "<MyFloatDecimal2>1234567890.09</MyFloatDecimal2>\n";
+
+testcase float_decimal_enc2() runs on FDT
+{
+  { var octetstring u8 := bxer_enc_fdec2(myfdec2); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_bxer); setverdict(fail, match(actual,c_myfxml2_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec2(myfdec2); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_exer); setverdict(fail, match(actual,c_myfxml2_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec2(myfdec2_2); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_2_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_2_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_2_bxer); setverdict(fail, match(actual,c_myfxml2_2_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec2(myfdec2_2); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_2_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_2_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_2_exer); setverdict(fail, match(actual,c_myfxml2_2_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec2(myfdec2_3); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_3_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_3_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_3_bxer); setverdict(fail, match(actual,c_myfxml2_3_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec2(myfdec2_3); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_3_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_3_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_3_exer); setverdict(fail, match(actual,c_myfxml2_3_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec2(myfdec2_4); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_4_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_4_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_4_bxer); setverdict(fail, match(actual,c_myfxml2_4_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec2(myfdec2_4); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_4_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_4_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_4_exer); setverdict(fail, match(actual,c_myfxml2_4_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec2(myfdec2_5); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_5_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_5_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_5_bxer); setverdict(fail, match(actual,c_myfxml2_5_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec2(myfdec2_5); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_5_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_5_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_5_exer); setverdict(fail, match(actual,c_myfxml2_5_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec2(myfdec2_6); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_6_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_6_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_6_bxer); setverdict(fail, match(actual,c_myfxml2_6_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec2(myfdec2_6); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_6_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_6_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_6_exer); setverdict(fail, match(actual,c_myfxml2_6_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec2(myfdec2_7); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_7_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_7_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_7_bxer); setverdict(fail, match(actual,c_myfxml2_7_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec2(myfdec2_7); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_7_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_7_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_7_exer); setverdict(fail, match(actual,c_myfxml2_7_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec2(myfdec2_8); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_8_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_8_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_8_bxer); setverdict(fail, match(actual,c_myfxml2_8_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec2(myfdec2_8); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml2_8_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml2_8_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml2_8_exer); setverdict(fail, match(actual,c_myfxml2_8_exer)); }; };
+}
+
+testcase float_decimal_dec2() runs on FDT
+{
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := bxer_dec_fdec2(bytes); if ( match(actual,myfdec2) ) { if(FractionDigitsTest_verbose) { log( myfdec2, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec2); setverdict(fail, match(actual,myfdec2)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := exer_dec_fdec2(bytes); if ( match(actual,12345.670000) ) { if(FractionDigitsTest_verbose) { log( 12345.670000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 12345.670000); setverdict(fail, match(actual,12345.670000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_2_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := bxer_dec_fdec2(bytes); if ( match(actual,myfdec2_2) ) { if(FractionDigitsTest_verbose) { log( myfdec2_2, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec2_2); setverdict(fail, match(actual,myfdec2_2)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_2_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := exer_dec_fdec2(bytes); if ( match(actual,12345.100000) ) { if(FractionDigitsTest_verbose) { log( 12345.100000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 12345.100000); setverdict(fail, match(actual,12345.100000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_3_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := bxer_dec_fdec2(bytes); if ( match(actual,myfdec2_3) ) { if(FractionDigitsTest_verbose) { log( myfdec2_3, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec2_3); setverdict(fail, match(actual,myfdec2_3)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_3_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := exer_dec_fdec2(bytes); if ( match(actual,1.230000) ) { if(FractionDigitsTest_verbose) { log( 1.230000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 1.230000); setverdict(fail, match(actual,1.230000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_4_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := bxer_dec_fdec2(bytes); if ( match(actual,myfdec2_4) ) { if(FractionDigitsTest_verbose) { log( myfdec2_4, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec2_4); setverdict(fail, match(actual,myfdec2_4)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_4_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := exer_dec_fdec2(bytes); if ( match(actual,1234.500000) ) { if(FractionDigitsTest_verbose) { log( 1234.500000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 1234.500000); setverdict(fail, match(actual,1234.500000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_5_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := bxer_dec_fdec2(bytes); if ( match(actual,myfdec2_5) ) { if(FractionDigitsTest_verbose) { log( myfdec2_5, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec2_5); setverdict(fail, match(actual,myfdec2_5)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_5_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := exer_dec_fdec2(bytes); if ( match(actual,12345.000000) ) { if(FractionDigitsTest_verbose) { log( 12345.000000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 12345.000000); setverdict(fail, match(actual,12345.000000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_6_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := bxer_dec_fdec2(bytes); if ( match(actual,myfdec2_6) ) { if(FractionDigitsTest_verbose) { log( myfdec2_6, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec2_6); setverdict(fail, match(actual,myfdec2_6)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_6_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := exer_dec_fdec2(bytes); if ( match(actual,12345.000000) ) { if(FractionDigitsTest_verbose) { log( 12345.000000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 12345.000000); setverdict(fail, match(actual,12345.000000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_7_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := bxer_dec_fdec2(bytes); if ( match(actual,myfdec2_7) ) { if(FractionDigitsTest_verbose) { log( myfdec2_7, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec2_7); setverdict(fail, match(actual,myfdec2_7)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_7_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := exer_dec_fdec2(bytes); if ( match(actual,123450.000000) ) { if(FractionDigitsTest_verbose) { log( 123450.000000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 123450.000000); setverdict(fail, match(actual,123450.000000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_8_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := bxer_dec_fdec2(bytes); if ( match(actual,myfdec2_8) ) { if(FractionDigitsTest_verbose) { log( myfdec2_8, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec2_8); setverdict(fail, match(actual,myfdec2_8)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml2_8_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal2 actual := exer_dec_fdec2(bytes); if ( match(actual,1234567890.090000) ) { if(FractionDigitsTest_verbose) { log( 1234567890.090000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 1234567890.090000); setverdict(fail, match(actual,1234567890.090000)); }; };
+}
+
+
+
+external function bxer_enc_fdec0(in MyFloatDecimal0 par) return octetstring with { extension "prototype(convert) encode (XER:XER_BASIC) errorbehavior(ALL:ERROR)" } external function cxer_enc_fdec0(in MyFloatDecimal0 par) return octetstring with { extension "prototype(convert) encode (XER:XER_CANONICAL) errorbehavior(ALL:ERROR)" } external function bxer_dec_fdec0(in octetstring par) return MyFloatDecimal0 with { extension "prototype(convert) decode (XER:XER_BASIC) errorbehavior(ALL:ERROR)" } external function cxer_dec_fdec0(in octetstring par) return MyFloatDecimal0 with { extension "prototype(convert) decode (XER:XER_CANONICAL) errorbehavior(ALL:ERROR)" }
+external function exer_enc_fdec0(in MyFloatDecimal0 par) return octetstring with { extension "prototype(convert) encode (XER:XER_EXTENDED) errorbehavior(ALL:ERROR)" } external function exer_dec_fdec0(in octetstring par) return MyFloatDecimal0 with { extension "prototype(convert) decode (XER:XER_EXTENDED) errorbehavior(ALL:ERROR)" }
+
+const MyFloatDecimal0 myfdec0 := 12345.6789;
+const universal charstring c_myfxml0_bxer := "<MyFloatDecimal0>12345.678900</MyFloatDecimal0>\n";
+const universal charstring c_myfxml0_exer := "<MyFloatDecimal0>12345</MyFloatDecimal0>\n";
+
+const MyFloatDecimal0 myfdec0_2 := 12345.1;
+const universal charstring c_myfxml0_2_bxer := "<MyFloatDecimal0>12345.100000</MyFloatDecimal0>\n";
+const universal charstring c_myfxml0_2_exer := "<MyFloatDecimal0>12345</MyFloatDecimal0>\n";
+
+const MyFloatDecimal0 myfdec0_3 := 12345E-4;
+const universal charstring c_myfxml0_3_bxer := "<MyFloatDecimal0>1.234500</MyFloatDecimal0>\n";
+const universal charstring c_myfxml0_3_exer := "<MyFloatDecimal0>1</MyFloatDecimal0>\n";
+
+const MyFloatDecimal0 myfdec0_4 := 12345E-1;
+const universal charstring c_myfxml0_4_bxer := "<MyFloatDecimal0>1234.500000</MyFloatDecimal0>\n";
+const universal charstring c_myfxml0_4_exer := "<MyFloatDecimal0>1234</MyFloatDecimal0>\n";
+
+const MyFloatDecimal0 myfdec0_5 := 12345E+0;
+const universal charstring c_myfxml0_5_bxer := "<MyFloatDecimal0>12345.000000</MyFloatDecimal0>\n";
+const universal charstring c_myfxml0_5_exer := "<MyFloatDecimal0>12345</MyFloatDecimal0>\n";
+
+const MyFloatDecimal0 myfdec0_6 := 12345E-0;
+const universal charstring c_myfxml0_6_bxer := "<MyFloatDecimal0>12345.000000</MyFloatDecimal0>\n";
+const universal charstring c_myfxml0_6_exer := "<MyFloatDecimal0>12345</MyFloatDecimal0>\n";
+
+const MyFloatDecimal0 myfdec0_7 := 12345E+1;
+const universal charstring c_myfxml0_7_bxer := "<MyFloatDecimal0>123450.000000</MyFloatDecimal0>\n";
+const universal charstring c_myfxml0_7_exer := "<MyFloatDecimal0>123450</MyFloatDecimal0>\n";
+
+const MyFloatDecimal0 myfdec0_8 := 1234567890.0987654321;
+const universal charstring c_myfxml0_8_bxer := "<MyFloatDecimal0>1234567890.098770</MyFloatDecimal0>\n";
+const universal charstring c_myfxml0_8_exer := "<MyFloatDecimal0>1234567890</MyFloatDecimal0>\n";
+
+testcase float_decimal_enc0() runs on FDT
+{
+  { var octetstring u8 := bxer_enc_fdec0(myfdec0); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_bxer); setverdict(fail, match(actual,c_myfxml0_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec0(myfdec0); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_exer); setverdict(fail, match(actual,c_myfxml0_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec0(myfdec0_2); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_2_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_2_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_2_bxer); setverdict(fail, match(actual,c_myfxml0_2_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec0(myfdec0_2); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_2_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_2_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_2_exer); setverdict(fail, match(actual,c_myfxml0_2_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec0(myfdec0_3); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_3_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_3_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_3_bxer); setverdict(fail, match(actual,c_myfxml0_3_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec0(myfdec0_3); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_3_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_3_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_3_exer); setverdict(fail, match(actual,c_myfxml0_3_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec0(myfdec0_4); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_4_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_4_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_4_bxer); setverdict(fail, match(actual,c_myfxml0_4_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec0(myfdec0_4); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_4_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_4_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_4_exer); setverdict(fail, match(actual,c_myfxml0_4_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec0(myfdec0_5); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_5_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_5_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_5_bxer); setverdict(fail, match(actual,c_myfxml0_5_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec0(myfdec0_5); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_5_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_5_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_5_exer); setverdict(fail, match(actual,c_myfxml0_5_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec0(myfdec0_6); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_6_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_6_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_6_bxer); setverdict(fail, match(actual,c_myfxml0_6_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec0(myfdec0_6); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_6_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_6_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_6_exer); setverdict(fail, match(actual,c_myfxml0_6_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec0(myfdec0_7); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_7_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_7_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_7_bxer); setverdict(fail, match(actual,c_myfxml0_7_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec0(myfdec0_7); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_7_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_7_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_7_exer); setverdict(fail, match(actual,c_myfxml0_7_exer)); }; };
+
+  { var octetstring u8 := bxer_enc_fdec0(myfdec0_8); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_8_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_8_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_8_bxer); setverdict(fail, match(actual,c_myfxml0_8_bxer)); }; };
+  { var octetstring u8 := exer_enc_fdec0(myfdec0_8); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myfxml0_8_exer) ) { if(FractionDigitsTest_verbose) { log( c_myfxml0_8_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myfxml0_8_exer); setverdict(fail, match(actual,c_myfxml0_8_exer)); }; };
+}
+
+testcase float_decimal_dec0() runs on FDT
+{
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := bxer_dec_fdec0(bytes); if ( match(actual,myfdec0) ) { if(FractionDigitsTest_verbose) { log( myfdec0, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec0); setverdict(fail, match(actual,myfdec0)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := exer_dec_fdec0(bytes); if ( match(actual,12345.000000) ) { if(FractionDigitsTest_verbose) { log( 12345.000000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 12345.000000); setverdict(fail, match(actual,12345.000000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_2_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := bxer_dec_fdec0(bytes); if ( match(actual,myfdec0_2) ) { if(FractionDigitsTest_verbose) { log( myfdec0_2, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec0_2); setverdict(fail, match(actual,myfdec0_2)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_2_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := exer_dec_fdec0(bytes); if ( match(actual,12345.000000) ) { if(FractionDigitsTest_verbose) { log( 12345.000000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 12345.000000); setverdict(fail, match(actual,12345.000000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_3_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := bxer_dec_fdec0(bytes); if ( match(actual,myfdec0_3) ) { if(FractionDigitsTest_verbose) { log( myfdec0_3, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec0_3); setverdict(fail, match(actual,myfdec0_3)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_3_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := exer_dec_fdec0(bytes); if ( match(actual,1.000000) ) { if(FractionDigitsTest_verbose) { log( 1.000000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 1.000000); setverdict(fail, match(actual,1.000000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_4_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := bxer_dec_fdec0(bytes); if ( match(actual,myfdec0_4) ) { if(FractionDigitsTest_verbose) { log( myfdec0_4, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec0_4); setverdict(fail, match(actual,myfdec0_4)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_4_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := exer_dec_fdec0(bytes); if ( match(actual,1234.000000) ) { if(FractionDigitsTest_verbose) { log( 1234.000000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 1234.000000); setverdict(fail, match(actual,1234.000000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_5_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := bxer_dec_fdec0(bytes); if ( match(actual,myfdec0_5) ) { if(FractionDigitsTest_verbose) { log( myfdec0_5, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec0_5); setverdict(fail, match(actual,myfdec0_5)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_5_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := exer_dec_fdec0(bytes); if ( match(actual,12345.000000) ) { if(FractionDigitsTest_verbose) { log( 12345.000000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 12345.000000); setverdict(fail, match(actual,12345.000000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_6_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := bxer_dec_fdec0(bytes); if ( match(actual,myfdec0_6) ) { if(FractionDigitsTest_verbose) { log( myfdec0_6, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec0_6); setverdict(fail, match(actual,myfdec0_6)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_6_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := exer_dec_fdec0(bytes); if ( match(actual,12345.000000) ) { if(FractionDigitsTest_verbose) { log( 12345.000000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 12345.000000); setverdict(fail, match(actual,12345.000000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_7_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := bxer_dec_fdec0(bytes); if ( match(actual,myfdec0_7) ) { if(FractionDigitsTest_verbose) { log( myfdec0_7, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec0_7); setverdict(fail, match(actual,myfdec0_7)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_7_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := exer_dec_fdec0(bytes); if ( match(actual,123450.000000) ) { if(FractionDigitsTest_verbose) { log( 123450.000000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 123450.000000); setverdict(fail, match(actual,123450.000000)); }; };
+
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_8_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := bxer_dec_fdec0(bytes); if ( match(actual,myfdec0_8) ) { if(FractionDigitsTest_verbose) { log( myfdec0_8, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", myfdec0_8); setverdict(fail, match(actual,myfdec0_8)); }; };
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myfxml0_8_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyFloatDecimal0 actual := exer_dec_fdec0(bytes); if ( match(actual,1234567890.000000) ) { if(FractionDigitsTest_verbose) { log( 1234567890.000000, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", 1234567890.000000); setverdict(fail, match(actual,1234567890.000000)); }; };
+}
+
+
+
+external function bxer_enc_frec(in MyRec par) return octetstring with { extension "prototype(convert) encode (XER:XER_BASIC) errorbehavior(ALL:ERROR)" } external function cxer_enc_frec(in MyRec par) return octetstring with { extension "prototype(convert) encode (XER:XER_CANONICAL) errorbehavior(ALL:ERROR)" } external function bxer_dec_frec(in octetstring par) return MyRec with { extension "prototype(convert) decode (XER:XER_BASIC) errorbehavior(ALL:ERROR)" } external function cxer_dec_frec(in octetstring par) return MyRec with { extension "prototype(convert) decode (XER:XER_CANONICAL) errorbehavior(ALL:ERROR)" }
+external function exer_enc_frec(in MyRec par) return octetstring with { extension "prototype(convert) encode (XER:XER_EXTENDED) errorbehavior(ALL:ERROR)" } external function exer_dec_frec(in octetstring par) return MyRec with { extension "prototype(convert) decode (XER:XER_EXTENDED) errorbehavior(ALL:ERROR)" }
+
+const MyRec c_myrec := { myfloat := 1234.5678 };
+
+const universal charstring c_myrec_bxer := "<MyRec>\n\t<myfloat>1234.567800</myfloat>\n</MyRec>\n\n";
+
+const universal charstring c_myrec_exer := "<MyRec myfloat='1234.56'/>\n\n";
+
+testcase float_decimal_attr_enc() runs on FDT {
+  { var octetstring u8 := bxer_enc_frec(c_myrec); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myrec_bxer) ) { if(FractionDigitsTest_verbose) { log( c_myrec_bxer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myrec_bxer); setverdict(fail, match(actual,c_myrec_bxer)); }; };
+  { var octetstring u8 := exer_enc_frec(c_myrec); var universal charstring actual; var integer retval := o2u("UTF-8", u8, actual); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } if ( match(actual,c_myrec_exer) ) { if(FractionDigitsTest_verbose) { log( c_myrec_exer, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myrec_exer); setverdict(fail, match(actual,c_myrec_exer)); }; };
+}
+
+testcase float_decimal_attr_dec() runs on FDT {
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myrec_bxer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyRec actual := bxer_dec_frec(bytes); if ( match(actual,c_myrec) ) { if(FractionDigitsTest_verbose) { log( c_myrec, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", c_myrec); setverdict(fail, match(actual,c_myrec)); }; };
+  var MyRec local_rec := c_myrec;
+  local_rec.myfloat := 1234.560000;
+  { var octetstring bytes; var integer retval := u2o("UTF-8", c_myrec_exer, bytes); if (retval!=0) { setverdict(fail, "Conversion failed: ", retval) } var MyRec actual := exer_dec_frec(bytes); if ( match(actual,local_rec) ) { if(FractionDigitsTest_verbose) { log( local_rec, "\t  matches OK" ); } setverdict(pass); } else { log(": fail: G0T ", actual ); log(": fail: EXP ", local_rec); setverdict(fail, match(actual,local_rec)); }; };
+}
+
+
+
+control {
+  execute(float_decimal_enc2());
+  execute(float_decimal_dec2());
+
+  execute(float_decimal_enc0());
+  execute(float_decimal_dec0());
+
+  execute(float_decimal_attr_enc());
+  execute(float_decimal_attr_dec());
+}
+
+}
+with { encode "XML" }
