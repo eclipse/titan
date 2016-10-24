@@ -279,6 +279,12 @@ struct XERdescriptor_t
   
   /** Points to the element type's XER descriptor in case of 'record of' and 'set of' types */
   const XERdescriptor_t* oftype_descr;
+  
+  /** Fraction digits value
+    * It is already checked that is must not be a negative number.
+    * The -1 value is used to determine if fractionDigits encoding instruction is present,
+    * so if the value is -1, no checks will be made. */
+  const int fractionDigits;
 };
 
 /** Information related to the embedded values in XML encoding
