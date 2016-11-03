@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_d22017fb",
+        "filename": "usrguide/referenceguide.doc",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-11-03T09:17:40Z",
+      "side": 1,
+      "message": "hexastring -\u003e hexstring\n                             \ncan be defined -\u003e can only be defined\n                                  \nfunction\u0027s -\u003e functions\u0027",
+      "revId": "1531abb280370c38d5821970ada25fc9fca9589d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
