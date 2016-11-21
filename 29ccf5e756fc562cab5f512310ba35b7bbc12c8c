@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa53dc9_4b73484e",
+        "filename": "compiler2/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-11-21T14:27:58Z",
+      "side": 1,
+      "message": "not added to the commit",
+      "range": {
+        "startLine": 90,
+        "startChar": 34,
+        "endLine": 90,
+        "endChar": 46
+      },
+      "revId": "29ccf5e756fc562cab5f512310ba35b7bbc12c8c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_2b8fe424",
+        "filename": "compiler2/Type_codegen.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-11-21T14:27:58Z",
+      "side": 1,
+      "message": "not added to the commit",
+      "range": {
+        "startLine": 31,
+        "startChar": 10,
+        "endLine": 31,
+        "endChar": 22
+      },
+      "revId": "29ccf5e756fc562cab5f512310ba35b7bbc12c8c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_8b927056",
+        "filename": "compiler2/ttcn3/rawAST.y",
+        "patchSetId": 1
+      },
+      "lineNbr": 1520,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-11-21T14:27:58Z",
+      "side": 1,
+      "message": "no longer ignored :)",
+      "range": {
+        "startLine": 1520,
+        "startChar": 37,
+        "endLine": 1520,
+        "endChar": 49
+      },
+      "revId": "29ccf5e756fc562cab5f512310ba35b7bbc12c8c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
