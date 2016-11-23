@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa53dc9_801a4216",
+        "filename": "core/Float.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1385,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-11-23T10:06:08Z",
+      "side": 1,
+      "message": "not needed\nif min_is_exclusive is false, then it won\u0027t get past the first operand of the ||.",
+      "range": {
+        "startLine": 1385,
+        "startChar": 72,
+        "endLine": 1385,
+        "endChar": 104
+      },
+      "revId": "5f466cbcf4ebe3f569594509c72d0023232ea5c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_a0e4260d",
+        "filename": "core/Integer.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 2564,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-11-23T10:06:08Z",
+      "side": 1,
+      "message": "remove",
+      "range": {
+        "startLine": 2563,
+        "startChar": 2,
+        "endLine": 2564,
+        "endChar": 19
+      },
+      "revId": "5f466cbcf4ebe3f569594509c72d0023232ea5c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
