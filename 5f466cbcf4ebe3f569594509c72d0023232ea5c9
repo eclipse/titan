@@ -45,6 +45,29 @@
       "revId": "5f466cbcf4ebe3f569594509c72d0023232ea5c9",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_c0f96aca",
+        "filename": "regression_test/templateExclusiveRange/ExclusiveRangeTemplate.ttcn",
+        "patchSetId": 3
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-11-23T10:40:39Z",
+      "side": 1,
+      "message": "remove!",
+      "range": {
+        "startLine": 333,
+        "startChar": 0,
+        "endLine": 337,
+        "endChar": 1
+      },
+      "revId": "5f466cbcf4ebe3f569594509c72d0023232ea5c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
