@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa53dc9_73183185",
+        "filename": "compiler2/ttcn3/Ttcnstuff.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2382,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-11-24T10:03:44Z",
+      "side": 1,
+      "message": "isn\u0027t this always true for unsigned types? (\u003d\u003e index out of bounds / segfault)",
+      "range": {
+        "startLine": 2382,
+        "startChar": 32,
+        "endLine": 2382,
+        "endChar": 38
+      },
+      "revId": "88613bf2ae3cd36ac0b16407468da0666d21085a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
