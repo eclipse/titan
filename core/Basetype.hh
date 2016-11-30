@@ -1110,4 +1110,41 @@ public:
   virtual ~Dec_Match_Interface() {}
 };
 
+/** Interface/base class for value redirects in RT2
+  *
+  * For every value redirect the compiler generates a new class that inherits
+  * this one and implements its virtual function. An instance of the new class
+  * is passed to a 'receive', 'getreply', 'catch' or 'done' function call as
+  * parameter, which, if successful, calls the instance's set_values() function. */
+#ifdef TITAN_RUNTIME_2
+class Value_Redirect_Interface {
+public:
+  virtual void set_values(const Base_Type*) = 0;
+  virtual ~Value_Redirect_Interface() { }
+};
+#endif
+
+/** Base class for index redirects
+  *
+  * For every index redirect the compiler generates a new class that inherits
+  * this one and implements its virtual function. An instance of the new class
+  * is passed to a port, timer or component operation, performed on an array with
+  * the help of the 'any from' clause, which, if successful, calls the instance's
+  * add_index() function once for each dimension in the array.
+  *
+  * List of operations in question: receive, check-receive, trigger, getcall,
+  * check-getcall, getreply, check-getreply, catch, check-catch, check, timeout,
+  * running (for both components and timers), done, killed and alive. */
+class Index_Redirect {
+protected:
+  int pos;
+  
+public:
+  Index_Redirect() : pos(-1) { }
+  virtual ~Index_Redirect() { }
+  void incr_pos() { ++pos; }
+  void decr_pos() { --pos; }
+  virtual void add_index(int p_index) = 0;
+};
+
 #endif
