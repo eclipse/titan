@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5aa745d1_a97c1821",
+        "filename": "compiler2/union.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1523,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-12-05T12:24:45Z",
+      "side": 1,
+      "message": "boolean",
+      "range": {
+        "startLine": 1523,
+        "startChar": 9,
+        "endLine": 1523,
+        "endChar": 13
+      },
+      "revId": "2cbe625013273b556dcc57381905772f8bfca9fb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
