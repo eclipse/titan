@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5aa745d1_abb0888c",
+        "filename": "compiler2/ttcn3/pstring_la.l",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-12-06T15:28:11Z",
+      "side": 1,
+      "message": "isn\u0027t this optional?",
+      "range": {
+        "startLine": 235,
+        "startChar": 27,
+        "endLine": 235,
+        "endChar": 31
+      },
+      "revId": "4d90c7f115637815d1cccef4ce82e024991b4e10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5aa745d1_cb7194e2",
+        "filename": "regression_test/templatePatternRef/TemplatePatternRefTest.ttcn",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-12-06T15:28:11Z",
+      "side": 1,
+      "message": "What\u0027s the point of this? Shouldn\u0027t this be in the templateCharstr folder?\n\nOr was it supposed to be \u0027if (not match(v_r, mw_myTempPatt4)\u0027?",
+      "range": {
+        "startLine": 70,
+        "startChar": 3,
+        "endLine": 70,
+        "endChar": 29
+      },
+      "revId": "4d90c7f115637815d1cccef4ce82e024991b4e10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5aa745d1_ab7768d3",
+        "filename": "regression_test/templatePatternRef/TemplatePatternRefTest.ttcn",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-12-06T15:28:11Z",
+      "side": 1,
+      "message": "Same as the previous one...",
+      "range": {
+        "startLine": 84,
+        "startChar": 38,
+        "endLine": 84,
+        "endChar": 58
+      },
+      "revId": "4d90c7f115637815d1cccef4ce82e024991b4e10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
