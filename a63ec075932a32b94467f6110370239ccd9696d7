@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5aa745d1_8873844d",
+        "filename": "function_test/Semantic_Analyser/float/special_OK.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-12-09T09:09:24Z",
+      "side": 1,
+      "message": "NaN/NaN ?",
+      "range": {
+        "startLine": 50,
+        "startChar": 2,
+        "endLine": 51,
+        "endChar": 25
+      },
+      "revId": "a63ec075932a32b94467f6110370239ccd9696d7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
