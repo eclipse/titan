@@ -22,6 +22,29 @@
       "revId": "a63ec075932a32b94467f6110370239ccd9696d7",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5aa745d1_28b0f0dc",
+        "filename": "regression_test/floatOper/TfloatOperSpecial.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-12-09T09:14:06Z",
+      "side": 1,
+      "message": "these",
+      "range": {
+        "startLine": 374,
+        "startChar": 10,
+        "endLine": 374,
+        "endChar": 16
+      },
+      "revId": "a63ec075932a32b94467f6110370239ccd9696d7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
