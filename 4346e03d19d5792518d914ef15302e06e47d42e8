@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ab451fb_05dd3814",
+        "filename": "core/config_process.l",
+        "patchSetId": 1
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-12-12T09:43:19Z",
+      "side": 1,
+      "message": "NAN might not be defined",
+      "range": {
+        "startLine": 335,
+        "startChar": 23,
+        "endLine": 335,
+        "endChar": 26
+      },
+      "revId": "4346e03d19d5792518d914ef15302e06e47d42e8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
