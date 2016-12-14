@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ab451fb_4e88f522",
+        "filename": "regression_test/XML/XmlWorkflow/src/xmlTest_Testcases.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2016-12-14T11:52:02Z",
+      "side": 1,
+      "message": "these",
+      "range": {
+        "startLine": 114,
+        "startChar": 10,
+        "endLine": 114,
+        "endChar": 16
+      },
+      "revId": "c43f8a755689efe10365ecab72298a285cfafafd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
