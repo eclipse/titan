@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ab451fb_89526cdc",
+        "filename": "compiler2/ttcn3/AST_ttcn3.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 6565,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2016-12-16T14:43:32Z",
+      "side": 1,
+      "message": "do",
+      "range": {
+        "startLine": 6565,
+        "startChar": 75,
+        "endLine": 6565,
+        "endChar": 79
+      },
+      "revId": "1aba791bd96b59b4f4a32737d65bfd92346ab5fe",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
