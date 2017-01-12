@@ -183,6 +183,12 @@ char hexdigit_to_char(unsigned char hexdigit)
   else return '\0';
 }
 
+boolean is_hexdigit(char c)
+{
+  return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') ||
+    (c >= 'a' && c <= 'f');
+}
+
 static boolean is_whitespace(char c)
 {
   switch (c) {
