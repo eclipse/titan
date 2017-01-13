@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fabf19d9_8e57f601",
+        "filename": "core/Addfunc.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1007710
+      },
+      "writtenOn": "2017-01-13T08:48:32Z",
+      "side": 1,
+      "message": "use the built-int int isxdigit ( int c ); instead.",
+      "range": {
+        "startLine": 186,
+        "startChar": 0,
+        "endLine": 190,
+        "endChar": 1
+      },
+      "revId": "1ebed10c40367673f9d1155eb8caffc27abb2170",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
