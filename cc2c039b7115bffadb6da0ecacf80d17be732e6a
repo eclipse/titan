@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fabf19d9_46450815",
+        "filename": "compiler2/Type.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1727,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-01-26T10:49:30Z",
+      "side": 1,
+      "message": "may be null",
+      "range": {
+        "startLine": 1727,
+        "startChar": 22,
+        "endLine": 1727,
+        "endChar": 36
+      },
+      "revId": "cc2c039b7115bffadb6da0ecacf80d17be732e6a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
