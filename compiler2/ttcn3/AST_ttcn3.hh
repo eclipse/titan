@@ -1749,6 +1749,8 @@ namespace Ttcn {
     size_t min_nof_pars;
     /** Points to the definition that the parameter list belongs to. */
     Definition *my_def;
+    /** Stores the type of the definition that the parameter list belongs to. */
+    Definition::asstype_t my_def_type;
     bool checked;
     bool is_startable;
 
@@ -1758,7 +1760,8 @@ namespace Ttcn {
     FormalParList& operator=(const FormalParList& p);
   public:
     FormalParList() : Scope(), Location(), pars_v(), pars_m()
-    , min_nof_pars(0), my_def(0), checked(false), is_startable(false) {}
+    , min_nof_pars(0), my_def(0), my_def_type(Definition::A_ERROR)
+    , checked(false), is_startable(false) {}
     ~FormalParList();
     virtual FormalParList *clone() const;
     virtual void set_fullname(const string& p_fullname);
@@ -1766,6 +1769,7 @@ namespace Ttcn {
     virtual void set_my_scope(Scope *p_scope);
     void set_my_def(Definition *p_def) { my_def = p_def; }
     Definition *get_my_def() const { return my_def; }
+    Definition::asstype_t get_my_def_type() const { return my_def_type; }
     void add_fp(FormalPar *p_fp);
     size_t get_nof_fps() const { return pars_v.size(); }
     bool has_notused_defval() const;

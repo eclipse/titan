@@ -3409,8 +3409,16 @@ error:
 
   void Statement::chk_deactivate()
   {
+    Error_Context cntxt(this, "In deactivate statement");
+    if (!use_runtime_2 &&
+        (my_sb->get_my_def()->get_asstype() == Common::Assignment::A_ALTSTEP ||
+        my_sb->get_my_def()->get_asstype() == Common::Assignment::A_FUNCTION)) {
+      warning("Calling `deactivate()' in a function or altstep. This %s "
+        "delete the parameters of %s currently running altstep%s.",
+        deactivate != NULL ? "might" : "will",
+        deactivate != NULL ? "a" : "all", deactivate != NULL ? "" : "s");
+    }
     if (deactivate) {
-      Error_Context cntxt(this, "In deactivate statement");
       deactivate->chk_expr_default(Type::EXPECTED_DYNAMIC_VALUE);
     }
   }
