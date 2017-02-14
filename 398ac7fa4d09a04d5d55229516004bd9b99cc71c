@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fabf19d9_2adf16da",
+        "filename": "README.cygwin",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-02-14T15:34:04Z",
+      "side": 1,
+      "message": "Please use spaces instead of tabs, like in other lines.",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 2
+      },
+      "revId": "398ac7fa4d09a04d5d55229516004bd9b99cc71c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
