@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7465a879_42a759d8",
+        "filename": "compiler2/ttcn3/Ttcnstuff.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1222,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-03-07T14:00:49Z",
+      "side": 1,
+      "message": "not allowed in open source",
+      "range": {
+        "startLine": 1222,
+        "startChar": 33,
+        "endLine": 1222,
+        "endChar": 40
+      },
+      "revId": "74686c956e5f322643a501e72fa6cc7e95f8213a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
