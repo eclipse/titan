@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b7023b2_e6e9a444",
+        "filename": "compiler2/ttcn3/Ttcnstuff.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1442,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-03-14T14:03:27Z",
+      "side": 1,
+      "message": "\"Neither out message type `%s\u0027, nor one of its target mappings are present\"",
+      "range": {
+        "startLine": 1441,
+        "startChar": 19,
+        "endLine": 1442,
+        "endChar": 55
+      },
+      "revId": "40772644bcb015476bd9a3b8fa2c53b51851609a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e8898d5_efb8c29b",
+        "filename": "compiler2/ttcn3/port.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2063,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-03-14T14:03:27Z",
+      "side": 1,
+      "message": "can\u0027t this be zero?",
+      "range": {
+        "startLine": 2063,
+        "startChar": 56,
+        "endLine": 2063,
+        "endChar": 92
+      },
+      "revId": "40772644bcb015476bd9a3b8fa2c53b51851609a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d91d713_b9709666",
+        "filename": "compiler2/ttcn3/port.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2124,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-03-14T14:03:27Z",
+      "side": 1,
+      "message": "functions",
+      "range": {
+        "startLine": 2124,
+        "startChar": 11,
+        "endLine": 2124,
+        "endChar": 19
+      },
+      "revId": "40772644bcb015476bd9a3b8fa2c53b51851609a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf9eff77_a515f8c3",
+        "filename": "compiler2/ttcn3/port.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2124,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-03-14T14:03:27Z",
+      "side": 1,
+      "message": "its",
+      "range": {
+        "startLine": 2124,
+        "startChar": 24,
+        "endLine": 2124,
+        "endChar": 28
+      },
+      "revId": "40772644bcb015476bd9a3b8fa2c53b51851609a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56da46aa_ccb34a18",
+        "filename": "compiler2/ttcn3/port.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2186,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-03-14T14:03:27Z",
+      "side": 1,
+      "message": "its",
+      "range": {
+        "startLine": 2186,
+        "startChar": 28,
+        "endLine": 2186,
+        "endChar": 32
+      },
+      "revId": "40772644bcb015476bd9a3b8fa2c53b51851609a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "26c8adf9_4a5789a8",
+        "filename": "compiler2/ttcn3/port.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2186,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-03-14T14:03:27Z",
+      "side": 1,
+      "message": "functions",
+      "range": {
+        "startLine": 2186,
+        "startChar": 15,
+        "endLine": 2186,
+        "endChar": 23
+      },
+      "revId": "40772644bcb015476bd9a3b8fa2c53b51851609a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a107b121_c2658271",
+        "filename": "regression_test/compileonly/portTranslation/PortTranslate.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-03-14T14:03:27Z",
+      "side": 1,
+      "message": "Check",
+      "range": {
+        "startLine": 64,
+        "startChar": 4,
+        "endLine": 64,
+        "endChar": 9
+      },
+      "revId": "40772644bcb015476bd9a3b8fa2c53b51851609a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
