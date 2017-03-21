@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6979c0b_24f356c1",
+        "filename": "compiler2/ttcn3/compiler.l",
+        "patchSetId": 1
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-03-21T14:46:05Z",
+      "side": 1,
+      "message": "this is a new TTCN-3 keyword\nit should be added to the keyword table in Identifier.cc",
+      "range": {
+        "startLine": 492,
+        "startChar": 0,
+        "endLine": 492,
+        "endChar": 8
+      },
+      "revId": "d697df42c3dfba925874374542413721defa3037",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
