@@ -266,8 +266,12 @@ namespace Common {
       Location my_location;
       my_location.set_location( *(tail->location) );
       loc = &my_location;
+      if (loc) {
+        loc->print_location(stderr);
+      }
+    } else if (loc) {
+      loc->print_location(stderr);
     }
-    if (loc) loc->print_location(stderr);
     fputs("error: ", stderr);
     vfprintf(stderr, fmt, args);
     putc('\n', stderr);
