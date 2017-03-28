@@ -3255,7 +3255,7 @@ namespace Common {
     case T_ANY:
       return p_tt2 == T_ANY || p_tt2 == T_OSTR;
     case T_ANYTYPE:
-      return p_tt2 == T_ANYTYPE && same_module;
+      return p_tt2 == T_ANYTYPE && same_module; // Need same module
       // these should never appear?
     case T_REFD:
     case T_REFDSPEC:
