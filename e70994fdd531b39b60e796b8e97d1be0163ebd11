@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7493fd74_41e184ad",
+        "filename": "compiler2/ttcn3/compiler.y",
+        "patchSetId": 1
+      },
+      "lineNbr": 1874,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-04-03T10:59:29Z",
+      "side": 1,
+      "message": "please list what those 3 new conflicts are",
+      "range": {
+        "startLine": 1874,
+        "startChar": 0,
+        "endLine": 1874,
+        "endChar": 32
+      },
+      "revId": "e70994fdd531b39b60e796b8e97d1be0163ebd11",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
