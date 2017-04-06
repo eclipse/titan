@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fff00f99_08ba7c20",
+        "filename": "compiler2/ttcn3/AST_ttcn3.hh",
+        "patchSetId": 2
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-04-06T11:17:27Z",
+      "side": 1,
+      "message": "\u0027first\u0027 was already used in this sentence",
+      "range": {
+        "startLine": 465,
+        "startChar": 15,
+        "endLine": 465,
+        "endChar": 20
+      },
+      "revId": "f71fe152081b7f3a1f1fc08bdbe986583d14b787",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
