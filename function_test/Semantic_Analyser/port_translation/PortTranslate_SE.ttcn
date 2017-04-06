@@ -194,4 +194,16 @@ module PortTranslate_SE { //^In TTCN-3 module//
 	with {
 		extension "prototype(fast)"
 	}
+
+	type port PT16 message map to P9 { //^In type definition \`PT16\'\://
+		out hexstring
+	} with {
+		extension "provider"  //^error\: The \`provider\' attribute cannot be used on translation ports//
+	}
+
+	type port PT17 message map to P9 { //^In type definition \`PT17\'\://
+		out hexstring
+	} with {
+		extension "user P9 out(hexstring -> hexstring: simple)"; //^error\: Attribute \`user\' cannot be used on translation ports\.//
+	}
 }
