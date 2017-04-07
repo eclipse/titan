@@ -300,6 +300,7 @@ namespace Ttcn {
                                     bool usedInIsbound,
                                     ReferenceChain *refch,
                                     bool silent = false);
+    bool concat_to_bin_pattern(string& patt_str, Type::typetype_t exp_tt) const;
     Value* get_string_encoding() const;
     TemplateInstance* get_decode_target() const;
     Template* get_concat_operand(bool first) const;
