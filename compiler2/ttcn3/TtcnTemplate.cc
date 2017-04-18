@@ -840,6 +840,7 @@ namespace Ttcn {
         Templates *sts = u.templates;
         size_t nof_temps = sts->get_nof_ts(); // "actual" nr in the list
         Type::typetype_t tt = t->get_typetype();
+        fprintf(stderr, "%i %i\n", nof_comps, nof_temps);
         switch (tt) {
         case Type::T_SEQ_T:
         case Type::T_SEQ_A:
@@ -861,6 +862,7 @@ namespace Ttcn {
           allow_fewer = true;
           break;
         case Type::T_SIGNATURE: // be precise
+          fprintf(stderr, "sig\n");
           break;
         default: // not possible, fatal error ?
           break;
