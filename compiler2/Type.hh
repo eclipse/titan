@@ -259,6 +259,7 @@ namespace Common {
       OT_OCFT, ///< another Type (T_OCFT), ASN.1 obj.class field type
       OT_TEMPLATE_INST, ///< a TemplateInstance (TTCN-3)
       OT_RUNSON_SCOPE, ///< a RunsOnScope (TTCN-3)
+      OT_PORT_SCOPE, ///< a port scope
       OT_EXC_SPEC, ///< exception Specification (ExcSpec)
       OT_SIG_PAR, ///< signature parameter (SignatureParam)
       OT_POOL ///< It's a pool type, owned by the type pool
@@ -879,6 +880,8 @@ namespace Common {
   private:
     bool chk_this_refd_template(Template *t, Common::Assignment *lhs);
     void chk_this_template_length_restriction(Template *t);
+    bool chk_this_template_concat_operand(Template* t, namedbool implicit_omit,
+      Common::Assignment *lhs);
     bool chk_this_template(Template *t, namedbool incomplete_allowed, namedbool sub_chk,
       namedbool implicit_omit, Common::Assignment *);
     bool chk_this_template_Str(Template *t, namedbool implicit_omit,

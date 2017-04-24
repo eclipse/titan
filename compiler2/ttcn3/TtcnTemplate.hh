@@ -62,14 +62,14 @@ namespace Ttcn {
       SUPERSET_MATCH, /**< superset match */
       SUBSET_MATCH, /**< subset match */
       PERMUTATION_MATCH, /**< permutation match */
-      ALL_FROM, /**< "all from" as part of a larger list e.g. permutation, superset, subset, etc. */
+      ALL_FROM, /**< "all from" clause */
       BSTR_PATTERN, /**< bitstring pattern */
       HSTR_PATTERN, /**< hexstring pattern */
       OSTR_PATTERN, /**< octetstring pattern */
       CSTR_PATTERN, /**< character string pattern */
       USTR_PATTERN, /**< universal charstring pattern */
       DECODE_MATCH, /**< decoded content match */
-      TEMPLATE_CONCAT /**< concatenation of two templates */
+      TEMPLATE_CONCAT /**< concatenation of two templates (runtime2 only) */
     };
 
     /** Status codes for the verification of template body completeness. */
@@ -300,6 +300,12 @@ namespace Ttcn {
                                     bool usedInIsbound,
                                     ReferenceChain *refch,
                                     bool silent = false);
+    /** Converts this template to a pattern of the specified binary string type,
+      * and adds it to the result. Used when evaluating concatenations between
+      * binary string templates.
+      * @param patt_str contains the resulting binary string pattern
+      * @param exp_tt contains the type of the resulting binary string pattern */
+    bool concat_to_bin_pattern(string& patt_str, Type::typetype_t exp_tt) const;
     Value* get_string_encoding() const;
     TemplateInstance* get_decode_target() const;
     Template* get_concat_operand(bool first) const;

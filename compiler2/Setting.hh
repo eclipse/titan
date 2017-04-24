@@ -18,6 +18,7 @@
  *   Kovacs, Ferenc
  *   Raduly, Csaba
  *   Szabados, Kristof
+ *   Szabo, Bence Janos
  *   Szabo, Janos Zoltan – initial implementation
  *   Tatarka, Gabor
  *   Zalanyi, Balazs Andor
@@ -55,6 +56,7 @@ namespace Ttcn {
   class FieldOrArrayRefs;
   class ActualParList;
   class RunsOnScope;
+  class PortScope;
   class StatementBlock;
   struct ErroneousDescriptor;
   class ErroneousDescriptors;
@@ -142,7 +144,8 @@ namespace Common {
 
     /** Constructor with filename and two location info.
      *
-     * @param p_filename
+     * @param p_filename contains the name of the file
+     *        Stores pointer \p p_filename into \c filename.
      * @param p_firstloc holds the location of the beginning.
      *        Its   \p first_line and       \p first_column are copied into
      *        \c yyloc.first_line and \c yyloc.first_column.
@@ -173,7 +176,8 @@ namespace Common {
     void set_location(const char *p_filename, const YYLTYPE& p_yyloc);
     /** Setter with filename and two location info.
      *
-     * @param p_filename
+     * @param p_filename contains the name of the file
+     *        Stores pointer \p p_filename into \c filename.
      * @param p_firstloc holds the location of the beginning.
      *        Its   \p first_line and       \p first_column are copied into
      *        \c yyloc.first_line and \c yyloc.first_column.
@@ -597,6 +601,9 @@ public:
     /** Returns the scope unit of the hierarchy that belongs to a
      * 'runs on' clause. */
     virtual Ttcn::RunsOnScope *get_scope_runs_on();
+    /** Returns the scope unit of the hierarchy that belongs to a
+     * 'port' clause. */
+    virtual Ttcn::PortScope *get_scope_port();
     /** Returns the assignments/module definitions scope. */
     virtual Assignments *get_scope_asss();
     /** Gets the module scope. This function returns this scope or a
@@ -760,7 +767,8 @@ public:
   public:
     /** Constructor.
      *
-     * @param p_loc
+     * @param p_loc the location to report the error to
+     *        stores \p p_loc into \c my_loc
      * @param p_str string describing the operation being performed
      */
     ReferenceChain(const Location *p_loc, const char *p_str=0);

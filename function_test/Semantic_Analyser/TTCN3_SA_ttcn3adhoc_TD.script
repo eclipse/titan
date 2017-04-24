@@ -5663,7 +5663,7 @@ module module1
   const myu1 c_myu1 := char(0, 0, 1, 0)
   const myu2 c_myu2 := char(0, 0, 1, 0) & char(0, 0, 1, 0)
   template myu1 t_myu1 := char(0, 0, 1, 0)
-  template myu2 t_myu2 := char(0, 0, 1, 0) & char(0, 0, 1, 0) // type restrictions are currently not checked for concatenated templates
+  template myu2 t_myu2 := char(0, 0, 1, 0) & char(0, 0, 1, 0)
   template myu2 t_myu3 := t_myu1
   template myu1 t_myu4 := (char(0, 0, 1, 0))
   
@@ -5672,7 +5672,7 @@ module module1
     
   control {
     var template myu1 vt_myu1 := char(0, 0, 1, 0)
-    var template myu2 vt_myu2 := char(0, 0, 1, 0) & char(0, 0, 1, 0) // type restrictions are currently not checked for concatenated templates
+    var template myu2 vt_myu2 := char(0, 0, 1, 0) & char(0, 0, 1, 0)
     var template myu2 vt_myu3 := fu1()
     var myu1 v_myu1 := char(0, 0, 1, 0)
     var myu2 v_myu2 := char(0, 0, 1, 0) & char(0, 0, 1, 0)
@@ -5683,7 +5683,7 @@ module module1
 <RESULT COUNT 5>
 (?is)\berror: char\(0, 0, 1, 0\) is not a valid value for type `universal charstring' which has subtype \(char\(0, 0, 0, 0\),char\(0, 0, 0, 1\)\)
 <END_RESULT>
-<RESULT COUNT 2>
+<RESULT COUNT 4>
 (?is)\berror: char\(0, 0, 1, 0\) & char\(0, 0, 1, 0\) is not a valid value for type `universal charstring' which has subtype length\(1\)
 <END_RESULT>
 <RESULT COUNT 2>
@@ -5692,7 +5692,7 @@ module module1
 <RESULT COUNT 1>
 (?is)\berror: The subtype is an empty set
 <END_RESULT>
-<RESULT COUNT 10>
+<RESULT COUNT 12>
 (?is)\berror:
 <END_RESULT>
 <END_TC>
@@ -6874,10 +6874,16 @@ control {
 }
 }
 <END_MODULE>
-<RESULT IF_PASS COUNT 2>
+<RESULT IF_PASS LTRT COUNT 2>
 (?im)error: Subtype mismatch: subtype length\(2\) has no common value with a string element
 <END_RESULT>
-<RESULT IF_PASS COUNT 6>
+RESULT IF_PASS FTRT COUNT 3>
+(?im)error: Subtype mismatch: subtype length\(2\) has no common value with a string element
+<END_RESULT>
+<RESULT IF_PASS COUNT LTRT 6>
+(?im)error: Subtype mismatch: subtype length\(2\) has no common value with subtype length\(1\)
+<END_RESULT>
+<RESULT IF_PASS COUNT FTRT 7>
 (?im)error: Subtype mismatch: subtype length\(2\) has no common value with subtype length\(1\)
 <END_RESULT>
 <RESULT IF_PASS COUNT 4>
@@ -6889,7 +6895,10 @@ control {
 <RESULT IF_PASS COUNT 2>
 (?im)error: Reference to a string element of type `octetstring' cannot be used in this context
 <END_RESULT>
-<RESULT COUNT 15>
+<RESULT COUNT LTRT 15>
+(?is)\berror:
+<END_RESULT>
+<RESULT COUNT FTRT 17>
 (?is)\berror:
 <END_RESULT>
 <END_TC>
@@ -7174,8 +7183,8 @@ const MYREC c_myrec22 := {i:=1} with {
   erroneous (r) "value := omit"
   erroneous (r.i) "value := 1"
 }
-const MySeq c_myrec23 := {i:=1} with { erroneous (b) "value(raw) := ""proba""" }
-const MySeq c_myrec24 := {i:=1} with { erroneous (b) "value(raw) := universal charstring:""proba""" }
+const MYREC2 c_myrec23 := {i:=1} with { erroneous (i) "value(raw) := ""proba""" }
+const MYREC2 c_myrec24 := {i:=1} with { erroneous (i) "value(raw) := universal charstring:""proba""" }
 const MYREC2 c_myrec25 := {i:=1} with { erroneous (i) "value(raw) := '1010'B" }
 const MYREC c_myrec26 := {i:=1} with { erroneous (b) "value := MyCharstring1:""haha""" }
 const MYREC c_myrec27 := {i:=1} with { erroneous (b) "value := MYREC2:{i:=1}" }
@@ -7285,19 +7294,15 @@ control {} with{erroneous ""}
 <END_RESULT>
 
 <RESULT FTRT COUNT 1>
-(?im)\berror: A `raw' charstring value was used for erroneous type `@Virag.MySeq' which has no TEXT or XER encodings.
+(?im)\berror: A `raw' charstring value was used for erroneous type `@virag.MYREC2' which has no TEXT, XER or JSON encodings.
 <END_RESULT>
 
 <RESULT FTRT COUNT 1>
-(?im)\berror: A `raw' universal charstring value was used for erroneous type `@Virag.MySeq' which has no XER encoding.
+(?im)\berror: A `raw' universal charstring value was used for erroneous type `@virag.MYREC2' which has no XER or JSON encodings.
 <END_RESULT>
 
 <RESULT FTRT COUNT 1>
-(?im)\berror: A `raw' bitstring value was used for erroneous type `@virag.MYREC2' which has no RAW or PER encodings.
-<END_RESULT>
-
-<RESULT FTRT COUNT 1>
-(?im)\berror: Type `VisibleString' and type `@virag.MYREC' have no common encoding
+(?im)\berror: A `raw' bitstring value was used for erroneous type `@virag.MYREC2' which has no RAW encoding.
 <END_RESULT>
 
 <RESULT FTRT COUNT 1>
@@ -7308,7 +7313,7 @@ control {} with{erroneous ""}
 (?im)\berror: The `erroneous' attribute can be used only on template and constant definitions
 <END_RESULT>
 
-<RESULT FTRT COUNT 33>
+<RESULT FTRT COUNT 32>
 (?is)\berror:
 <END_RESULT>
 

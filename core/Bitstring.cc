@@ -256,6 +256,7 @@ BITSTRING BITSTRING::operator+(const BITSTRING_ELEMENT& other_value) const
   return ret_val;
 }
 
+#ifdef TITAN_RUNTIME_2
 BITSTRING BITSTRING::operator+(const OPTIONAL<BITSTRING>& other_value) const
 {
   if (other_value.is_present()) {
@@ -263,6 +264,7 @@ BITSTRING BITSTRING::operator+(const OPTIONAL<BITSTRING>& other_value) const
   }
   TTCN_error("Unbound or omitted right operand of bitstring concatenation.");
 }
+#endif
 
 BITSTRING BITSTRING::operator~() const
 {
@@ -1341,6 +1343,7 @@ BITSTRING BITSTRING_ELEMENT::operator+(const BITSTRING_ELEMENT& other_value)
   return BITSTRING(2, &result);
 }
 
+#ifdef TITAN_RUNTIME_2
 BITSTRING BITSTRING_ELEMENT::operator+(
   const OPTIONAL<BITSTRING>& other_value) const
 {
@@ -1349,6 +1352,7 @@ BITSTRING BITSTRING_ELEMENT::operator+(
   }
   TTCN_error("Unbound or omitted right operand of bitstring concatenation.");
 }
+#endif
 
 BITSTRING BITSTRING_ELEMENT::operator~() const
 {
@@ -1625,7 +1629,7 @@ BITSTRING_template::BITSTRING_template(const OPTIONAL<BITSTRING>& other_value)
   case OPTIONAL_OMIT:
     set_selection(OMIT_VALUE);
     break;
-  default:
+  case OPTIONAL_UNBOUND:
     TTCN_error("Creating a bitstring template from an unbound optional field.");
   }
 }
@@ -1688,7 +1692,7 @@ BITSTRING_template& BITSTRING_template::operator=
   case OPTIONAL_OMIT:
     set_selection(OMIT_VALUE);
     break;
-  default:
+  case OPTIONAL_UNBOUND:
     TTCN_error("Assignment of an unbound optional field to a bitstring "
       "template.");
   }
@@ -1705,6 +1709,7 @@ BITSTRING_template& BITSTRING_template::operator=
   return *this;
 }
 
+#ifdef TITAN_RUNTIME_2
 void BITSTRING_template::concat(Vector<unsigned char>& v) const
 {
   switch (template_selection) {
@@ -1949,6 +1954,7 @@ BITSTRING_template operator+(template_sel left_template_sel,
   TTCN_error("Operand of bitstring template concatenation is an "
     "unbound or omitted record/set field.");
 }
+#endif // TITAN_RUNTIME_2
 
 BITSTRING_ELEMENT BITSTRING_template::operator[](int index_value)
 {
