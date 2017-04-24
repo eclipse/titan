@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6be15e17_a055f7d1",
+        "filename": "regression_test/XML/LegacyUntaggedUnion/Makefile",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-04-24T08:40:47Z",
+      "side": 1,
+      "message": "this file doesn\u0027t exist",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 30
+      },
+      "revId": "639845fea16a585fa7b5e964b03be355c6470e88",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
