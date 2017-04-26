@@ -258,7 +258,7 @@ void Type::parse_attributes()
   }
 
   if ((hasVariantAttrs())
-      && (enable_text() || enable_raw() || enable_xer())) {
+      && (enable_text() || enable_raw() || enable_xer() || enable_json())) {
 #ifndef NDEBUG
     if (rawAST_debug) {
       const char *fn = get_fullname().c_str();
