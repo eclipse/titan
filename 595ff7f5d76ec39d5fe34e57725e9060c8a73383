@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9dc37806_f0bd3912",
+        "filename": "regression_test/portTranslation/PortTranslation.ttcn",
+        "patchSetId": 2
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-05-02T14:52:52Z",
+      "side": 1,
+      "message": "It\u0027s not a good idea to put code needed by another test case here. It might not be reached if something goes wrong in this test case. Perhaps putting these in a function or dummy test case called by the control part would be better...",
+      "range": {
+        "startLine": 398,
+        "startChar": 2,
+        "endLine": 413,
+        "endChar": 28
+      },
+      "revId": "595ff7f5d76ec39d5fe34e57725e9060c8a73383",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
