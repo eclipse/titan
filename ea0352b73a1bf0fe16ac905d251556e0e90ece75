@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3eae22d8_ebf76e33",
+        "filename": "core/Port.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2176,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-05-04T08:32:03Z",
+      "side": 1,
+      "message": "Perhaps it would be better like this:\n\"System %s is already mapped to port %s\"",
+      "range": {
+        "startLine": 2176,
+        "startChar": 22,
+        "endLine": 2176,
+        "endChar": 60
+      },
+      "revId": "ea0352b73a1bf0fe16ac905d251556e0e90ece75",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
