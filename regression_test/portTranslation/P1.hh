@@ -38,6 +38,10 @@ private:
 	void Handle_Fd_Event_Writable(int fd);
 	void Handle_Fd_Event_Readable(int fd);
 	/* void Handle_Timeout(double time_since_last_call); */
+
+	int user_map_ran;
+	boolean user_start_ran;
+	boolean port_param_set;
 protected:
 	void user_map(const char *system_port);
 	void user_unmap(const char *system_port);
@@ -45,7 +49,6 @@ protected:
 	void user_start();
 	void user_stop();
 
-public:
 	void outgoing_send(const MyRec& send_par);
 	void outgoing_send(const OCTETSTRING& send_par);
 	void outgoing_send(const BITSTRING& send_par);
