@@ -21,11 +21,19 @@ type record MyRecordDefault { //In type \`\@TempNoDefaultOrPort\_SE\.MyRecordDef
 
   type record of MyRecordDefault MyRecordOfDefault; //In type \`\@TempNoDefaultOrPort\_SE\.MyRecordOfDefault\'//
 
+  type port P message {
+    inout integer
+  }
+
+  type component MyComp {
+    timer t; /* This shound not cause FATAL_ERROR */
+  }
 
   type union MyUnion { //In type \`\@TempNoDefaultOrPort\_SE\.MyUnion\':// 
     integer choice1,
     MyRecordOfDefault a, //In field \`a\'://
-    anytype b //In type \`\@TempNoDefaultOrPort_SE\.anytype\'// //In field \`b\'://
+    anytype b, //In type \`\@TempNoDefaultOrPort_SE\.anytype\'// //In field \`b\'://
+    MyComp cmp
   }
 
   template MyUnion m_integerChosen := { //In template definition//
