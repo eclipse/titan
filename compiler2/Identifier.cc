@@ -656,6 +656,8 @@ namespace Common {
     {"remove__bom__", "remove_bom", "remove_bom_"},
     {"encode__base64__", "encode_base64", "encode_base64_"},
     {"decode__base64__", "decode_base64", "decode_base64_"},
+    {"json2cbor", "json2cbor", "json2cbor"},
+    {"cbor2json", "cbor2json", "cbor2json"},
     {"get__stringencoding__", "get_stringencoding", "get_stringencoding_"},
     /* reserved names of base library - keywords in ASN.1 */
     {"FALSE_", 0, "FALSE"},
