@@ -2987,8 +2987,10 @@ int UNIVERSAL_CHARSTRING::check_BOM(CharCoding::CharCodingType expected_coding,
       TTCN_error("Internal error: invalid expected coding (%d)", expected_coding);
       break;
   }
-  TTCN_EncDec_ErrorContext::warning("No %s Byte Order Mark(BOM) detected. It may result decoding errors",
-  coding_str.c_str());
+  if (TTCN_Logger::log_this_event(TTCN_Logger::DEBUG_UNQUALIFIED)) {
+    TTCN_EncDec_ErrorContext::warning("No %s Byte Order Mark(BOM) detected. It may result decoding errors",
+    coding_str.c_str());
+  }
   return 0;
 }
 
