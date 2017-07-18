@@ -1,0 +1,6 @@
+*.old
+*.log
+compile
+*.cc
+*.hh
+*.d
