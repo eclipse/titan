@@ -7204,6 +7204,8 @@ namespace Ttcn {
         printing != NULL && printing->get_printing() == PrintingType::PT_COMPACT;
       if (compact_printing || encoding_options) {
         str = mputstr(str, ", ");
+      } else {
+        str = mputstr(str, ", 0");
       }
       if (compact_printing) {
         str = mputprintf(str, "XER_CANONICAL%s",
@@ -7212,8 +7214,11 @@ namespace Ttcn {
       if (encoding_options) str = mputprintf(str, "%s",
         encoding_options->c_str());
     } else {
-      if (encoding_options) str = mputprintf(str, ", %s",
-        encoding_options->c_str());
+      if (encoding_options) {
+        str = mputprintf(str, ", %s", encoding_options->c_str());
+      } else {
+        str = mputstr(str, ", 0");
+      }
     }
     str = mputstr(str, ");\n");
     const char *result_name;
