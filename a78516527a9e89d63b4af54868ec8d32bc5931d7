@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4b6f868_c9cb3dcd",
+        "filename": "core/RAW.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1007685
+      },
+      "writtenOn": "2017-07-20T08:42:16Z",
+      "side": 1,
+      "message": "unsigned int",
+      "range": {
+        "startLine": 417,
+        "startChar": 16,
+        "endLine": 417,
+        "endChar": 19
+      },
+      "revId": "a78516527a9e89d63b4af54868ec8d32bc5931d7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
