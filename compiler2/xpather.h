@@ -245,6 +245,7 @@ const char *get_suffix(const char *file_name);
  * @param warnings_for_bad_variants warningsForBadVariants -E
  * @param activate_debugger activateDebugger -n
  * @param disable_predef_exp_folder disablePredefinedExternalFolder
+ * @param legacy_codec_handling legacyCodecHandling (compiler option '-e')
  * @param solspeclibs SolarisSpecificLibraries
  * @param sol8speclibs Solaris8SpecificLibraries
  * @param linuxspeclibs LinuxSpecificLibraries
@@ -287,7 +288,7 @@ tpd_result process_tpd(const char **p_tpd_name, const char *actcfg,
   boolean *disablejson, boolean *forcexerinasn, boolean *defaultasomit, boolean *gccmessageformat,
   boolean *linenumber, boolean *includesourceinfo, boolean *addsourcelineinfo, boolean *suppresswarnings,
   boolean *outparamboundness, boolean *omit_in_value_list, boolean *warnings_for_bad_variants, boolean *activate_debugger, boolean* ignore_untagged_union,
-  boolean *disable_predef_exp_folder, struct string_list* solspeclibs, struct string_list* sol8speclibs,
+  boolean *disable_predef_exp_folder, boolean* legacy_codec_handling, struct string_list* solspeclibs, struct string_list* sol8speclibs,
   struct string_list* linuxspeclibs, struct string_list* freebsdspeclibs, struct string_list* win32speclibs,
   char** ttcn3preprocessor, struct string_list* linkerlibs, struct string_list* additionalObjects, struct string_list* linkerlibsearchpath, boolean Vflag, boolean Dflag,
   boolean *Zflag, boolean *Hflag, char** generatorCommandOutput, struct string2_list* target_placement_list, boolean prefix_workdir, struct string2_list* run_command_list,

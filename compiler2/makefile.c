@@ -269,6 +269,7 @@ struct makefile_struct {
   boolean activate_debugger;
   boolean ignore_untagged_on_top_union;
   boolean disable_predef_ext_folder;
+  boolean legacy_codec_handling;
   struct string_list* solspeclibraries; /* not owned */
   struct string_list* sol8speclibraries; /* not owned */
   struct string_list* linuxspeclibraries; /* not owned */
@@ -338,6 +339,7 @@ static void init_makefile_struct(struct makefile_struct *makefile)
   makefile->activate_debugger = FALSE;
   makefile->ignore_untagged_on_top_union = FALSE;
   makefile->disable_predef_ext_folder = FALSE;
+  makefile->legacy_codec_handling = FALSE;
   makefile->solspeclibraries = NULL;
   makefile->sol8speclibraries = NULL;
   makefile->linuxspeclibraries = NULL;
@@ -2266,6 +2268,7 @@ static void print_makefile(struct makefile_struct *makefile)
           (makefile->warnings_for_bad_variants ? " -E" : ""),
           (makefile->activate_debugger ? " -n" : ""),
           (makefile->ignore_untagged_on_top_union ? " -N" : ""),
+          (makefile->legacy_codec_handling ? " -e" : ""),
           (makefile->tcov_file_name ? makefile->tcov_file_name : ""),
           (makefile->profiled_file_list ? " -z $(PROFILED_FILE_LIST)" : ""),
           /* end of COMPILER FLAGS */
@@ -4647,7 +4650,7 @@ static void generate_makefile(size_t n_arguments, char *arguments[],
   boolean disablexer, boolean disablejson, boolean forcexerinasn, boolean defaultasomit, boolean gccmsgformat,
   boolean linenumbersonlymsg, boolean includesourceinfo, boolean addsourcelineinfo, boolean suppresswarnings,
   boolean outparamboundness, boolean omit_in_value_list, boolean warnings_for_bad_variants, boolean activate_debugger,
-  boolean ignore_untagged_on_top_union, boolean disable_predef_ext_folder, struct string_list* solspeclibraries,
+  boolean ignore_untagged_on_top_union, boolean disable_predef_ext_folder, boolean legacy_codec_handling, struct string_list* solspeclibraries,
   struct string_list* sol8speclibraries, struct string_list* linuxspeclibraries, struct string_list* freebsdspeclibraries,
   struct string_list* win32speclibraries, const char* ttcn3preprocessor, struct string_list* linkerlibraries,
   struct string_list* additionalObjects, struct string_list* linkerlibsearchpath, char* generatorCommandOutput,
@@ -4701,6 +4704,7 @@ static void generate_makefile(size_t n_arguments, char *arguments[],
   makefile.activate_debugger = activate_debugger;
   makefile.ignore_untagged_on_top_union = ignore_untagged_on_top_union;
   makefile.disable_predef_ext_folder = disable_predef_ext_folder;
+  makefile.legacy_codec_handling = legacy_codec_handling;
   makefile.solspeclibraries = solspeclibraries;
   makefile.sol8speclibraries = sol8speclibraries;
   makefile.linuxspeclibraries = linuxspeclibraries;
@@ -4964,6 +4968,7 @@ int main(int argc, char *argv[])
   struct string2_list* run_command_list = NULL;
   struct string2_list* required_configs = NULL;
   char* makefileScript = NULL;
+  boolean legacy_codec_handling = FALSE;
 
 #ifdef LICENSE
   license_struct lstr;
@@ -5357,7 +5362,8 @@ int main(int argc, char *argv[])
       &Rflag, &lflag, &mflag, &Pflag, &Lflag, rflag, Fflag, Tflag, output_file, &abs_work_dir, sub_project_dirs, program_name, prj_graph_fp,
       create_symlink_list, ttcn3_prep_includes, ttcn3_prep_defines, ttcn3_prep_undefines, prep_includes, prep_defines, prep_undefines, &csmode,
       &quflag, &dsflag, &cxxcompiler, &optlevel, &optflags, &dbflag, &drflag, &dtflag, &dxflag, &djflag, &fxflag, &doflag, &gfflag, &lnflag, &isflag,
-      &asflag, &temp_wflag, &Yflag, &Mflag, &Eflag, &nflag, &Nflag, &diflag, solspeclibraries, sol8speclibraries, linuxspeclibraries, freebsdspeclibraries, win32speclibraries, &ttcn3prep,
+      &asflag, &temp_wflag, &Yflag, &Mflag, &Eflag, &nflag, &Nflag, &diflag, &legacy_codec_handling,
+      solspeclibraries, sol8speclibraries, linuxspeclibraries, freebsdspeclibraries, win32speclibraries, &ttcn3prep,
       linkerlibraries, additionalObjects, linkerlibsearchpath, Vflag, Dflag, &Zflag, &Hflag,
       &generatorCommandOutput, target_placement_list, Wflag, run_command_list, required_configs, &profiled_file_list, search_paths, n_search_paths, &makefileScript);
     
@@ -5404,8 +5410,8 @@ int main(int argc, char *argv[])
       Rflag, lflag, mflag, Cflag, code_splitting_mode, tcov_file_name, profiled_file_list,
       file_list_file_name, Lflag, Zflag, Hflag, rflag ? sub_project_dirs : NULL, ttcn3_prep_includes,
       ttcn3_prep_defines, ttcn3_prep_undefines, prep_includes, prep_defines, prep_undefines, csmode, quflag, dsflag, cxxcompiler, optlevel, optflags, dbflag,
-      drflag, dtflag, dxflag, djflag, fxflag, doflag, gfflag, lnflag, isflag, asflag, wflag, Yflag, Mflag, Eflag, nflag, Nflag, diflag, solspeclibraries,
-      sol8speclibraries, linuxspeclibraries, freebsdspeclibraries, win32speclibraries, ttcn3prep, linkerlibraries, additionalObjects,
+      drflag, dtflag, dxflag, djflag, fxflag, doflag, gfflag, lnflag, isflag, asflag, wflag, Yflag, Mflag, Eflag, nflag, Nflag, diflag, legacy_codec_handling,
+      solspeclibraries, sol8speclibraries, linuxspeclibraries, freebsdspeclibraries, win32speclibraries, ttcn3prep, linkerlibraries, additionalObjects,
       linkerlibsearchpath, generatorCommandOutput, target_placement_list);
     if (makefileScript != NULL) {
       executeMakefileScript(makefileScript, output_file);
