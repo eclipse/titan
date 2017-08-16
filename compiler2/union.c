@@ -268,8 +268,7 @@ void defUnionClass(struct_def const *sdef, output_struct *output)
     "{\n"
     "if (checked_selection == %s) TTCN_error(\"Internal error: Performing "
       "ischosen() operation on an invalid field of union type %s.\");\n"
-    "if (union_selection == %s) TTCN_error(\"Performing ischosen() operation "
-      "on an unbound value of union type %s.\");\n"
+    "if (union_selection == %s) return false;\n"
     "return union_selection == checked_selection;\n"
     "}\n\n", name, selection_type, unbound_value, dispname, unbound_value,
     dispname);
