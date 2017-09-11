@@ -387,17 +387,40 @@ void XSDName2TTCN3Name(const Mstring& in, QualifiedNames & used_names, modeType 
           variant += "\"name as '" + in + "'\"";
         }
         break;
-      case enum_id_name:
-        if (tmp1 == tmp2) { // If the only difference is the case of the first letter
+      case enum_id_name: {
+        // Escape some special characters.
+        Mstring escaped_in;
+        bool found_spec = false;
+        for (size_t i = 0; i < in.size(); i++) {
+          if (in[i] == '\'') {
+            escaped_in = escaped_in + "&apos;";
+            found_spec = true;
+          } else if (in[i] == '\"') {
+            escaped_in = escaped_in + "&quot;";
+            found_spec = true;
+          } else if (in[i] == '>') {
+            escaped_in = escaped_in + "&gt;";
+            found_spec = true;
+          } else if (in[i] == '<') {
+            escaped_in = escaped_in + "&lt;";
+            found_spec = true;
+          } else if (in[i] == '&') {
+            escaped_in = escaped_in + "&amp;";
+            found_spec = true;
+          } else {
+            escaped_in = escaped_in + in[i];
+          }
+        }
+        if (tmp1 == tmp2 && found_spec == false) { // If the only difference is the case of the first letter
           if (isupper(in[0])) {
             variant += "\"text \'" + res + "\' as capitalized\"";
           } else {
             variant += "\"text \'" + res + "\' as uncapitalized\"";
           }
         } else { // Otherwise if other letters have changed too
-          variant += "\"text \'" + res + "\' as '" + in + "'\"";
+          variant += "\"text \'" + res + "\' as '" + escaped_in + "'\"";
         }
-        break;
+        break; }
       default:
         break;
     }
