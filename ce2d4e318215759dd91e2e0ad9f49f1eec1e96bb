@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00693e47_33054979",
+        "filename": "regression_test/commMessage/TcommMessage.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1562,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2017-09-11T08:21:46Z",
+      "side": 1,
+      "message": "is it acceptable?",
+      "range": {
+        "startLine": 1562,
+        "startChar": 29,
+        "endLine": 1562,
+        "endChar": 70
+      },
+      "revId": "ce2d4e318215759dd91e2e0ad9f49f1eec1e96bb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "313fd912_1db4ea18",
+        "filename": "regression_test/commMessage/TcommMessage.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2017-09-11T08:21:46Z",
+      "side": 1,
+      "message": "vt_setoff :\u003d * \u003d\u003e not isvalue(vt_setof) is ok but is {} a possibility?",
+      "range": {
+        "startLine": 1565,
+        "startChar": 6,
+        "endLine": 1565,
+        "endChar": 56
+      },
+      "revId": "ce2d4e318215759dd91e2e0ad9f49f1eec1e96bb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
