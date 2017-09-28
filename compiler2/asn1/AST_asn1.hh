@@ -249,6 +249,7 @@ namespace Asn {
     virtual void chk();
   private:
     virtual void get_imported_mods(module_set_t& p_imported_mods);
+    virtual void get_imported_module_names(std::vector<Identifier>& imported_mods);
     virtual bool has_circular_import();
     virtual void generate_code_internal(CodeGenHelper& cgh);
   public:
@@ -428,6 +429,8 @@ namespace Asn {
     void add_impmod(ImpMod *p_impmod);
     /** Sets the internal pointer my_mod to \a p_mod. */
     void set_my_mod(Module *p_mod);
+    size_t get_imports_size() const {return impmods_v.size();}
+    ImpMod* get_impmod(size_t index) const {return impmods_v[index];}
     /** Recursive check. Checks whether the modules with the id exist,
      *  then checks that ImpMod. */
     void chk_imp(ReferenceChain& refch);

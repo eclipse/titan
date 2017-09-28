@@ -29,13 +29,16 @@
  ******************************************************************************/
 /* Main program for the merged compiler */
 
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
 #include <errno.h>
+#include <map>
 #include <vector>
+#include <stack>
 #include <sstream>
 #if defined SOLARIS || defined SOLARIS8
 # include <sys/utsname.h>
@@ -99,8 +102,8 @@ boolean generate_skeleton = FALSE, force_overwrite = FALSE,
   force_gen_seof = FALSE, omit_in_value_list = FALSE,
   warnings_for_bad_variants = FALSE, debugger_active = FALSE,
   legacy_unbound_union_fields = FALSE, split_to_slices = FALSE,
-  legacy_untagged_union, disable_user_info, legacy_codec_handling = FALSE;
-  // use legacy codec handling until the implementation of the new one is finished
+  legacy_untagged_union, disable_user_info, legacy_codec_handling = FALSE,
+  dont_parse_all_modules = FALSE;
 
 // Default code splitting mode is set to 'no splitting'.
 CodeGenHelper::split_type code_splitting_mode = CodeGenHelper::SPLIT_NONE;
@@ -417,6 +420,8 @@ static void usage()
     "	-N:		ignore UNTAGGED encoding instruction on top level unions (legacy behaviour)\n"
     "	-o dir:		output files will be placed into dir\n"
     "	-p:		parse only (no semantic check or code generation)\n"
+    "	--parse-less:	don't parse modules that are not needed for code generation\n"
+    "			this will only work if all module names match their file names\n"
     "	-P pduname:	define top-level pdu\n"
     "	-q:		suppress all messages (quiet mode)\n"
     "	-Qn:		quit after n errors\n"
@@ -455,6 +460,88 @@ extern int pattern_yydebug;
 extern int pattern_unidebug;
 extern int rawAST_debug;
 extern int coding_attrib_debug;
+
+std::string get_module_basename(const char *filename)
+{
+  const char *basename = strrchr(filename, '/');
+  if (!basename)
+    basename = filename;
+  else
+    basename++;
+  const char *dot = strrchr(basename, '.');
+  if (dot)
+    return std::string(basename, dot-basename);
+  else
+    return basename;
+}
+
+std::string get_module_basename_by_id(const char *module_id)
+{
+  std::string result(module_id);
+  for (size_t i = 0; i < result.size(); i++)
+    if (result[i] == '-')
+      result[i] = '_';
+  return result;
+}
+
+Module *parse_module(const module_struct *module)
+{
+  switch (module->module_type) {
+  case Module::MOD_ASN:
+    return asn1_parse_file(module->file_name, module->need_codegen);
+  case Module::MOD_TTCN:
+    return ttcn3_parse_file(module->file_name, module->need_codegen);
+  default: // MOD_UNKNOWN ?
+    return NULL;
+  }
+}
+
+void parse_modules(size_t n_modules, const module_struct *module_list)
+{
+    std::vector<bool>  is_module_enqueued(n_modules, false);
+    std::stack<size_t> modules_to_parse;
+    std::map<std::string, size_t> module_ind_by_name;
+
+    for (size_t i = 0; i < n_modules; i++) {
+      if (module_list[i].need_codegen || !dont_parse_all_modules) {
+        DEBUG(1, "Must parse %s", module_list[i].file_name);
+        modules_to_parse.push(i);
+        is_module_enqueued[i] = true;
+      }
+      std::string module_id = get_module_basename(module_list[i].file_name);
+      DEBUG(1, "%s will be resolved as %s", module_id.c_str(), module_list[i].file_name);
+      module_ind_by_name[module_id] = i;
+    }
+
+    while (!modules_to_parse.empty()) {
+      size_t module_ind = modules_to_parse.top();
+      modules_to_parse.pop();
+      const module_struct *module = module_list + module_ind;
+      Module *parsed_module = parse_module(module);
+
+      std::vector<Identifier> imports;
+      if (parsed_module) {
+        parsed_module->get_imported_module_names(imports);
+      }
+      for (size_t i = 0; i < imports.size(); i++) {
+        std::string import_module_name = get_module_basename_by_id(imports[i].get_dispname().c_str());
+        DEBUG(1, "%s imports module %s", module->file_name, import_module_name.c_str());
+        std::map<std::string, size_t>::iterator p_imported_module_ind = module_ind_by_name.find(import_module_name);
+        if (p_imported_module_ind != module_ind_by_name.end()) {
+          size_t imported_module_ind = p_imported_module_ind->second;
+          if (!is_module_enqueued[imported_module_ind]) {
+            DEBUG(1, "Must parse %s", module_list[imported_module_ind].file_name);
+            modules_to_parse.push(imported_module_ind);
+            is_module_enqueued[imported_module_ind] = true;
+          } else {
+            DEBUG(1, "%s already set to be parsed", module_list[imported_module_ind].file_name);
+          }
+        } else {
+          ERROR("Could not resolve module name %s", import_module_name.c_str());
+        }
+      }
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -588,8 +675,18 @@ int main(int argc, char *argv[])
   }
 
   if (!ttcn2json) {
+    enum {
+      LONGOPT_TTCN2JSON      = 1000,
+      LONGOPT_DONT_PARSE_ALL = 1001
+    };
+    static struct option long_options[] = {
+      {"ttcn2json", 0, NULL, LONGOPT_TTCN2JSON},
+      {"parse-less", 0, NULL, LONGOPT_DONT_PARSE_ALL},
+      {NULL, 0, NULL, 0}
+    };
+
     for ( ; ; ) {
-      int c = getopt(argc, argv, "aA:bBcC:dDeEfFgijJ:K:lLMnNo:pP:qQ:rRsStT:uU:vV:wxXyYz:0-");
+      int c = getopt_long(argc, argv, "aA:bBcC:dDeEfFgijJ:K:lLMnNo:pP:qQ:rRsStT:uU:vV:wxXyYz:0-", long_options, NULL);
       if (c == -1) break;
       switch (c) {
       case 'a':
@@ -807,13 +904,15 @@ int main(int argc, char *argv[])
         Error_Context::set_max_errors(max_errs);
         break; }
 
-      case '-':
-        if (!strcmp(argv[optind], "--ttcn2json")) {
-          ERROR("Option `--ttcn2json' is only allowed as the first option");
-        } else {
-          ERROR("Invalid option: `%s'", argv[optind]);
-        }
-        // no break
+      case LONGOPT_TTCN2JSON:
+        ERROR("Option `--ttcn2json' is only allowed as the first option");
+        errflag = true;
+        print_usage = true;
+        break;
+
+      case LONGOPT_DONT_PARSE_ALL:
+        dont_parse_all_modules = true;
+        break;
 
       default:
         errflag = true;
@@ -1142,19 +1241,7 @@ int main(int argc, char *argv[])
     if (asn1_modules_present) asn1_init();
     modules = new Common::Modules();
 
-    for (size_t i = 0; i < n_modules; i++) {
-      const module_struct *module = module_list + i;
-      switch (module->module_type) {
-      case Module::MOD_ASN:
-        asn1_parse_file(module->file_name, module->need_codegen);
-        break;
-      case Module::MOD_TTCN:
-        ttcn3_parse_file(module->file_name, module->need_codegen);
-        break;
-      default: // MOD_UNKNOWN ?
-        break;
-      }
-    }
+    parse_modules(n_modules, module_list);
 
     for (size_t i = 0; i < n_modules; i++) Free(module_list[i].absolute_path);
     Free(module_list);

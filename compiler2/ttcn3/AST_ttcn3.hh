@@ -661,6 +661,7 @@ namespace Ttcn {
     void chk_friends();
     void chk_groups();
     virtual void get_imported_mods(module_set_t& p_imported_mods);
+    virtual void get_imported_module_names(std::vector<Identifier>& imported_mods);
     virtual void generate_code_internal(CodeGenHelper& cgh);
   public:
     /** Returns a scope that can access the definitions within component type
