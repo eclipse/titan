@@ -81,7 +81,7 @@ endif
 
 PDFS := $(MANPAGES:.1=.pdf)
 
-COMPILER_SOURCES := encdec.c enum.c functionref.c record.c record_of.c union.c \
+COMPILER_SOURCES := encdec.c enum.cc functionref.cc record.cc record_of.cc union.cc \
 PredefFunc.cc AST.cc Code.cc Constraint.cc CompilerError.cc \
 CompField.cc CompType.cc EnumItem.cc Identifier.cc Int.cc \
 main.cc Real.cc Setting.cc SigParam.cc string.cc subtype.cc Stopwatch.cc \
