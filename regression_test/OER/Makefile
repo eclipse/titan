@@ -12,14 +12,17 @@
 TOPDIR := ..
 include $(TOPDIR)/Makefile.regression
 
-.SUFFIXES: .ttcn .hh
+.SUFFIXES: .ttcn .asn .hh
 .PHONY: all clean dep run
 
 TTCN3_LIB = ttcn3$(RT2_SUFFIX)-parallel$(DYNAMIC_SUFFIX)
 
-TTCN3_MODULES = Hostid.ttcn
+TTCN3_MODULES = OER.ttcn
 
-GENERATED_SOURCES = $(TTCN3_MODULES:.ttcn=.cc)
+ASN1_MODULES = Types.asn
+
+GENERATED_SOURCES = $(ASN1_MODULES:.asn=.cc) $(TTCN3_MODULES:.ttcn=.cc)
+
 GENERATED_HEADERS = $(GENERATED_SOURCES:.cc=.hh)
 ifdef CODE_SPLIT
 GENERATED_SOURCES := $(foreach file, $(GENERATED_SOURCES:.cc=), $(addprefix $(file), .cc _seq.cc _set.cc  _seqof.cc _setof.cc _union.cc))
@@ -30,16 +33,9 @@ GENERATED_SOURCES2 := $(foreach file, $(GENERATED_SOURCES:.cc=), $(addprefix $(f
 GENERATED_SOURCES += $(GENERATED_SOURCES2)
 endif
 
-USER_SOURCES =
+OBJECTS = $(GENERATED_SOURCES:.cc=.o)
 
-OBJECTS = $(GENERATED_SOURCES:.cc=.o) $(USER_SOURCES:.cc=.o)
-
-TARGET = Hostid$(EXESUFFIX)
-
-CONFIG = config.cfg
-ifeq ($(findstring SOLARIS, $(PLATFORM)), SOLARIS)
-CONFIG = config_solaris.cfg
-endif
+TARGET = OER$(EXESUFFIX)
 
 all: $(TARGET)
 
@@ -47,20 +43,15 @@ $(TARGET): $(GENERATED_SOURCES) $(USER_SOURCES)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ -L$(TTCN3_DIR)/lib -l$(TTCN3_LIB) -L$(OPENSSL_DIR)/lib -lcrypto $($(PLATFORM)_LIBS)
 
 $(GENERATED_SOURCES) $(GENERATED_HEADERS): compile
-	@if [ ! -f $@ ]; then $(RM) compile; $(MAKE) compile; fi
 
 compile: $(TTCN3_MODULES) $(ASN1_MODULES)
-	$(filter-out -Nold -E, $(TTCN3_COMPILER)) $(COMPILER_FLAGS) $^ 
-	touch compile
-	
+	$(TTCN3_COMPILER) $(COMPILER_FLAGS) $^
+
 clean distclean:
-	-rm -f $(TARGET) $(OBJECTS) $(GENERATED_HEADERS) \
-	$(GENERATED_SOURCES) *.log Makefile.bak compile
+	$(RM) $(TARGET) $(GENERATED_HEADERS) $(GENERATED_SOURCES) $(OBJECTS) *.log Makefile.bak
 
 dep: $(GENERATED_SOURCES)
 	makedepend $(CPPFLAGS) $(GENERATED_SOURCES)
 
 run: $(TARGET)
-	$(TTCN3_DIR)/bin/ttcn3_start $^ $(CONFIG)
-
-
+	$(TTCN3_DIR)/bin/ttcn3_start $(TARGET) OER.cfg
