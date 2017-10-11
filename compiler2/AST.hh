@@ -33,6 +33,7 @@
 #include <new>
 #include <set>
 #include <string>
+#include <vector>
 #include "../common/dbgnew.hh"
 
 #include "../common/ModuleVersion.hh"
@@ -365,6 +366,7 @@ namespace Common {
     /** Walks through the import list and collects the imported modules into
          * \a p_imported_mods recursively. */
     virtual void get_imported_mods(module_set_t& p_imported_mods) = 0;
+    virtual void get_imported_module_names(std::vector<Identifier>& imported_mods) = 0;
     void write_checksum();
     static char* get_product_identifier(const char* product_number,
         const unsigned int suffix, unsigned int release, unsigned int patch,

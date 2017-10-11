@@ -31,7 +31,6 @@
 #include <stdlib.h>
 
 #include "main.hh"
-#include "ttcn3/compiler.h"
 
 void defEnumClass(const enum_def *edef, output_struct *output)
 {

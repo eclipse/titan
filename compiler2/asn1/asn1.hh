@@ -14,6 +14,11 @@
 #ifndef _ASN1_HH
 #define _ASN1_HH
 
+namespace Common
+{
+  class Module;
+}
+
 /**
  * Call this before using ASN stuff.
  */
@@ -25,7 +30,7 @@ extern void asn1_free();
 /**
  * Parse the file given by \a filename.
  */
-extern int asn1_parse_file(const char* filename, boolean generate_code);
+extern Common::Module* asn1_parse_file(const char* filename, boolean generate_code);
 /**
  * Set to non-zero to print lof of parsing debug messages to stderr.
  */

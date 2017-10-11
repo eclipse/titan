@@ -10414,13 +10414,14 @@ static void ttcn3_error(const char *str)
   }
 }
 
-int ttcn3_parse_file(const char* filename, boolean generate_code)
+Common::Module* ttcn3_parse_file(const char* filename, boolean generate_code)
 {
+  Common::Module* result = NULL;
   anytype_access = false;
   ttcn3_in = fopen(filename, "r");
   if (ttcn3_in == NULL) {
     ERROR("Cannot open input file `%s': %s", filename, strerror(errno));
-    return -1;
+    return NULL;
   }
   infile = filename;
   init_ttcn3_lex();
@@ -10428,7 +10429,7 @@ int ttcn3_parse_file(const char* filename, boolean generate_code)
   is_erroneous_parsed = false;
   NOTIFY("Parsing TTCN-3 module `%s'...", filename);
 
-  int retval = ttcn3_parse();
+  ttcn3_parse();
 
   free_ttcn3_lex(); // does fclose(ttcn3_in);
 
@@ -10437,12 +10438,13 @@ int ttcn3_parse_file(const char* filename, boolean generate_code)
     set_md5_checksum(act_ttcn3_module);
     if (generate_code) act_ttcn3_module->set_gen_code();
     modules->add_mod(act_ttcn3_module);
+    result = act_ttcn3_module;
     act_ttcn3_module = 0;
   }
 
   act_group = 0;
 
-  return retval;
+  return result;
 }
 
 Ttcn::ErroneousAttributeSpec* ttcn3_parse_erroneous_attr_spec_string(

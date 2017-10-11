@@ -3942,31 +3942,32 @@ LowerRef:
  * Interface
  *********************************************************************/
 
-int asn1_parse_file(const char* filename, boolean generate_code)
+Common::Module* asn1_parse_file(const char* filename, boolean generate_code)
 {
   asn1_yy_parse_internal=false;
-  int retval=0;
+  Common::Module* result=NULL;
   asn1la_newfile(filename);
   yyin=fopen(filename, "r");
   if(yyin==NULL) {
     ERROR("Cannot open input file `%s': %s",
           filename, strerror(errno));
-    return -1;
+    return NULL;
   }
   yy_buffer_state *flex_buffer = asn1_yy_create_buffer(yyin, YY_BUF_SIZE);
   asn1_yy_switch_to_buffer(flex_buffer);
   act_asn1_module=0;
   NOTIFY("Parsing ASN.1 module `%s'...", filename);
-  retval=yyparse();
+  int retval=yyparse();
   fclose(yyin);
   asn1_yylex_destroy();
   if(retval==0 && act_asn1_module!=0) {
     act_asn1_module->set_location(filename);
     if (generate_code) act_asn1_module->set_gen_code();
     modules->add_mod(act_asn1_module);
+    result = act_asn1_module;
   }
   act_asn1_module=0;
-  return retval;
+  return result;
 }
 
 /**

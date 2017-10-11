@@ -499,6 +499,13 @@ namespace Asn {
     imp->get_imported_mods(p_imported_mods);
   }
 
+  void Module::get_imported_module_names(std::vector<Identifier>& imported_mods)
+  {
+    imported_mods.clear();
+    for (size_t i = 0; i < imp->get_imports_size(); i++)
+      imported_mods.push_back(imp->get_impmod(i)->get_modid());
+  }
+
   bool Module::has_circular_import()
   {
     return imp->get_is_circular();
