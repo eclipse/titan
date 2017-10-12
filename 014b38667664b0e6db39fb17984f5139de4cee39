@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ca1fb8f_7980b692",
+        "filename": "compiler2/Type_chk.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 3007,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-10-12T08:05:33Z",
+      "side": 1,
+      "message": "why not make one \u0027if\u0027 out of these, since their \u0027else\u0027 branches are identical",
+      "range": {
+        "startLine": 3006,
+        "startChar": 10,
+        "endLine": 3007,
+        "endChar": 57
+      },
+      "revId": "014b38667664b0e6db39fb17984f5139de4cee39",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
