@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "084f487d_2373b254",
+        "filename": "core/Basetype.hh",
+        "patchSetId": 1
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-10-25T16:02:39Z",
+      "side": 1,
+      "message": "I\u0027m pretty OER uses a different buffer...",
+      "range": {
+        "startLine": 400,
+        "startChar": 37,
+        "endLine": 400,
+        "endChar": 51
+      },
+      "revId": "012d72e5a35b991019c053777267a75f3a1e2e49",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e16de04_c9d463f3",
+        "filename": "core/OER.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-10-25T16:02:39Z",
+      "side": 1,
+      "message": "singular",
+      "range": {
+        "startLine": 25,
+        "startChar": 46,
+        "endLine": 25,
+        "endChar": 47
+      },
+      "revId": "012d72e5a35b991019c053777267a75f3a1e2e49",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
