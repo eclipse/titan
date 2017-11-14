@@ -2371,8 +2371,8 @@ void defUnionClass(struct_def const *sdef, output_struct *output)
   if (oer_needed) {
     // OER encode
     src = mputprintf(src,
-      "int %s::OER_encode(const TTCN_Typedescriptor_t& p_td, TTCN_Buffer& p_buf) const\n"
-      "{\n", name);
+      "int %s::OER_encode(const TTCN_Typedescriptor_t&%s, TTCN_Buffer& p_buf) const\n"
+      "{\n", name, use_runtime_2 ? " p_td" : "");
     if (use_runtime_2) {
       src = mputstr(src, "  if (err_descr) return OER_encode_negtest(err_descr, p_td, p_buf);\n");
     }
@@ -2474,8 +2474,10 @@ void defUnionClass(struct_def const *sdef, output_struct *output)
       "int %s::OER_decode(const TTCN_Typedescriptor_t&, TTCN_Buffer& p_buf, OER_struct& p_oer)\n"
       "{\n", name);
     if (sdef->ot == NULL) {
-      src = mputstr(src, 
-        "  const ASN_Tag_t& descr = decode_oer_tag(p_buf);\n");
+      if (sdef->nElements > 0) {
+        src = mputstr(src, 
+          "  const ASN_Tag_t& descr = decode_oer_tag(p_buf);\n");
+      }
       for (i = 0; i < sdef->nElements; ++i) {
         src = mputprintf(src,
           "  if (%s_descr_.ber->tags[%s_descr_.ber->n_tags-1].tagclass == descr.tagclass &&\n"
