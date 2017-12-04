@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69ef2f91_186ce0ba",
+        "filename": "compiler2/Type_chk.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 3154,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2017-12-04T15:53:23Z",
+      "side": 1,
+      "message": "add a \u0027no break\u0027 comment",
+      "range": {
+        "startLine": 3154,
+        "startChar": 4,
+        "endLine": 3154,
+        "endChar": 5
+      },
+      "revId": "6a82db01633db2428c8d29b7b87baf1976756ed7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
