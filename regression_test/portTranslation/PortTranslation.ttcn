@@ -464,8 +464,12 @@ module PortTranslation {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+function f_mapper() {
+map(self:p, system:p2);
+}
+
 	testcase tc_send2() runs on MyComp system System {
-		map(self:p, system:p2);
+		f_mapper();
 		var MyRec v_rec := { 'ABCDEF'O, Oct };
 
 		// Send octetstring with Oct, so the first mapping function will be successful
