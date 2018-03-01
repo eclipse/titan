@@ -16,6 +16,24 @@
       "revId": "277fb24785585544f21a915377ae97044b678a4e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a602727a_2e7674a1",
+        "filename": "etc/xsd/TPD.xsd",
+        "patchSetId": 2
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2018-03-01T11:36:44Z",
+      "side": 1,
+      "message": "I will update the referenceguide.doc because we have a special extension for header handling. If you edited manually the header, its structure may would have been broken/hurt.",
+      "parentUuid": "937c4600_c9fcb60c",
+      "revId": "277fb24785585544f21a915377ae97044b678a4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
