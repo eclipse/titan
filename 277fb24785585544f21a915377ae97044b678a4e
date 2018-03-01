@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "937c4600_c9fcb60c",
+        "filename": "etc/xsd/TPD.xsd",
+        "patchSetId": 2
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2018-03-01T11:27:41Z",
+      "side": 1,
+      "message": "This shall be documented in the usrguide.referenceguide.doc, exactly after the previous element.",
+      "revId": "277fb24785585544f21a915377ae97044b678a4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
