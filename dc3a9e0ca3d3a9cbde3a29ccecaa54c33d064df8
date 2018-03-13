@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb23766c_f99d7574",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2018-03-13T10:49:20Z",
+      "side": 1,
+      "message": "missing copyright header",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 1
+      },
+      "revId": "dc3a9e0ca3d3a9cbde3a29ccecaa54c33d064df8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
