@@ -198,6 +198,10 @@ char* generate_code_debugger_add_var(char* str, Common::Assignment* var_ass,
     eval = var_ass->get_eval_type();
     Ttcn::FormalPar* fpar = dynamic_cast<Ttcn::FormalPar*>(var_ass);
     is_constant = fpar == NULL || !fpar->get_used_as_lvalue();
+    if(!fpar->need_generate_shadow_object()) {
+      // detect if the shadow object was skipped as not used
+      return str ? str : memptystr();
+    }
     break; }
   case Common::Assignment::A_CONST:
   case Common::Assignment::A_EXT_CONST:

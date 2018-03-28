@@ -7824,9 +7824,6 @@ namespace Ttcn {
     // assemble the function body first (this also determines which parameters
     // are never used)
     char* body = create_location_object(memptystr(), "ALTSTEP", dispname_str);
-    if (debugger_active) {
-      body = generate_code_debugger_function_init(body, this);
-    }
     body = sb->generate_code(body, target->header.global_vars,
       target->source.global_vars);
     body = ags->generate_code_altstep(body, target->header.global_vars,
@@ -7844,16 +7841,22 @@ namespace Ttcn {
     // (this needs be done after the body is generated, so it to knows which 
     // parameters are never used)
     char* shadow_objects = fp_list->generate_shadow_objects(memptystr());
+
+    char* dbg = memptystr();
+    if (debugger_active) {
+      dbg = generate_code_debugger_function_init(dbg, this);
+    }
     
     // function for altstep instance: body
     target->source.function_bodies = mputprintf(target->source.function_bodies,
       "alt_status %s_instance(%s)\n"
       "{\n"
-      "%s%s"
-      "}\n\n", genname_str, formal_par_list, shadow_objects, body);
+      "%s%s%s"
+      "}\n\n", genname_str, formal_par_list, shadow_objects, dbg, body);
     Free(formal_par_list);
     Free(shadow_objects);
     Free(body);
+    Free(dbg);
 
     char *actual_par_list =
       fp_list->generate_code_actual_parlist(memptystr(), "");
@@ -9248,11 +9251,17 @@ namespace Ttcn {
     return str;
   }
 
+  bool  FormalPar::need_generate_shadow_object() const
+  {
+    return ((used_as_lvalue || (use_runtime_2 && usage_found &&
+            my_parlist->get_my_def()->get_asstype() == Definition::A_ALTSTEP)) && 
+            eval == NORMAL_EVAL)
+           && (asstype == A_PAR_VAL_IN || asstype == A_PAR_TEMPL_IN);
+  }
+
   char *FormalPar::generate_shadow_object(char *str) const
   {
-    if ((used_as_lvalue || (use_runtime_2 && usage_found &&
-        my_parlist->get_my_def()->get_asstype() == Definition::A_ALTSTEP))
-        && eval == NORMAL_EVAL) {
+    if (need_generate_shadow_object()) {
       const string& t_genname = get_genname();
       const char *genname_str = t_genname.c_str();
       const char *name_str = id->get_name().c_str();
