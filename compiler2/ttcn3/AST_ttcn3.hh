@@ -1825,6 +1825,7 @@ namespace Ttcn {
      * parameter when necessary. It is used when the value of an 'in' value or
      * template parameter is overwritten within the function body. */
     char *generate_shadow_object(char *str) const;
+    bool  need_generate_shadow_object() const;
    /** Generates a C++ statement that calls a function that sets the parameter unbound
      *  It is used when the value of an 'out' value  */
     char *generate_code_set_unbound(char *str) const;
