@@ -198,10 +198,29 @@ public:
     }
   }
 
-  void activate_port()
+  void activate_port(boolean system = FALSE)
   {
     for (unsigned int v_index = 0; v_index < array_size; v_index++) {
-      array_elements[v_index].activate_port();
+      array_elements[v_index].activate_port(system);
+    }
+  }
+  
+  boolean port_is_started()
+  {
+    for (unsigned int v_index = 0; v_index < array_size; v_index++) {
+      if (!array_elements[v_index].port_is_started()) {
+        return FALSE;
+      }
+    }
+    return TRUE;
+  }
+  
+  void start()
+  {
+    for (unsigned int v_index = 0; v_index < array_size; v_index++) {
+      if (!array_elements[v_index].port_is_started()) {
+        array_elements[v_index].start();
+      }
     }
   }
 

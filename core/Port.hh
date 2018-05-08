@@ -138,6 +138,9 @@ public:
   
   boolean port_is_started();
   
+  virtual void add_port(PORT* p);
+  virtual void remove_port(PORT* p);
+  
   // Returns the outer message port it is mapped to 
   // when the port works in translation mode. 
   // In the case of dual faced ports it returns the port object

@@ -7642,7 +7642,7 @@ error:
             "The port translation will not work.");
         }
       }
-      if (warning == false) {
+      if (/*warning == */false) {
         Reference* portref = config_op.first_is_system ?
           config_op.portref1 : config_op.portref2;
         expr.expr = mputstr(expr.expr, "if (!(");
@@ -7684,7 +7684,7 @@ error:
       expr.expr = mputstr(expr.expr, ", TRUE");
       }
     expr.expr = mputstr(expr.expr, ")");
-    if (config_op.translate == true) {
+    if (/*config_op.translate == true*/ false) {
       string funcname;
       if (strcmp(opname, "map") == 0) {
         funcname = "add_port";
