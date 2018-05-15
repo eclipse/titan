@@ -503,15 +503,11 @@ namespace Ttcn {
 
   string PatternString::create_charstring_literals(Common::Module *p_mod, string& preamble)
   {
-    /* The cast is there for the benefit of OPTIONAL<CHARSTRING>, because
-     * it doesn't have operator+(). Only the first member needs the cast
-     * (the others will be automagically converted to satisfy
-     * CHARSTRING::operator+(const CHARSTRING&) ) */
     string s;
     if (pattern_type == CSTR_PATTERN)
-      s = "CHARSTRING_template(STRING_PATTERN, (CHARSTRING)";
+      s = "CHARSTRING_template(STRING_PATTERN, ";
     else
-      s = "UNIVERSAL_CHARSTRING_template(STRING_PATTERN, (CHARSTRING)";
+      s = "UNIVERSAL_CHARSTRING_template(STRING_PATTERN, ";
     size_t nof_elems = elems.size();
     if (nof_elems > 0) {
       // the pattern is not empty
@@ -612,13 +608,18 @@ namespace Ttcn {
           break; }
         // Not known in compile time
         case ps_elem_t::PSE_REF: {
+          Common::Assignment* assign = pse->ref->get_refd_assignment();
+          if (assign->get_Type()->field_is_optional(pse->ref->get_subrefs())) {
+            // convert operands of type OPTIONAL<CHARSTRING> to CHARSTRING,
+            // otherwise they cannot be concatenated
+            s += "(CHARSTRING)";
+          }
           expression_struct expr;
           Code::init_expr(&expr);
           pse->ref->generate_code(&expr);
           if (expr.preamble || expr.postamble)
             FATAL_ERROR("PatternString::create_charstring_literals()");
           s += expr.expr;
-          Common::Assignment* assign = pse->ref->get_refd_assignment();
           char* str = NULL;
           
           // TODO: these checks will generated each time a reference is referenced in a pattern
