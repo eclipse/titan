@@ -98,10 +98,10 @@ Compressed update site and SHA512 checksum:
 * https://github.com/eclipse/titan.TestPorts.TELNETasp
 * https://github.com/eclipse/titan.TestPorts.UDPasp
 * https://github.com/eclipse/titan.TestPorts.UNIX_DOMAIN_SOCKETasp
-* http://git.eclipse.org/gitroot/titan/titan.TestPorts.GPIO  
-* http://git.eclipse.org/gitroot/titan/titan.TestPorts.MTP3  
-* http://git.eclipse.org/gitroot/titan/titan.TestPorts.Serial  
-* http://git.eclipse.org/gitroot/titan/titan.TestPorts.SocketCANasp   
+* http://git.eclipse.org/c/titan/titan.TestPorts.GPIO.git  
+* http://git.eclipse.org/c/titan/titan.TestPorts.MTP3.git
+* http://git.eclipse.org/c/titan/titan.TestPorts.Serial.git
+* http://git.eclipse.org/c/titan/titan.TestPorts.SocketCANasp.git 
  
  
 ## Protocol Modules:
@@ -140,65 +140,65 @@ Compressed update site and SHA512 checksum:
 * https://github.com/eclipse/titan.ProtocolModules.UDP
 * https://github.com/eclipse/titan.ProtocolModules.WebSocket
 * https://github.com/eclipse/titan.ProtocolModules.XMPP
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.BSSAPP_v7.3.0  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.BSSGP_v13.0.0  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.BSSMAP_v11.2.0  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.CoAP   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.DSS1_ETSI   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.DUA   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.EAP   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.GRE   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.GTP_v13.5.0  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.GTPv2_v13.7.0  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.HTTP2  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.ISUP_Q.762  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.LLC_v7.1.0  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.M2PA   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.M2UA  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.MQTT   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.MobileL3_v13.4.0  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.MongoDB  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.NDP   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.NS_v7.3.0  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.NTAF   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.OPC_UA   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.ROSE   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.SCTP   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.SDP   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.SNDCP_v7.0.0  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.STOMP  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.STUN_RFC5389   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.SUA   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.TLS   
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.WTP  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolModules.XTDP   
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.BSSAPP_v7.3.0.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.BSSGP_v13.0.0.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.BSSMAP_v11.2.0.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.CoAP.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.DSS1_ETSI.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.DUA.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.EAP.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.GRE.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.GTP_v13.5.0.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.GTPv2_v13.7.0.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.HTTP2.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.ISUP_Q.762.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.LLC_v7.1.0.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.M2PA.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.M2UA.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.MQTT.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.MobileL3_v13.4.0.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.MongoDB.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.NDP.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.NS_v7.3.0.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.NTAF.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.OPC_UA.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.ROSE.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.SCTP.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.SDP.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.SNDCP_v7.0.0.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.STOMP.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.STUN_RFC5389.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.SUA.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.TLS.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.WTP.git
+* http://git.eclipse.org/c/titan/titan.ProtocolModules.XTDP.git
 
 
 ## Protocol Emulations
 
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolEmulations.M3UA  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolEmulations.SCCP  
-* http://git.eclipse.org/gitroot/titan/titan.ProtocolEmulations.SUA  
+* http://git.eclipse.org/c/titan/titan.ProtocolEmulations.M3UA.git
+* http://git.eclipse.org/c/titan/titan.ProtocolEmulations.SCCP.git
+* http://git.eclipse.org/c/titan/titan.ProtocolEmulations.SUA.git
 
 ## Libraries:
 
 * https://github.com/eclipse/titan.Libraries.TCCUsefulFunctions
-* http://git.eclipse.org/gitroot/titan/titan.Libraries.CLL  
-* http://git.eclipse.org/gitroot/titan/titan.Libraries.ServiceFramework   
-* http://git.eclipse.org/gitroot/titan/titan.Libraries.TLS  
-* http://git.eclipse.org/gitroot/titan/titan.Libraries.Web_GUI   
+* http://git.eclipse.org/c/titan/titan.Libraries.CLL.git
+* http://git.eclipse.org/c/titan/titan.Libraries.ServiceFramework.git
+* http://git.eclipse.org/c/titan/titan.Libraries.TLS.git
+* http://git.eclipse.org/c/titan/titan.Libraries.Web_GUI.git 
 
 ## Application Libraries:
 
-* http://git.eclipse.org/gitroot/titan/titan.ApplicationLibraries.CoAP  
-* http://git.eclipse.org/gitroot/titan/titan.ApplicationLibraries.LWM2M   
-* http://git.eclipse.org/gitroot/titan/titan.ApplicationLibraries.MQTT  
+* http://git.eclipse.org/c/titan/titan.ApplicationLibraries.CoAP.git
+* http://git.eclipse.org/c/titan/titan.ApplicationLibraries.LWM2M.git
+* http://git.eclipse.org/c/titan/titan.ApplicationLibraries.MQTT.git
  
 ## Applications:
 
-* http://git.eclipse.org/gitroot/titan/titan.Applications.IoT_Functiontest_Framework  
-* http://git.eclipse.org/gitroot/titan/titan.Applications.IoT_Loadtest_Framework  
-* http://git.eclipse.org/gitroot/titan/titan.Applications.RIoT  
+* http://git.eclipse.org/c/titan/titan.Applications.IoT_Functiontest_Framework.git
+* http://git.eclipse.org/c/titan/titan.Applications.IoT_Loadtest_Framework.git
+* http://git.eclipse.org/c/titan/titan.Applications.RIoT.git
 
 ## Miscellaneous projects: 
 
