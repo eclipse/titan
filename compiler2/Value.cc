@@ -410,6 +410,362 @@ namespace Common {
     } // switch
   }
 
+  void Value::chk_expr_immutability() {
+    switch (valuetype) {
+      case V_ERROR:
+      case V_NULL:
+      case V_BOOL:
+      case V_REAL:
+      case V_OMIT:
+      case V_VERDICT:
+      case V_TTCN3_NULL:
+      case V_DEFAULT_NULL:
+      case V_FAT_NULL:
+      case V_MACRO:
+      case V_NOTUSED:
+      case V_FUNCTION:
+      case V_ALTSTEP:
+      case V_TESTCASE:
+        break;
+      case V_INT:
+        // TODO
+        //delete u.val_Int;
+        break;
+      case V_NAMEDINT:
+      case V_ENUM:
+      case V_UNDEF_LOWERID:
+        // TODO
+        //delete u.val_id;
+        break;
+      case V_BSTR:
+      case V_HSTR:
+      case V_OSTR:
+      case V_CSTR:
+      case V_ISO2022STR:
+        // TODO
+        //delete u.str.val_str;
+        //clean_up_string_elements(u.str.str_elements);
+        break;
+      case V_USTR:
+        // TODO
+        //delete u.ustr.val_ustr;
+        //clean_up_string_elements(u.ustr.ustr_elements);
+        break;
+      case V_CHARSYMS:
+        // TODO
+        //delete u.char_syms;
+        break;
+      case V_OID:
+      case V_ROID:
+        // TODO
+        //if (u.oid_comps)
+        //{
+        //  for (size_t i = 0; i < u.oid_comps->size(); i++)
+        //    delete (*u.oid_comps)[i];
+        //  u.oid_comps->clear();
+        //  delete u.oid_comps;
+        //}
+        break;
+      case V_EXPR:
+        switch (u.expr.state) {
+          case EXPR_CHECKING:
+          case EXPR_CHECKING_ERR:
+            FATAL_ERROR("Value::clean_up_expr()");
+          default:
+            break;
+          }
+          switch (u.expr.v_optype) {
+            case OPTYPE_RND: // -
+            case OPTYPE_COMP_NULL:
+            case OPTYPE_COMP_MTC:
+            case OPTYPE_COMP_SYSTEM:
+            case OPTYPE_COMP_SELF:
+            case OPTYPE_COMP_RUNNING_ANY:
+            case OPTYPE_COMP_RUNNING_ALL:
+            case OPTYPE_COMP_ALIVE_ANY:
+            case OPTYPE_COMP_ALIVE_ALL:
+            case OPTYPE_TMR_RUNNING_ANY:
+            case OPTYPE_GETVERDICT:
+            case OPTYPE_TESTCASENAME:
+            case OPTYPE_PROF_RUNNING:
+            case OPTYPE_GET_PORT_REF: // type (not owned)
+              break;
+            case OPTYPE_COMP_RUNNING: // v1 [r2] b4
+            case OPTYPE_COMP_ALIVE:
+              // TODO
+              //delete u.expr.r2;
+              // no break
+            case OPTYPE_UNARYPLUS: // v1
+            case OPTYPE_UNARYMINUS:
+            case OPTYPE_NOT:
+            case OPTYPE_NOT4B:
+            case OPTYPE_BIT2HEX:
+            case OPTYPE_BIT2INT:
+            case OPTYPE_BIT2OCT:
+            case OPTYPE_BIT2STR:
+            case OPTYPE_BSON2JSON:
+            case OPTYPE_CBOR2JSON:
+            case OPTYPE_CHAR2INT:
+            case OPTYPE_CHAR2OCT:
+            case OPTYPE_FLOAT2INT:
+            case OPTYPE_FLOAT2STR:
+            case OPTYPE_HEX2BIT:
+            case OPTYPE_HEX2INT:
+            case OPTYPE_HEX2OCT:
+            case OPTYPE_HEX2STR:
+            case OPTYPE_INT2CHAR:
+            case OPTYPE_INT2FLOAT:
+            case OPTYPE_INT2STR:
+            case OPTYPE_INT2UNICHAR:
+            case OPTYPE_JSON2BSON:
+            case OPTYPE_JSON2CBOR:
+            case OPTYPE_OCT2BIT:
+            case OPTYPE_OCT2CHAR:
+            case OPTYPE_OCT2HEX:
+            case OPTYPE_OCT2INT:
+            case OPTYPE_OCT2STR:
+            case OPTYPE_STR2BIT:
+            case OPTYPE_STR2FLOAT:
+            case OPTYPE_STR2HEX:
+            case OPTYPE_STR2INT:
+            case OPTYPE_STR2OCT:
+            case OPTYPE_UNICHAR2INT:
+            case OPTYPE_UNICHAR2CHAR:
+            case OPTYPE_ENUM2INT:
+            case OPTYPE_RNDWITHVAL:
+            case OPTYPE_REMOVE_BOM:
+            case OPTYPE_GET_STRINGENCODING:
+            case OPTYPE_DECODE_BASE64:
+            case OPTYPE_HOSTID:
+              // TODO TEST: INT2STR
+              u.expr.v1->chk_expr_immutability();
+              break;
+            case OPTYPE_ADD: // v1 v2
+            case OPTYPE_SUBTRACT:
+            case OPTYPE_MULTIPLY:
+            case OPTYPE_DIVIDE:
+            case OPTYPE_MOD:
+            case OPTYPE_REM:
+            case OPTYPE_CONCAT:
+            case OPTYPE_EQ:
+            case OPTYPE_LT:
+            case OPTYPE_GT:
+            case OPTYPE_NE:
+            case OPTYPE_GE:
+            case OPTYPE_LE:
+            case OPTYPE_AND:
+            case OPTYPE_OR:
+            case OPTYPE_XOR:
+            case OPTYPE_AND4B:
+            case OPTYPE_OR4B:
+            case OPTYPE_XOR4B:
+            case OPTYPE_SHL:
+            case OPTYPE_SHR:
+            case OPTYPE_ROTL:
+            case OPTYPE_ROTR:
+            case OPTYPE_INT2BIT:
+            case OPTYPE_INT2HEX:
+            case OPTYPE_INT2OCT:
+            case OPTYPE_UNICHAR2OCT:
+            case OPTYPE_OCT2UNICHAR:
+            case OPTYPE_ENCODE_BASE64:
+              // TODO TEST: AND/OR/ADD
+              u.expr.v1->chk_expr_immutability();
+              u.expr.v2->chk_expr_immutability();
+              break;
+            case OPTYPE_UNDEF_RUNNING: // r1 [r2] b4
+            case OPTYPE_TMR_RUNNING:   // r1 [r2] b4
+              // TODO
+              //delete u.expr.r1;
+              //delete u.expr.r2;
+              break;
+            case OPTYPE_DECODE: // r1 r2 [v3] [v4]
+              // TODO
+              //delete u.expr.r1;
+              //delete u.expr.r2;
+              //delete u.expr.v3;
+              //delete u.expr.v4;
+              break;
+            case OPTYPE_SUBSTR:
+            case OPTYPE_ENCODE:
+              // TODO
+              //delete u.expr.ti1;
+              //delete u.expr.v2;
+              //delete u.expr.v3;
+              break;
+            case OPTYPE_REGEXP:
+              // TODO
+              //delete u.expr.ti1;
+              //delete u.expr.t2;
+              //delete u.expr.v3;
+              break;
+            case OPTYPE_DECOMP: // v1 v2 v3
+              // TODO
+              //delete u.expr.v1;
+              //delete u.expr.v2;
+              //delete u.expr.v3;
+              break;
+            case OPTYPE_REPLACE:
+              // TODO
+              //delete u.expr.ti1;
+              //delete u.expr.v2;
+              //delete u.expr.v3;
+              //delete u.expr.ti4;
+              break;
+            case OPTYPE_VALUEOF: // ti1 [subrefs2]
+              // TODO
+              //delete u.expr.subrefs2;
+              // fall through
+            case OPTYPE_LENGTHOF: // ti1
+            case OPTYPE_SIZEOF:   // ti1
+            case OPTYPE_ISVALUE:
+            case OPTYPE_ISBOUND:
+            case OPTYPE_ISPRESENT:
+            case OPTYPE_TTCN2STRING:
+              // TODO TEST
+              u.expr.ti1->get_specific_value()->chk_expr_immutability();
+              break;
+            case OPTYPE_ISTEMPLATEKIND: // ti1 v2
+              // TODO TEST
+               u.expr.ti1->get_specific_value()->chk_expr_immutability();
+               u.expr.v2->chk_expr_immutability();
+              break;
+            case OPTYPE_ENCVALUE_UNICHAR: // ti1 [v2] [v3] [v4]
+              // TODO TEST
+              //delete u.expr.ti1;
+              //delete u.expr.v2;
+              //delete u.expr.v3;
+              //delete u.expr.v4;
+              break;
+            case OPTYPE_DECVALUE_UNICHAR: // r1 r2 [v3] [v4] [v5]
+              // TODO
+              //delete u.expr.r1;
+              //delete u.expr.r2;
+              //delete u.expr.v3;
+              //delete u.expr.v4;
+              //delete u.expr.v5;
+              break;
+            case OPTYPE_TMR_READ:
+            case OPTYPE_ACTIVATE:
+              // TODO
+              //delete u.expr.r1;
+              break;
+            case OPTYPE_EXECUTE: // r1 [v2]
+              // TODO
+              //delete u.expr.r1;
+              //delete u.expr.v2;
+              break;
+            case OPTYPE_CHECKSTATE_ANY: // [r1] v2
+            case OPTYPE_CHECKSTATE_ALL:
+              // TODO
+              //delete u.expr.r1;
+              //delete u.expr.v2;
+              break;
+            case OPTYPE_COMP_CREATE: // r1 [v2] [v3] b4
+              // TODO
+              //delete u.expr.r1;
+              //delete u.expr.v2;
+              //delete u.expr.v3;
+              break;
+            case OPTYPE_MATCH: // v1 t2
+              // TODO
+              //delete u.expr.v1;
+              //delete u.expr.t2;
+              break;
+            case OPTYPE_ISCHOSEN: // r1 i2
+              // TODO
+              //delete u.expr.r1;
+              //delete u.expr.i2;
+              break;
+            case OPTYPE_ISCHOSEN_V: // v1 i2
+              // TODO
+              //delete u.expr.v1;
+              //delete u.expr.i2;
+              break;
+            case OPTYPE_ISCHOSEN_T: // t1 i2
+              // TODO
+              //delete u.expr.t1;
+              //delete u.expr.i2;
+              break;
+            case OPTYPE_ACTIVATE_REFD: //v1 t_list2
+              // TODO
+              //delete u.expr.v1;
+              //if (u.expr.state != EXPR_CHECKED)
+              //  delete u.expr.t_list2;
+              //else
+              //  delete u.expr.ap_list2;
+              break;
+            case OPTYPE_EXECUTE_REFD: //v1 t_list2 [v3]
+              // TODO
+              //delete u.expr.v1;
+              //if (u.expr.state != EXPR_CHECKED)
+              //  delete u.expr.t_list2;
+              //else
+              //  delete u.expr.ap_list2;
+              //delete u.expr.v3;
+              break;
+            case OPTYPE_LOG2STR:
+            case OPTYPE_ANY2UNISTR:
+              // TODO
+              //delete u.expr.logargs;
+              break;
+            default:
+              FATAL_ERROR("Value::chk_expr_immutability()");
+          } // switch
+        break;
+      case V_CHOICE:
+        // TODO
+        //delete u.choice.alt_name;
+        //delete u.choice.alt_value;
+        break;
+      case V_SEQOF:
+      case V_SETOF:
+      case V_ARRAY:
+        // TODO
+        //delete u.val_vs;
+        break;
+      case V_SEQ:
+      case V_SET:
+        // TODO
+        //delete u.val_nvs;
+        break;
+      case V_REFD:
+        warning("Reference '%s' may change the actual snapshot.", get_reference()->get_dispname().c_str());
+        break;
+      case V_REFER:
+        // TODO
+        //delete u.refered;
+        break;
+      case V_INVOKE:
+        // TODO
+        //delete u.invoke.v;
+        //delete u.invoke.t_list;
+        //delete u.invoke.ap_list;
+        break;
+      case V_NAMEDBITS:
+        // TODO
+        //if (u.ids)
+        //{
+        //  for (size_t i = 0; i < u.ids->size(); i++)
+        //    delete u.ids->get_nth_elem(i);
+        //  u.ids->clear();
+        //  delete u.ids;
+        //}
+        break;
+      case V_UNDEF_BLOCK:
+        // TODO
+        //delete u.block;
+        break;
+      case V_ANY_VALUE:
+      case V_ANY_OR_OMIT:
+        // TODO
+        //delete u.len_res;
+        break;
+      default:
+        FATAL_ERROR("Value::chk_expr_immutability()");
+    } // switch
+  }
+
   void Value::clean_up()
   {
     switch (valuetype) {
