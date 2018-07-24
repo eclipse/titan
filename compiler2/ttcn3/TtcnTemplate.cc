@@ -2474,6 +2474,97 @@ end:
     }
   }
 
+  void Template::chk_immutability()
+  {
+    const char *templatetypes[] = {
+        "TEMPLATE_ERROR",        /**< erroneous template */
+        "TEMPLATE_NOTUSED",      /**< not used symbol (-) */
+        "OMIT_VALUE",            /**< omit */
+        "ANY_VALUE",             /**< any value (?) */
+        "ANY_OR_OMIT",           /**< any or omit (*) */
+        "SPECIFIC_VALUE",        /**< specific value */
+        "TEMPLATE_REFD",         /**< reference to another template */
+        "TEMPLATE_INVOKE",       /** template returning invoke */
+        "TEMPLATE_LIST",         /**< value list notation */
+        "NAMED_TEMPLATE_LIST",   /**< assignment notation */
+        "INDEXED_TEMPLATE_LIST", /**< assignment notation with array indices */
+        "VALUE_LIST",            /**< value list match */
+        "COMPLEMENTED_LIST",     /**< complemented list match */
+        "VALUE_RANGE",           /**< value range match */
+        "SUPERSET_MATCH",        /**< superset match */
+        "SUBSET_MATCH",          /**< subset match */
+        "PERMUTATION_MATCH",     /**< permutation match */
+        "ALL_FROM",              /**< "all from" clause */
+        "BSTR_PATTERN",          /**< bitstring pattern */
+        "HSTR_PATTERN",          /**< hexstring pattern */
+        "OSTR_PATTERN",          /**< octetstring pattern */
+        "CSTR_PATTERN",          /**< character string pattern */
+        "USTR_PATTERN",          /**< universal charstring pattern */
+        "DECODE_MATCH",          /**< decoded content match */
+        "TEMPLATE_CONCAT"        /**< concatenation of two templates (runtime2 only) */
+    };
+
+    switch (templatetype) {
+    case TEMPLATE_ERROR:   /**< erroneous template */
+    case TEMPLATE_NOTUSED: /**< not used symbol (-) */
+    case OMIT_VALUE:       /**< omit */
+    case ANY_VALUE:        /**< any value (?) */
+    case ANY_OR_OMIT:      /**< any or omit (*) */
+      break;
+    case SPECIFIC_VALUE: /**< specific value */
+      u.specific_value->chk_expr_immutability();
+      break;
+    case TEMPLATE_REFD: { /**< reference to another template */
+      Ttcn::ActualParList *aplist = get_reference()->get_parlist();
+      if (aplist) {
+        aplist->chk_immutability();
+      }
+      if (get_template_refd_last()->templatetype == TEMPLATE_REFD)
+      {
+        Assignment *formal_param_ass = get_template_refd_last()->get_reference()->get_refd_assignment();
+        if (formal_param_ass->get_asstype() >= Assignment::A_PAR_VAL)
+          if (formal_param_ass->get_asstype() <= Assignment::A_PAR_TEMPL_INOUT)
+            if (formal_param_ass->get_eval_type() != NORMAL_EVAL)
+              warning("Fuzzy parameter '%s' may change during the actual snapshot.",
+                  get_reference()->get_dispname().c_str());
+      }
+      break;
+    }
+    case NAMED_TEMPLATE_LIST:
+    { /**< assignment notation */
+      size_t nnt = get_nof_comps();
+      for (size_t i = 0; i < nnt; ++i)
+      {
+        Ttcn::NamedTemplate *nt = get_namedtemp_byIndex(i);
+        nt->get_template()->chk_immutability();
+      }
+      break;
+    }
+    // TODO
+    case TEMPLATE_INVOKE:       /** template returning invoke */
+    case TEMPLATE_LIST:         /**< value list notation */
+    case INDEXED_TEMPLATE_LIST: /**< assignment notation with array indices */
+    case VALUE_LIST:            /**< value list match */
+    case COMPLEMENTED_LIST:     /**< complemented list match */
+    case VALUE_RANGE:           /**< value range match */
+    case SUPERSET_MATCH:        /**< superset match */
+    case SUBSET_MATCH:          /**< subset match */
+    case PERMUTATION_MATCH:     /**< permutation match */
+    case ALL_FROM:              /**< "all from" clause */
+    case BSTR_PATTERN:          /**< bitstring pattern */
+    case HSTR_PATTERN:          /**< hexstring pattern */
+    case OSTR_PATTERN:          /**< octetstring pattern */
+    case CSTR_PATTERN:          /**< character string pattern */
+    case USTR_PATTERN:          /**< universal charstring pattern */
+    case DECODE_MATCH:          /**< decoded content match */
+    case TEMPLATE_CONCAT:       /**< concatenation of two templates (runtime2 only) */
+      note("TemplateType %s", templatetypes[templatetype]);
+      break;
+    default:
+      FATAL_ERROR("chk_immutability()");
+    }
+  }
+
   Templates *Template::harbinger(Template *t, bool from_permutation, bool killer)
   {
     Templates *new_templates = new Templates;
@@ -5675,6 +5766,60 @@ compile_time:
     }
     return needs_runtime_check;
   }
+
+  void TemplateInstance::chk_immutability() const {
+      if (derived_reference) {
+        int asstype = ((Reference*)derived_reference)->get_refd_assignment()->get_asstype();
+        switch (asstype) {
+          case Assignment::A_TYPE:           /**< type */
+          case Assignment::A_CONST:          /**< value (const) */
+          case Assignment::A_UNDEF:          /**< undefined/undecided (ASN.1) */
+          case Assignment::A_ERROR:          /**< erroneous; the kind cannot be deduced (ASN.1) */
+          case Assignment::A_OC:             /**< information object class (ASN.1) */
+          case Assignment::A_OBJECT:         /**< information object (ASN.1) */
+          case Assignment::A_OS:             /**< information object set (ASN.1) */
+          case Assignment::A_VS:             /**< value set (ASN.1) */
+          case Assignment::A_EXT_CONST:      /**< external constant (TTCN-3) */
+          case Assignment::A_MODULEPAR:      /**< module parameter (TTCN-3) */
+          case Assignment::A_MODULEPAR_TEMP: /**< template module parameter */
+          case Assignment::A_VAR:            /**< variable (TTCN-3) */
+          case Assignment::A_VAR_TEMPLATE:   /**< template variable: dynamic template (TTCN-3) */
+          case Assignment::A_TIMER:          /**< timer (TTCN-3) */
+          case Assignment::A_PORT:           /**< port (TTCN-3) */
+          case Assignment::A_ALTSTEP:        /**< altstep (TTCN-3) */
+          case Assignment::A_TESTCASE:       /**< testcase Assignment::(TTCN-3) */
+          case Assignment::A_PAR_TIMER:      /**< formal parameter (timer) (TTCN-3) */
+          case Assignment::A_PAR_PORT:        /**< formal parameter (port) (TTCN-3) */
+            break;
+          case Assignment::A_TEMPLATE:       /**< template (TTCN-3) */
+            ((Reference*)derived_reference)->get_parlist()->chk_immutability();
+            break;
+          case Assignment::A_FUNCTION:       /**< function without return type (TTCN-3) */
+          case Assignment::A_FUNCTION_RVAL:  /**< function that returns a value (TTCN-3) */
+          case Assignment::A_FUNCTION_RTEMP: /**< function that returns a template (TTCN-3) */
+          case Assignment::A_EXT_FUNCTION:   /**< external function without return type (TTCN-3) */
+          case Assignment::A_EXT_FUNCTION_RVAL:  /**< ext. func that returns a value (TTCN-3) */
+          case Assignment::A_EXT_FUNCTION_RTEMP: /**< ext. func that returns a template (TTCN-3) */
+            warning("Function invocation '%s' may change the actual snapshot.",
+              ((Reference*)derived_reference)->get_dispname().c_str());
+            break;
+          case Assignment::A_PAR_VAL:        /**< formal parameter (value) (TTCN-3) */
+          case Assignment::A_PAR_VAL_IN:     /**< formal parameter (in value) (TTCN-3) */
+          case Assignment::A_PAR_VAL_OUT:    /**< formal parameter (out value) (TTCN-3) */
+          case Assignment::A_PAR_VAL_INOUT:  /**< formal parameter (inout value) (TTCN-3) */
+          case Assignment::A_PAR_TEMPL_IN:   /**< formal parameter ([in] template) (TTCN-3) */
+          case Assignment::A_PAR_TEMPL_OUT:  /**< formal parameter (out template) (TTCN-3) */
+          case Assignment::A_PAR_TEMPL_INOUT:/**< formal parameter (inout template) (TTCN-3) */
+            if (((Reference*)derived_reference)->get_refd_assignment()->get_eval_type() == FUZZY_EVAL)
+              warning("Fuzzy parameter '%s' may change (during) the actual snapshot.",
+                ((Reference*)derived_reference)->get_dispname().c_str());
+            break;
+          default:
+            FATAL_ERROR("Value::chk_expr_immutability()");
+        }
+      }
+      template_body->chk_immutability();
+    }
 
   bool TemplateInstance::has_single_expr()
   {
