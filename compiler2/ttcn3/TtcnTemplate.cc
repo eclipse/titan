@@ -2474,6 +2474,127 @@ end:
     }
   }
 
+  void Template::chk_immutability()
+  {
+    const char *templatetypes[] = {
+        "TEMPLATE_ERROR",        /**< erroneous template */
+        "TEMPLATE_NOTUSED",      /**< not used symbol (-) */
+        "OMIT_VALUE",            /**< omit */
+        "ANY_VALUE",             /**< any value (?) */
+        "ANY_OR_OMIT",           /**< any or omit (*) */
+        "SPECIFIC_VALUE",        /**< specific value */
+        "TEMPLATE_REFD",         /**< reference to another template */
+        "TEMPLATE_INVOKE",       /** template returning invoke */
+        "TEMPLATE_LIST",         /**< value list notation */
+        "NAMED_TEMPLATE_LIST",   /**< assignment notation */
+        "INDEXED_TEMPLATE_LIST", /**< assignment notation with array indices */
+        "VALUE_LIST",            /**< value list match */
+        "COMPLEMENTED_LIST",     /**< complemented list match */
+        "VALUE_RANGE",           /**< value range match */
+        "SUPERSET_MATCH",        /**< superset match */
+        "SUBSET_MATCH",          /**< subset match */
+        "PERMUTATION_MATCH",     /**< permutation match */
+        "ALL_FROM",              /**< "all from" clause */
+        "BSTR_PATTERN",          /**< bitstring pattern */
+        "HSTR_PATTERN",          /**< hexstring pattern */
+        "OSTR_PATTERN",          /**< octetstring pattern */
+        "CSTR_PATTERN",          /**< character string pattern */
+        "USTR_PATTERN",          /**< universal charstring pattern */
+        "DECODE_MATCH",          /**< decoded content match */
+        "TEMPLATE_CONCAT"        /**< concatenation of two templates (runtime2 only) */
+    };
+
+    switch (templatetype) {
+    case TEMPLATE_ERROR:   /**< erroneous template */
+    case TEMPLATE_NOTUSED: /**< not used symbol (-) */
+    case OMIT_VALUE:       /**< omit */
+    case ANY_VALUE:        /**< any value (?) */
+    case ANY_OR_OMIT:      /**< any or omit (*) */
+      break;
+    case SPECIFIC_VALUE: /**< specific value */
+      u.specific_value->chk_expr_immutability();
+      break;
+    case TEMPLATE_REFD: { /**< reference to another template */
+      Ttcn::ActualParList *aplist = get_reference()->get_parlist();
+      if (aplist)
+      {
+        size_t num = aplist->get_nof_pars();
+        for (size_t i = 0; i < num; ++i)
+        {
+          const Ttcn::ActualPar *ap = aplist->get_par(i);
+        deeper:
+          switch (ap->get_selection()) {
+          case ActualPar::AP_ERROR:
+            break;
+          case ActualPar::AP_VALUE: {
+            ap->get_Value()->chk_expr_immutability();
+            break;
+          }
+          case ActualPar::AP_TEMPLATE:
+            ap->get_TemplateInstance()->chk_immutability();
+            break;
+          case ActualPar::AP_REF:
+            note("KISCICA3");
+            break;
+          case ActualPar::AP_DEFAULT: {
+            note("KISCICA4");
+            ap = ap->get_ActualPar();
+            goto deeper;
+            break;
+          }
+            // no default
+          } // switch actual par selection
+        }   // next
+      }
+      if (get_template_refd_last()->templatetype == TEMPLATE_REFD)
+      {
+        Assignment *formal_param_ass = get_template_refd_last()->get_reference()->get_refd_assignment();
+        if (formal_param_ass->get_asstype() >= Assignment::A_PAR_VAL &&
+            formal_param_ass->get_asstype() <= Assignment::A_PAR_TEMPL_INOUT &&
+            formal_param_ass->get_eval_type() != NORMAL_EVAL)
+        {
+          warning("Fuzzy parameter '%s' may change during the actual snapshot.",
+                  get_reference()->get_dispname().c_str());
+        }
+
+        //note("ASS TYPE: %d",get_template_refd_last()->get_reference()->get_refd_assignment()->get_eval_type);
+      }
+      break;
+    }
+    case NAMED_TEMPLATE_LIST:
+    { /**< assignment notation */
+      size_t nnt = get_nof_comps();
+      for (size_t i = 0; i < nnt; ++i)
+      {
+        Ttcn::NamedTemplate *nt = get_namedtemp_byIndex(i);
+        nt->get_template()->chk_immutability();
+      }
+      break;
+    }
+    case TEMPLATE_INVOKE:       /** template returning invoke */
+    case TEMPLATE_LIST:         /**< value list notation */
+    case INDEXED_TEMPLATE_LIST: /**< assignment notation with array indices */
+    case VALUE_LIST:            /**< value list match */
+    case COMPLEMENTED_LIST:     /**< complemented list match */
+    case VALUE_RANGE:           /**< value range match */
+    case SUPERSET_MATCH:        /**< superset match */
+    case SUBSET_MATCH:          /**< subset match */
+    case PERMUTATION_MATCH:     /**< permutation match */
+    case ALL_FROM:              /**< "all from" clause */
+    case BSTR_PATTERN:          /**< bitstring pattern */
+    case HSTR_PATTERN:          /**< hexstring pattern */
+    case OSTR_PATTERN:          /**< octetstring pattern */
+    case CSTR_PATTERN:          /**< character string pattern */
+    case USTR_PATTERN:          /**< universal charstring pattern */
+    case DECODE_MATCH:          /**< decoded content match */
+    case TEMPLATE_CONCAT:       /**< concatenation of two templates (runtime2 only) */
+      note("TemplateType %s", templatetypes[templatetype]);
+      break;
+    default:
+      FATAL_ERROR("chk_immutability()");
+    }
+  }
+
   Templates *Template::harbinger(Template *t, bool from_permutation, bool killer)
   {
     Templates *new_templates = new Templates;
