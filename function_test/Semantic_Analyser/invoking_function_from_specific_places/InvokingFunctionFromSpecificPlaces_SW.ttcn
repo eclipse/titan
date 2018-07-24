@@ -1,0 +1,82 @@
+/******************************************************************************
+ * Copyright (c) 2000-2018 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.html
+ *
+ * Contributors:
+ *   Aron Simon
+ *
+ ******************************************************************************/
+
+module InvokingFunctionFromSpecificPlaces_SW { //^In TTCN-3 module//
+
+  modulepar boolean mp := true;
+
+  type component MTC { }
+  type component PTC { }
+
+  function fb() return boolean { return true; }
+  function fi() return integer { return 1; }
+  external function ef() return boolean;
+
+  testcase                        //^In testcase definition//
+  tc(in boolean fp, in @fuzzy boolean ffp)
+  runs on MTC {
+    var boolean vb := true;
+    var @fuzzy boolean fvb := true;
+    var PTC ptc := PTC.create;
+    timer t := 1.0; t.start; 
+    alt {                         //^In alt construct//
+      /* A_MODULEPAR */
+      [mp]  t.timeout {}
+
+      /* TODO: A_VAR */
+      [vb]  t.timeout {}
+
+      /* TODO: A_VAR @fuzzy */
+      [fvb]  t.timeout {}
+
+      /* A_FUNCTION_RVAL */
+      [fb()] t.timeout {}          //^In guard expression// //^warning\: Function invocation// 
+    
+      /* A_EXT_FUNCTION_RVAL */
+      [ef()] t.timeout {}         //^In guard expression// //^warning\: Function invocation// 
+    
+      /* A_PAR_VAL_IN */
+      [fp]  t.timeout {}
+
+      /* A_PAR_VAL_IN @fuzzy */
+      [ffp]  t.timeout {}         //^In guard expression// //^warning\: Fuzzy parameter//
+
+      /* OPTYPE_RND */
+      [rnd() < 1.0]  t.timeout {} //^In guard expression// //Random number generation//
+
+      /* OPTYPE_RNDWITHVAL */
+      [rnd(5.0) < 1.0]  t.timeout {} //^In guard expression// //Random number generation//
+    
+      /* OPTYPE_ with v1 */
+      [+(fi()) < 5] t.timeout {}          //^In guard expression// //^warning\: Function invocation// 
+      [-(fi()) < 5] t.timeout {}          //^In guard expression// //^warning\: Function invocation// 
+      [not fb()]    t.timeout {}          //^In guard expression// //^warning\: Function invocation// 
+      [int2float(fi()) < 5.0] t.timeout {}          //^In guard expression// //^warning\: Function invocation// 
+      
+
+      /* OPTYPE_ with v1 v2 */
+      [fi() + 1 < 5] t.timeout {}          //^In guard expression// //^warning\: Function invocation// 
+      [fi() - 1 <= 5] t.timeout {}          //^In guard expression// //^warning\: Function invocation// 
+      [fi() + 1 == 5] t.timeout {}          //^In guard expression// //^warning\: Function invocation// 
+      [fi() / 1 > 5] t.timeout {}          //^In guard expression// //^warning\: Function invocation// 
+      [fi() * 1 >= 5] t.timeout {}          //^In guard expression// //^warning\: Function invocation// 
+
+      [all component.running] t.timeout {} //^In guard expression// //^warning\: State of component//
+      [any component.running] t.timeout {} //^In guard expression// //^warning\: State of component//
+      [ptc.running] t.timeout {} //^In guard expression// //^warning\: State of component//
+
+      [any timer.running] t.timeout {} //^In guard expression// //^warning\: State of timer//
+      [t.running] t.timeout {} //^In guard expression// //^warning\: State of timer//
+
+    }
+  }
+}

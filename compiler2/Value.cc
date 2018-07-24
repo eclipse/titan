@@ -30,6 +30,7 @@
  ******************************************************************************/
 #include "../common/dbgnew.hh"
 #include "Value.hh"
+#include "AST.hh"
 #include "Identifier.hh"
 #include "Valuestuff.hh"
 #include "PredefFunc.hh"
@@ -407,6 +408,488 @@ namespace Common {
       break;
     default:
       FATAL_ERROR("Value::Value()");
+    } // switch
+  }
+
+  void Value::chk_expr_immutability() {
+    const char* valuetypes[] = {
+      "V_ERROR", /**< erroneous */
+      "V_NULL", /**< NULL (for ASN.1 NULL type, also in TTCN-3) */
+      "V_BOOL", /**< boolean */
+      "V_NAMEDINT", /**< integer / named number */
+      "V_NAMEDBITS", /**< named bits (identifiers) */
+      "V_INT", /**< integer */
+      "V_REAL", /**< real/float */
+      "V_ENUM", /**< enumerated */
+      "V_BSTR", /**< bitstring */
+      "V_HSTR", /**< hexstring */
+      "V_OSTR", /**< octetstring */
+      "V_CSTR", /**< charstring */
+      "V_USTR", /**< universal charstring */
+      "V_ISO2022STR", /**< ISO-2022 string (treat as octetstring) */
+      "V_CHARSYMS", /**< parsed ASN.1 universal string notation */
+      "V_OID", /**< object identifier */
+      "V_ROID", /**< relative object identifier */
+      "V_CHOICE", /**< choice; set directly by the ASN.1 parser */
+      "V_SEQOF", /**< sequence (record) of */
+      "V_SETOF", /**< set of */
+      "V_ARRAY", /**< array */
+      "V_SEQ", /**< sequence (record) */
+      "V_SET", /**< set */
+      "V_OPENTYPE", /**< open type */
+      "V_REFD", /**< referenced */
+      "V_UNDEF_LOWERID", /**< undefined loweridentifier */
+      "V_UNDEF_BLOCK", /**< undefined {block} */
+      "V_OMIT", /**< special value for optional values */
+      "V_VERDICT", /**< verdict */
+      "V_TTCN3_NULL", /**< TTCN-3 null (for component or default references) */
+      "V_DEFAULT_NULL", /**< null default reference */
+      "V_FAT_NULL", /**< null for function, altstep and testcase */
+      "V_EXPR", /**< expressions */
+      "V_MACRO", /**< macros (%%something) */
+      "V_NOTUSED", /**< not used symbol ('-') */
+      "V_FUNCTION", /**< function */
+      "V_ALTSTEP", /**< altstep */
+      "V_TESTCASE", /**< testcase */
+      "V_INVOKE", /**< invoke operation */
+      "V_REFER", /**< refer(function) */
+      "V_ANY_VALUE", /**< any value (?) - used by template concatenation */
+      "V_ANY_OR_OMIT" /**< any or omit (*) - used by template concatenation */
+    };
+
+    const char* optypes[] = {
+      "OPTYPE_RND", // -
+      "OPTYPE_TESTCASENAME", // -
+
+      "OPTYPE_UNARYPLUS", // v1
+      "OPTYPE_UNARYMINUS", // v1
+      "OPTYPE_NOT", // v1
+      "OPTYPE_NOT4B", // v1
+
+      "OPTYPE_BIT2HEX", // v1  6
+      "OPTYPE_BIT2INT", // v1
+      "OPTYPE_BIT2OCT", // v1
+      "OPTYPE_BIT2STR", // v1
+      "OPTYPE_CHAR2INT", // v1  10
+      "OPTYPE_CHAR2OCT", // v1
+      "OPTYPE_FLOAT2INT", // v1
+      "OPTYPE_FLOAT2STR", // v1
+      "OPTYPE_HEX2BIT", // v1
+      "OPTYPE_HEX2INT", // v1
+      "OPTYPE_HEX2OCT", // v1
+      "OPTYPE_HEX2STR", // v1
+      "OPTYPE_INT2CHAR", // v1
+      "OPTYPE_INT2FLOAT", // v1
+      "OPTYPE_INT2STR", // v1   20
+      "OPTYPE_INT2UNICHAR", // v1
+      "OPTYPE_OCT2BIT", // v1
+      "OPTYPE_OCT2CHAR", // v1
+      "OPTYPE_OCT2HEX", // v1
+      "OPTYPE_OCT2INT", // v1
+      "OPTYPE_OCT2STR", // v1
+      "OPTYPE_OCT2UNICHAR", // v1 [v2]
+      "OPTYPE_STR2BIT", // v1
+      "OPTYPE_STR2FLOAT", // v1
+      "OPTYPE_STR2HEX", // v1
+      "OPTYPE_STR2INT", // v1    30
+      "OPTYPE_STR2OCT", // v1
+      "OPTYPE_UNICHAR2INT", // v1
+      "OPTYPE_UNICHAR2CHAR", // v1
+      "OPTYPE_UNICHAR2OCT", // v1 [v2]
+      "OPTYPE_ENUM2INT", // v1
+
+      "OPTYPE_ENCODE", // ti1 [v2] [v3] 35
+
+      "OPTYPE_RNDWITHVAL", /** \todo -> SEED */ // v1
+
+      "OPTYPE_ADD", // v1 v2
+      "OPTYPE_SUBTRACT", // v1 v2
+      "OPTYPE_MULTIPLY", // v1 v2
+      "OPTYPE_DIVIDE", // v1 v2      40
+      "OPTYPE_MOD", // v1 v2
+      "OPTYPE_REM", // v1 v2
+      "OPTYPE_CONCAT", // v1 v2
+      "OPTYPE_EQ", // v1 v2
+      "OPTYPE_LT", // v1 v2
+      "OPTYPE_GT", // v1 v2
+      "OPTYPE_NE", // v1 v2
+      "OPTYPE_GE", // v1 v2
+      "OPTYPE_LE", // v1 v2
+      "OPTYPE_AND", // v1 v2    50
+      "OPTYPE_OR", // v1 v2
+      "OPTYPE_XOR", // v1 v2
+      "OPTYPE_AND4B", // v1 v2
+      "OPTYPE_OR4B", // v1 v2
+      "OPTYPE_XOR4B", // v1 v2
+      "OPTYPE_SHL", // v1 v2
+      "OPTYPE_SHR", // v1 v2
+      "OPTYPE_ROTL", // v1 v2
+      "OPTYPE_ROTR", // v1 v2
+
+      "OPTYPE_INT2BIT", // v1 v2    60
+      "OPTYPE_INT2HEX", // v1 v2
+      "OPTYPE_INT2OCT", // v1 v2
+
+      "OPTYPE_DECODE", // r1 r2 [v3] [v4]
+
+      "OPTYPE_SUBSTR", // ti1 v2 v3
+      "OPTYPE_REGEXP", // ti1 t2 v3 b4
+      "OPTYPE_DECOMP", // v1 v2 v3     66
+
+      "OPTYPE_REPLACE", // ti1 v2 v3 ti4
+
+      "OPTYPE_ISVALUE", // ti1   68
+      "OPTYPE_ISBOUND", // ti1
+      "OPTYPE_ISPRESENT", // ti1
+      "OPTYPE_ISCHOSEN", // r1 i2
+      "OPTYPE_ISCHOSEN_V", // v1 i2
+      "OPTYPE_ISCHOSEN_T", // t1 i2
+
+      "OPTYPE_LENGTHOF", // ti1
+      "OPTYPE_SIZEOF", // ti1 
+      "OPTYPE_VALUEOF", // ti1
+      "OPTYPE_MATCH", // v1 t2
+
+      "OPTYPE_TTCN2STRING", // ti1
+      "OPTYPE_REMOVE_BOM", //v1
+      "OPTYPE_GET_STRINGENCODING", //v1
+      "OPTYPE_ENCODE_BASE64", //v1 [v2]
+      "OPTYPE_DECODE_BASE64", //v1
+
+      /** cannot distinguish during parsing; can be COMP or TMR */
+      "OPTYPE_UNDEF_RUNNING", // r1 [r2] b4                   78
+      "OPTYPE_COMP_NULL", // - (from V_TTCN3_NULL)
+      "OPTYPE_COMP_MTC", // -
+      "OPTYPE_COMP_SYSTEM", // -
+      "OPTYPE_COMP_SELF", // -
+      "OPTYPE_COMP_CREATE", // r1 [v2] [v3] b4
+      "OPTYPE_COMP_RUNNING", // v1 [r2] b4
+      "OPTYPE_COMP_RUNNING_ANY", // -
+      "OPTYPE_COMP_RUNNING_ALL", // -
+      "OPTYPE_COMP_ALIVE", // v1
+      "OPTYPE_COMP_ALIVE_ANY", // -
+      "OPTYPE_COMP_ALIVE_ALL", // -
+      "OPTYPE_TMR_READ", // r1     90
+      "OPTYPE_TMR_RUNNING", // r1 [r2] b4
+      "OPTYPE_TMR_RUNNING_ANY", // -
+      "OPTYPE_GETVERDICT", // -
+      "OPTYPE_ACTIVATE", // r1
+      "OPTYPE_ACTIVATE_REFD", //v1 t_list2
+      "OPTYPE_EXECUTE", // r1 [v2]
+      "OPTYPE_EXECUTE_REFD", // v1 t_list2 [v3]
+
+      "OPTYPE_LOG2STR", // logargs
+      "OPTYPE_PROF_RUNNING", // -     99
+      
+      "OPTYPE_ENCVALUE_UNICHAR", // ti1 [v2] [v3] [v4]
+      "OPTYPE_DECVALUE_UNICHAR", // r1 r2 [v3] [v4] [v5]
+      
+      "OPTYPE_ANY2UNISTR", // logarg", length = 1
+      "OPTYPE_CHECKSTATE_ANY", // [r1] v2", port or any
+      "OPTYPE_CHECKSTATE_ALL", // [r1] v2", port or all
+      "OPTYPE_HOSTID", // [v1]
+      "OPTYPE_ISTEMPLATEKIND", // ti1 v2
+      
+      "OPTYPE_CBOR2JSON", // v1
+      "OPTYPE_JSON2CBOR", // v1
+      "OPTYPE_BSON2JSON", // v1
+      "OPTYPE_JSON2BSON", // v1
+      
+      "OPTYPE_GET_PORT_REF", // -
+    };
+
+    const char* asstypes[] = {
+      "A_TYPE",           /**< type */
+      "A_CONST",          /**< value (const) */
+      "A_UNDEF",          /**< undefined/undecided (ASN.1) */
+      "A_ERROR",          /**< erroneous; the kind cannot be deduced (ASN.1) */
+      "A_OC",             /**< information object class (ASN.1) */
+      "A_OBJECT",         /**< information object (ASN.1) */
+      "A_OS",             /**< information object set (ASN.1) */
+      "A_VS",             /**< value set (ASN.1) */
+      "A_EXT_CONST",      /**< external constant (TTCN-3) */
+      "A_MODULEPAR",      /**< module parameter (TTCN-3) */
+      "A_MODULEPAR_TEMP", /**< template module parameter */
+      "A_TEMPLATE",       /**< template (TTCN-3) */
+      "A_VAR",            /**< variable (TTCN-3) */
+      "A_VAR_TEMPLATE",   /**< template variable", dynamic template (TTCN-3) */
+      "A_TIMER",          /**< timer (TTCN-3) */
+      "A_PORT",           /**< port (TTCN-3) */
+      "A_FUNCTION",       /**< function without return type (TTCN-3) */
+      "A_FUNCTION_RVAL",  /**< function that returns a value (TTCN-3) */
+      "A_FUNCTION_RTEMP", /**< function that returns a template (TTCN-3) */
+      "A_EXT_FUNCTION",   /**< external function without return type (TTCN-3) */
+      "A_EXT_FUNCTION_RVAL",  /**< ext. func that returns a value (TTCN-3) */
+      "A_EXT_FUNCTION_RTEMP", /**< ext. func that returns a template (TTCN-3) */
+      "A_ALTSTEP",        /**< altstep (TTCN-3) */
+      "A_TESTCASE",       /**< testcase (TTCN-3) */
+      "A_PAR_VAL",        /**< formal parameter (value) (TTCN-3) */
+      "A_PAR_VAL_IN",     /**< formal parameter (in value) (TTCN-3) */
+      "A_PAR_VAL_OUT",    /**< formal parameter (out value) (TTCN-3) */
+      "A_PAR_VAL_INOUT",  /**< formal parameter (inout value) (TTCN-3) */
+      "A_PAR_TEMPL_IN",   /**< formal parameter ([in] template) (TTCN-3) */
+      "A_PAR_TEMPL_OUT",  /**< formal parameter (out template) (TTCN-3) */
+      "A_PAR_TEMPL_INOUT",/**< formal parameter (inout template) (TTCN-3) */
+      "A_PAR_TIMER",      /**< formal parameter (timer) (TTCN-3) */
+      "A_PAR_PORT"        /**< formal parameter (port) (TTCN-3) */
+    };
+
+    int asstype;
+    if(valuetype == V_REFD) asstype = get_reference()->get_refd_assignment()->get_asstype();
+
+    switch (valuetype) {
+      case V_REFD: /**< referenced */
+        switch (asstype) {
+          case Assignment::A_TYPE:           /**< type */
+          case Assignment::A_CONST:          /**< value (const) */
+          case Assignment::A_UNDEF:          /**< undefined/undecided (ASN.1) */
+          case Assignment::A_ERROR:          /**< erroneous; the kind cannot be deduced (ASN.1) */
+          case Assignment::A_OC:             /**< information object class (ASN.1) */
+          case Assignment::A_OBJECT:         /**< information object (ASN.1) */
+          case Assignment::A_OS:             /**< information object set (ASN.1) */
+          case Assignment::A_VS:             /**< value set (ASN.1) */
+          case Assignment::A_EXT_CONST:      /**< external constant (TTCN-3) */
+          case Assignment::A_MODULEPAR:      /**< module parameter (TTCN-3) */
+          case Assignment::A_MODULEPAR_TEMP: /**< template module parameter */
+            break;
+          case Assignment::A_TEMPLATE:       /**< template (TTCN-3) */
+          case Assignment::A_VAR:            /**< variable (TTCN-3) */
+          case Assignment::A_VAR_TEMPLATE:   /**< template variable: dynamic template (TTCN-3) */
+            // TODO: catch fuzzy or lazzy
+            break;
+          case Assignment::A_TIMER:          /**< timer (TTCN-3) */
+          case Assignment::A_PORT:           /**< port (TTCN-3) */
+            break;
+          case Assignment::A_FUNCTION:       /**< function without return type (TTCN-3) */
+          case Assignment::A_FUNCTION_RVAL:  /**< function that returns a value (TTCN-3) */
+          case Assignment::A_FUNCTION_RTEMP: /**< function that returns a template (TTCN-3) */
+          case Assignment::A_EXT_FUNCTION:   /**< external function without return type (TTCN-3) */
+          case Assignment::A_EXT_FUNCTION_RVAL:  /**< ext. func that returns a value (TTCN-3) */
+          case Assignment::A_EXT_FUNCTION_RTEMP: /**< ext. func that returns a template (TTCN-3) */
+            warning("Function invocation '%s' may change the actual snapshot.",
+              get_reference()->get_dispname().c_str());
+            break;
+          case Assignment::A_ALTSTEP:        /**< altstep (TTCN-3) */
+          case Assignment::A_TESTCASE:       /**< testcase Assignment::(TTCN-3) */
+            break;
+          case Assignment::A_PAR_VAL:        /**< formal parameter (value) (TTCN-3) */
+          case Assignment::A_PAR_VAL_IN:     /**< formal parameter (in value) (TTCN-3) */
+          case Assignment::A_PAR_VAL_OUT:    /**< formal parameter (out value) (TTCN-3) */
+          case Assignment::A_PAR_VAL_INOUT:  /**< formal parameter (inout value) (TTCN-3) */
+          case Assignment::A_PAR_TEMPL_IN:   /**< formal parameter ([in] template) (TTCN-3) */
+          case Assignment::A_PAR_TEMPL_OUT:  /**< formal parameter (out template) (TTCN-3) */
+          case Assignment::A_PAR_TEMPL_INOUT:/**< formal parameter (inout template) (TTCN-3) */
+            // TODO: catch fuzzy or lazzy
+            if (get_reference()->get_refd_assignment()->get_eval_type() == FUZZY_EVAL)
+              warning("Fuzzy parameter '%s' may change during the actual snapshot.",
+                get_reference()->get_dispname().c_str());
+            break;
+          case Assignment::A_PAR_TIMER:      /**< formal parameter (timer) (TTCN-3) */
+          case Assignment::A_PAR_PORT:        /**< formal parameter (port) (TTCN-3) */
+            break;
+          default:
+            FATAL_ERROR("Value::chk_expr_immutability()");
+        }
+        break;
+      case V_EXPR: /**< expressions */
+        switch (u.expr.v_optype) {
+          case OPTYPE_TESTCASENAME: // -
+            break;
+          case OPTYPE_RND: // -
+          case OPTYPE_RNDWITHVAL: /** \todo -> SEED */ // v1
+            warning("Random number generation 'rnd()' change the actual snapshot.");
+            break;
+          case OPTYPE_UNARYPLUS: // v1
+          case OPTYPE_UNARYMINUS: // v1
+          case OPTYPE_NOT: // v1
+          case OPTYPE_NOT4B: // v1
+          case OPTYPE_BIT2HEX: // v1  6
+          case OPTYPE_BIT2INT: // v1
+          case OPTYPE_BIT2OCT: // v1
+          case OPTYPE_BIT2STR: // v1
+          case OPTYPE_CHAR2INT: // v1  10
+          case OPTYPE_CHAR2OCT: // v1
+          case OPTYPE_FLOAT2INT: // v1
+          case OPTYPE_FLOAT2STR: // v1
+          case OPTYPE_HEX2BIT: // v1
+          case OPTYPE_HEX2INT: // v1
+          case OPTYPE_HEX2OCT: // v1
+          case OPTYPE_HEX2STR: // v1
+          case OPTYPE_INT2CHAR: // v1
+          case OPTYPE_INT2FLOAT: // v1
+          case OPTYPE_INT2STR: // v1   20
+          case OPTYPE_INT2UNICHAR: // v1
+          case OPTYPE_OCT2BIT: // v1
+          case OPTYPE_OCT2CHAR: // v1
+          case OPTYPE_OCT2HEX: // v1
+          case OPTYPE_OCT2INT: // v1
+          case OPTYPE_OCT2STR: // v1
+          case OPTYPE_STR2BIT: // v1
+          case OPTYPE_STR2FLOAT: // v1
+          case OPTYPE_STR2HEX: // v1
+          case OPTYPE_STR2INT: // v1    30
+          case OPTYPE_STR2OCT: // v1
+          case OPTYPE_UNICHAR2INT: // v1
+          case OPTYPE_UNICHAR2CHAR: // v1
+          case OPTYPE_ENUM2INT: // v1
+          case OPTYPE_REMOVE_BOM: //v1
+          case OPTYPE_GET_STRINGENCODING: //v1
+          case OPTYPE_DECODE_BASE64: //v1
+          case OPTYPE_CBOR2JSON: // v1
+          case OPTYPE_JSON2CBOR: // v1
+          case OPTYPE_BSON2JSON: // v1
+          case OPTYPE_JSON2BSON: // v1
+            u.expr.v1->chk_expr_immutability();
+            break;
+          case OPTYPE_UNICHAR2OCT: // v1 [v2]
+          case OPTYPE_OCT2UNICHAR: // v1 [v2]
+          case OPTYPE_ENCODE_BASE64: //v1 [v2]
+            u.expr.v1->chk_expr_immutability();
+            if (u.expr.v2) u.expr.v2->chk_expr_immutability();
+            break;
+          case OPTYPE_ADD: // v1 v2
+          case OPTYPE_SUBTRACT: // v1 v2
+          case OPTYPE_MULTIPLY: // v1 v2
+          case OPTYPE_DIVIDE: // v1 v2      40
+          case OPTYPE_MOD: // v1 v2
+          case OPTYPE_REM: // v1 v2
+          case OPTYPE_CONCAT: // v1 v2
+          case OPTYPE_EQ: // v1 v2 ==
+          case OPTYPE_LT: // v1 v2 <
+          case OPTYPE_GT: // v1 v2 >
+          case OPTYPE_NE: // v1 v2 !=
+          case OPTYPE_GE: // v1 v2 >=
+          case OPTYPE_LE: // v1 v2 <=
+          case OPTYPE_AND: // v1 v2    50
+          case OPTYPE_OR: // v1 v2
+          case OPTYPE_XOR: // v1 v2
+          case OPTYPE_AND4B: // v1 v2
+          case OPTYPE_OR4B: // v1 v2
+          case OPTYPE_XOR4B: // v1 v2
+          case OPTYPE_SHL: // v1 v2
+          case OPTYPE_SHR: // v1 v2
+          case OPTYPE_ROTL: // v1 v2
+          case OPTYPE_ROTR: // v1 v2
+          case OPTYPE_INT2BIT: // v1 v2    60
+          case OPTYPE_INT2HEX: // v1 v2
+          case OPTYPE_INT2OCT: // v1 v2
+            u.expr.v1->chk_expr_immutability();
+            u.expr.v2->chk_expr_immutability();
+            break;
+
+          /* TODO */
+          case OPTYPE_ENCODE: // ti1 [v2] [v3] 35
+          case OPTYPE_DECODE: // r1 r2 [v3] [v4]
+
+          case OPTYPE_SUBSTR: // ti1 v2 v3
+          case OPTYPE_REGEXP: // ti1 t2 v3 b4
+          case OPTYPE_DECOMP: // v1 v2 v3     66
+
+          case OPTYPE_REPLACE: // ti1 v2 v3 ti4
+
+          case OPTYPE_ISVALUE: // ti1   68
+          case OPTYPE_ISBOUND: // ti1
+          case OPTYPE_ISPRESENT: // ti1
+          case OPTYPE_ISCHOSEN: // r1 i2
+          case OPTYPE_ISCHOSEN_V: // v1 i2
+          case OPTYPE_ISCHOSEN_T: // t1 i2
+
+          case OPTYPE_LENGTHOF: // ti1
+          case OPTYPE_SIZEOF: // ti1 
+          case OPTYPE_VALUEOF: // ti1
+          case OPTYPE_MATCH: // v1 t2
+
+          case OPTYPE_TTCN2STRING: // ti1
+
+          /** cannot distinguish during parsing; can be COMP or TMR */
+          case OPTYPE_UNDEF_RUNNING: // r1 [r2] b4                   78
+          case OPTYPE_COMP_NULL: // - (from V_TTCN3_NULL)
+          case OPTYPE_COMP_MTC: // -
+          case OPTYPE_COMP_SYSTEM: // -
+          case OPTYPE_COMP_SELF: // -
+          case OPTYPE_COMP_CREATE: // r1 [v2] [v3] b4
+            break;
+          case OPTYPE_COMP_RUNNING: // v1 [r2] b4
+          case OPTYPE_COMP_RUNNING_ANY: // -
+          case OPTYPE_COMP_RUNNING_ALL: // -
+          case OPTYPE_COMP_ALIVE: // v1
+          case OPTYPE_COMP_ALIVE_ANY: // -
+          case OPTYPE_COMP_ALIVE_ALL: // -
+            warning("State of component(s) may change during the actual snapshot.");
+            break;
+          case OPTYPE_TMR_READ: // r1     90
+            break;
+          case OPTYPE_TMR_RUNNING: // r1 [r2] b4
+          case OPTYPE_TMR_RUNNING_ANY: // -
+            warning("State of timer(s) may change during the actual snapshot.");
+            break;
+          case OPTYPE_GETVERDICT: // -
+          case OPTYPE_ACTIVATE: // r1
+          case OPTYPE_ACTIVATE_REFD: //v1 t_list2
+          case OPTYPE_EXECUTE: // r1 [v2]
+          case OPTYPE_EXECUTE_REFD: // v1 t_list2 [v3]
+
+          case OPTYPE_LOG2STR: // logargs
+          case OPTYPE_PROF_RUNNING: // -     99
+
+          case OPTYPE_ENCVALUE_UNICHAR: // ti1 [v2] [v3] [v4]
+          case OPTYPE_DECVALUE_UNICHAR: // r1 r2 [v3] [v4] [v5]
+
+          case OPTYPE_ANY2UNISTR: // logarg: length = 1
+          case OPTYPE_CHECKSTATE_ANY: // [r1] v2: port or any
+          case OPTYPE_CHECKSTATE_ALL: // [r1] v2: port or all
+          case OPTYPE_HOSTID: // [v1]
+          case OPTYPE_ISTEMPLATEKIND: // ti1 v2
+
+          case OPTYPE_GET_PORT_REF: // -optypes
+            break;
+          default:
+            FATAL_ERROR("Value::chk_expr_immutability()");
+        }
+        break;
+      case V_ERROR: /**< erroneous */
+      case V_NULL: /**< NULL (for ASN.1 NULL type: also in TTCN-3) */
+      case V_BOOL: /**< boolean */
+      case V_NAMEDINT: /**< integer / named number */
+      case V_NAMEDBITS: /**< named bits (identifiers) */
+      case V_INT: /**< integer */
+      case V_REAL: /**< real/float */
+      case V_ENUM: /**< enumerated */
+      case V_BSTR: /**< bitstring */
+      case V_HSTR: /**< hexstring */
+      case V_OSTR: /**< octetstring */
+      case V_CSTR: /**< charstring */
+      case V_USTR: /**< universal charstring */
+      case V_ISO2022STR: /**< ISO-2022 string (treat as octetstring) */
+      case V_CHARSYMS: /**< parsed ASN.1 universal string notation */
+      case V_OID: /**< object identifier */
+      case V_ROID: /**< relative object identifier */
+      case V_CHOICE: /**< choice; set directly by the ASN.1 parser */
+      case V_SEQOF: /**< sequence (record) of */
+      case V_SETOF: /**< set of */
+      case V_ARRAY: /**< array */
+      case V_SEQ: /**< sequence (record) */
+      case V_SET: /**< set */
+      case V_OPENTYPE: /**< open type */
+      case V_UNDEF_BLOCK: /**< undefined {block} */
+      case V_OMIT: /**< special value for optional values */
+      case V_VERDICT: /**< verdict */
+      case V_TTCN3_NULL: /**< TTCN-3 null (for component or default references) */
+      case V_DEFAULT_NULL: /**< null default reference */
+      case V_FAT_NULL: /**< null for function: altstep and testcase */
+      case V_MACRO: /**< macros (%%something) */
+      case V_NOTUSED: /**< not used symbol ('-') */
+      case V_FUNCTION: /**< function */
+      case V_ALTSTEP: /**< altstep */
+      case V_TESTCASE: /**< testcase */
+      case V_INVOKE: /**< invoke operation */
+      case V_REFER: /**< refer(function) */
+      case V_ANY_VALUE: /**< any value (?) - used by template concatenation */
+      case V_ANY_OR_OMIT: /**< any or omit (*) - used by template concatenation */
+        break;
+      case V_UNDEF_LOWERID: /**< undefined loweridentifier */
+      default:
+        FATAL_ERROR("Value::chk_expr_immutability()");
     } // switch
   }
 
