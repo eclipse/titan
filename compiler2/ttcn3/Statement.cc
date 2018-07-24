@@ -12749,6 +12749,7 @@ error:
       if (expr) {
 	Error_Context cntxt(expr, "In guard expression");
         expr->chk_expr_bool(Type::EXPECTED_DYNAMIC_VALUE);
+        expr->chk_expr_immutability();
       }
       {
 	Error_Context cntxt(stmt, "In guard operation");
@@ -12760,6 +12761,7 @@ error:
       if (expr) {
 	Error_Context cntxt(expr, "In guard expression");
         expr->chk_expr_bool(Type::EXPECTED_DYNAMIC_VALUE);
+        expr->chk_expr_immutability();
       }
       {
 	Error_Context cntxt(ref, "In guard statement");
@@ -12779,6 +12781,7 @@ error:
       if (expr) {
 	Error_Context cntxt(expr, "In guard expression");
         expr->chk_expr_bool(Type::EXPECTED_DYNAMIC_VALUE);
+        expr->chk_expr_immutability();
       }
       {
         if (!invoke.t_list) return; //already_checked
