@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11da2b53_3bad6e2c",
+        "filename": "compiler2/Type.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 3431,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2018-08-29T14:05:48Z",
+      "side": 1,
+      "message": "won\u0027t work in case of custom encodings",
+      "range": {
+        "startLine": 3431,
+        "startChar": 10,
+        "endLine": 3431,
+        "endChar": 44
+      },
+      "revId": "b1e316bc538af81f5be09027053e9265b40f5dbc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
