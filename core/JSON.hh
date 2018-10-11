@@ -66,6 +66,8 @@ struct TTCN_JSONdescriptor_t
     * number, instead of its name form as a JSON string (affects both encoding
     * and decoding). */
   boolean as_number;
+  
+  boolean as_map;
 };
 
 /** This macro makes sure that coding errors will only be displayed if the silent
