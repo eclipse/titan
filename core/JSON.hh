@@ -21,6 +21,11 @@ class JSON_Tokenizer;
 class CHARSTRING;
 class INTEGER;
 
+struct JsonEnumText {
+  int index;
+  const char* text;
+};
+
 /** Descriptor for JSON encoding/decoding during runtime */
 struct TTCN_JSONdescriptor_t 
 {
@@ -73,6 +78,10 @@ struct TTCN_JSONdescriptor_t
     * a non-optional universal charstring.
     * Example: { "key1" : value1, "key2" : value2 } */
   boolean as_map;
+  
+  size_t nof_enum_texts;
+  
+  const JsonEnumText* enum_texts;
 };
 
 /** This macro makes sure that coding errors will only be displayed if the silent
