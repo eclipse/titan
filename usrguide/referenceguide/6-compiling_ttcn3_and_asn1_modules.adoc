@@ -18,7 +18,7 @@ The program compiler resides in the directory `$TTCN3_DIR/bin`.
 The command line syntax of the compiler is the following:
 
 [source]
-compiler [ -abBcdDeEfgijlLMnNOpqrRstuwxXyY ] [ -J file ] [ -K file ] [ -z file ] [ -N old|new ][ -o dir ] [ -V n ] [ -P toplevel pdu ] [ -Qn ] [ -U none|type|"number" ] …[ -T ] module.ttcn [ -A ] module.asn … [ - module.ttcn module.asn … ]
+compiler [ -abBcdDeEfgiIjlLMnNOpqrRstuwxXyY ] [ -J file ] [ -K file ] [ -z file ] [ -N old|new ][ -o dir ] [ -V n ] [ -P toplevel pdu ] [ -Qn ] [ -U none|type|"number" ] …[ -T ] module.ttcn [ -A ] module.asn … [ - module.ttcn module.asn … ]
 
 or
 
@@ -113,6 +113,10 @@ If both `–g` and `–i` are specified, `-g` takes precedence.
 * `-i`
 +
 The compiler error/warning messages will contain only the line numbers, the column numbers will remain hidden. This option provides backward compatibility with the error message format of earlier versions.
+
+* `-I`
++
+Enables the use of real-time testing features, i.e. the test system clock ('now') and timestamp redirects. These features are disabled by default for backward compatibility.
 
 * `-j`
 +

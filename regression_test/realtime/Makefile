@@ -15,6 +15,8 @@ include $(TOPDIR)/Makefile.regression
 .SUFFIXES: .ttcn .hh
 .PHONY: all clean dep run
 
+COMPILER_FLAGS += -I
+
 TTCN3_LIB = ttcn3$(RT2_SUFFIX)-parallel$(DYNAMIC_SUFFIX)
 
 TTCN3_MODULES = realtimeNow.ttcn realtimeTimestamp.ttcn
