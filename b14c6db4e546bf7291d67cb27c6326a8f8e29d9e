@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e791edee_08b8b196",
+        "filename": "compiler2/record_of.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2018-11-19T09:40:15Z",
+      "side": 0,
+      "message": "Why is this better? (just curious)",
+      "range": {
+        "startLine": 327,
+        "startChar": 50,
+        "endLine": 328,
+        "endChar": 57
+      },
+      "revId": "b14c6db4e546bf7291d67cb27c6326a8f8e29d9e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
