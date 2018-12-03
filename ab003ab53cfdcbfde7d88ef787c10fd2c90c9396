@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "948943e4_5dad3b17",
+        "filename": "usrguide/apiguide/2-test_ports.adoc",
+        "patchSetId": 2
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2018-12-03T14:05:23Z",
+      "side": 1,
+      "message": "queried (?)",
+      "range": {
+        "startLine": 928,
+        "startChar": 91,
+        "endLine": 928,
+        "endChar": 100
+      },
+      "revId": "ab003ab53cfdcbfde7d88ef787c10fd2c90c9396",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6b4583f_e9171c09",
+        "filename": "usrguide/apiguide/2-test_ports.adoc",
+        "patchSetId": 2
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2018-12-03T14:05:23Z",
+      "side": 1,
+      "message": "queried (?)",
+      "range": {
+        "startLine": 955,
+        "startChar": 114,
+        "endLine": 955,
+        "endChar": 123
+      },
+      "revId": "ab003ab53cfdcbfde7d88ef787c10fd2c90c9396",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
