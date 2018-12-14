@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d7958b7e_9c1978fe",
+        "filename": "mctr2/mctr/MainController.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2018-12-14T09:45:37Z",
+      "side": 1,
+      "message": "There\u0027s a condition in the \u0027for\u0027 cycle for it (found_index \u003d\u003d -1).",
+      "parentUuid": "459f9c3b_b007a117",
+      "revId": "6fcbefff1cb97f297001f58c84026159a01d26e7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "67fa497f_44d4f1ce",
         "filename": "mctr2/mctr/MainController.cc",
         "patchSetId": 1
