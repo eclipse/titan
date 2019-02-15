@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e0d0cda_751ae6d5",
+        "filename": "usrguide/apiguide/7-references.adoc",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2019-02-15T11:03:22Z",
+      "side": 1,
+      "message": "space",
+      "range": {
+        "startLine": 7,
+        "startChar": 236,
+        "endLine": 7,
+        "endChar": 238
+      },
+      "revId": "3a9b5f5c52e55636edb3c20539404aaf077187be",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
