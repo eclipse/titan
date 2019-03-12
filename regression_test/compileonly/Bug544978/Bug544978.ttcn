@@ -1,0 +1,21 @@
+module Bug544978 {
+
+type record Rec {
+  integer x
+}
+
+type record of Rec RecList1;
+type record of Rec RecList2;
+
+function f(inout RecList1 x) return integer {
+  return 0;
+}
+
+control {   
+  var RecList2 x;
+  if (0 != f(x)) {
+    log("1");
+  }
+}
+
+}
