@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "619b0d84_c5d8d639",
+        "filename": "usrguide/java_referenceguide/2-ttcn-3_limitations_in_this_version.adoc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2019-05-05T14:42:30Z",
+      "side": 1,
+      "message": "list extends",
+      "revId": "bf54e8a1345673496518437421d1653e6b9db6cf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a658aa69_947400c4",
+        "filename": "usrguide/java_referenceguide/4-ttcn3_language_extensions.adoc",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2019-05-05T14:42:30Z",
+      "side": 1,
+      "message": "XML-\u003eJSON",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 7
+      },
+      "revId": "bf54e8a1345673496518437421d1653e6b9db6cf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
