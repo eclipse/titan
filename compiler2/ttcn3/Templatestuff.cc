@@ -968,6 +968,7 @@ namespace Ttcn {
 
   NamedParams * NamedParams::clone() const
   {
+    FATAL_ERROR("NamedParams::clone() !!!!");
     return new NamedParams(*this);
   }
 

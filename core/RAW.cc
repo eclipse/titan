@@ -137,6 +137,8 @@ const unsigned char BitMaskTable[9]={
 0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff
 };
 
+const unsigned char CSN1_L_H_Mask = 0x2B; // 00101011
+
 /**
  * Initialize the RAW encoding tree. The tree representations makes it easier
  * to encode/decode structured types with various attributes. Each node in the
@@ -423,6 +425,7 @@ int RAW_encode_enum_type(const TTCN_Typedescriptor_t& p_td,
   my_raw.prepadding      = p_td.raw->prepadding;
   my_raw.ptroffset       = p_td.raw->ptroffset;
   my_raw.unit            = p_td.raw->unit;
+  my_raw.csn1lh          = p_td.raw->csn1lh;
   TTCN_Typedescriptor_t my_descr = { p_td.name, 0, &my_raw, NULL, NULL, NULL, NULL,
     NULL, TTCN_Typedescriptor_t::DONTCARE };
   INTEGER i(integer_value);
@@ -452,6 +455,7 @@ int RAW_decode_enum_type(const TTCN_Typedescriptor_t& p_td, TTCN_Buffer& buff,
   my_raw.prepadding      = p_td.raw->prepadding;
   my_raw.ptroffset       = p_td.raw->ptroffset;
   my_raw.unit            = p_td.raw->unit;
+  my_raw.csn1lh          = p_td.raw->csn1lh;
   TTCN_Typedescriptor_t my_descr = { p_td.name, 0, &my_raw, NULL, NULL, NULL, NULL,
     NULL, TTCN_Typedescriptor_t::DONTCARE };
   INTEGER i;
@@ -509,13 +513,13 @@ int min_of_ints(unsigned int num_of_int,...)
  *                                                                                                                                                       |     unit
  *                                                                                                                                                       |     | padding_pattern_length
  *                                                                                                                                                       |     |   padding_pattern
- *                                                                                                                                                       |     |        length_restriction
- *                                                 length,comp ,byteorder,align    ,ord_field,ord_octet,ext_bit   ,hexorder,fieldorder,top_bit,          |     |        |  stringformat,       forceomit */
-const TTCN_RAWdescriptor_t INTEGER_raw_=               {8,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL};
-const TTCN_RAWdescriptor_t BOOLEAN_raw_=               {1,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL};
-const TTCN_RAWdescriptor_t BITSTRING_raw_=             {0,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL};
-const TTCN_RAWdescriptor_t OCTETSTRING_raw_=           {0,SG_NO,ORDER_LSB,ORDER_MSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL};
-const TTCN_RAWdescriptor_t HEXSTRING_raw_=             {0,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL};
-const TTCN_RAWdescriptor_t CHARSTRING_raw_=            {0,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL};
-const TTCN_RAWdescriptor_t FLOAT_raw_=                {64,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL};
-const TTCN_RAWdescriptor_t UNIVERSAL_CHARSTRING_raw_ = {0,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL};
+ *                                                                                                                                                       |     |        length_restriction     forceomit
+ *                                                 length,comp ,byteorder,align    ,ord_field,ord_octet,ext_bit   ,hexorder,fieldorder,top_bit,          |     |        |  stringformat,       |    csn1lh */
+const TTCN_RAWdescriptor_t INTEGER_raw_=               {8,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL,false};
+const TTCN_RAWdescriptor_t BOOLEAN_raw_=               {1,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL,false};
+const TTCN_RAWdescriptor_t BITSTRING_raw_=             {0,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL,false};
+const TTCN_RAWdescriptor_t OCTETSTRING_raw_=           {0,SG_NO,ORDER_LSB,ORDER_MSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL,false};
+const TTCN_RAWdescriptor_t HEXSTRING_raw_=             {0,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL,false};
+const TTCN_RAWdescriptor_t CHARSTRING_raw_=            {0,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL,false};
+const TTCN_RAWdescriptor_t FLOAT_raw_=                {64,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL,false};
+const TTCN_RAWdescriptor_t UNIVERSAL_CHARSTRING_raw_ = {0,SG_NO,ORDER_LSB,ORDER_LSB,ORDER_LSB,ORDER_LSB,EXT_BIT_NO,ORDER_LSB,ORDER_LSB,TOP_BIT_INHERITED,0,0,0,8,0,NULL,-1,CharCoding::UNKNOWN,NULL,false};
