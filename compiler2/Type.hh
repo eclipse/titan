@@ -699,8 +699,9 @@ namespace Common {
     const vector<coding_t>& get_coding_table() const { return coding_table; }
     
     /** Returns whether this type can have the specified encoding.
+      * (Returns 'unknown' if the type or a part of it has not been checked yet.)
       * Only used with new codec handling. */
-    bool can_have_coding(MessageEncodingType_t coding);
+    tribool can_have_coding(MessageEncodingType_t coding);
     
     /** Checks whether the type itself or one of its fields/elements is a
       * component or default type. Recursive. */
