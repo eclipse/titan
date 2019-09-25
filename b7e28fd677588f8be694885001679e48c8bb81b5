@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5cce960a_0114944d",
+        "filename": "regression_test/floatOper/config.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2019-09-25T15:11:48Z",
+      "side": 1,
+      "message": "header changed deliberately?",
+      "range": {
+        "startLine": 2,
+        "startChar": 2,
+        "endLine": 6,
+        "endChar": 3
+      },
+      "revId": "b7e28fd677588f8be694885001679e48c8bb81b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
