@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b70ff8f_5ca935eb",
+        "filename": "regression_test/hexstrOper/config.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2019-10-01T06:28:08Z",
+      "side": 1,
+      "message": "is it acceptable in RT1?",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 22
+      },
+      "revId": "a05516ac06236dcfc2f88a9865a8901490ae40b8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
