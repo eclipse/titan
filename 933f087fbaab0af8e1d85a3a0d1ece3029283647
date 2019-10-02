@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "15361818_247a0a55",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2019-10-02T08:47:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3ff94b3_32d965a9",
+      "range": {
+        "startLine": 321,
+        "startChar": 2,
+        "endLine": 321,
+        "endChar": 24
+      },
+      "revId": "933f087fbaab0af8e1d85a3a0d1ece3029283647",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "68090fda_45b7c5a4",
         "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "933f087fbaab0af8e1d85a3a0d1ece3029283647",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63241358_2fe0d337",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2019-10-02T08:47:50Z",
+      "side": 1,
+      "message": "You are right. I\u0027m going to modify it.",
+      "parentUuid": "68090fda_45b7c5a4",
+      "range": {
+        "startLine": 371,
+        "startChar": 2,
+        "endLine": 371,
+        "endChar": 24
+      },
+      "revId": "933f087fbaab0af8e1d85a3a0d1ece3029283647",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6cb509a4_3a18e2d7",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2019-10-02T08:47:50Z",
+      "side": 1,
+      "message": "You are right. I\u0027m going to modify it.",
+      "parentUuid": "2c05c67b_73a7fdb2",
+      "range": {
+        "startLine": 448,
+        "startChar": 2,
+        "endLine": 448,
+        "endChar": 24
+      },
+      "revId": "933f087fbaab0af8e1d85a3a0d1ece3029283647",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2c4d1546_1835acd0",
         "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
         "patchSetId": 1
@@ -91,6 +163,30 @@
       "revId": "933f087fbaab0af8e1d85a3a0d1ece3029283647",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81160e27_90e32a58",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2019-10-02T08:47:50Z",
+      "side": 1,
+      "message": "You are right. I\u0027m going to modify it.",
+      "parentUuid": "2c4d1546_1835acd0",
+      "range": {
+        "startLine": 536,
+        "startChar": 2,
+        "endLine": 536,
+        "endChar": 24
+      },
+      "revId": "933f087fbaab0af8e1d85a3a0d1ece3029283647",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "7d49da39_577d4d74",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1726,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2019-10-02T08:47:50Z",
+      "side": 1,
+      "message": "You are right. I\u0027m going to modify it.",
+      "parentUuid": "bdc5ea36_e4e4df3e",
+      "range": {
+        "startLine": 1726,
+        "startChar": 6,
+        "endLine": 1726,
+        "endChar": 1
+      },
+      "revId": "933f087fbaab0af8e1d85a3a0d1ece3029283647",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8cc6c787_aa8695d7",
         "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
         "patchSetId": 1
@@ -137,6 +257,30 @@
       "revId": "933f087fbaab0af8e1d85a3a0d1ece3029283647",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14e1a628_45216937",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1740,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2019-10-02T08:47:50Z",
+      "side": 1,
+      "message": "You are right. I\u0027m going to modify it.",
+      "parentUuid": "8cc6c787_aa8695d7",
+      "range": {
+        "startLine": 1740,
+        "startChar": 6,
+        "endLine": 1740,
+        "endChar": 1
+      },
+      "revId": "933f087fbaab0af8e1d85a3a0d1ece3029283647",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
