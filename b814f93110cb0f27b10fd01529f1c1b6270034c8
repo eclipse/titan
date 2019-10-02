@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba2555c7_bdd94501",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 2202,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2019-10-02T15:22:22Z",
+      "side": 1,
+      "message": "uninitialized string to be inserted",
+      "range": {
+        "startLine": 2202,
+        "startChar": 2,
+        "endLine": 2202,
+        "endChar": 1
+      },
+      "revId": "b814f93110cb0f27b10fd01529f1c1b6270034c8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "421a147c_4f0a551d",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 2216,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2019-10-02T15:22:22Z",
+      "side": 1,
+      "message": "uninitialized input str",
+      "range": {
+        "startLine": 2216,
+        "startChar": 2,
+        "endLine": 2216,
+        "endChar": 37
+      },
+      "revId": "b814f93110cb0f27b10fd01529f1c1b6270034c8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
