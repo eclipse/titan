@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c40d117_9912a0b2",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 2874,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2019-10-02T15:57:29Z",
+      "side": 1,
+      "message": "the length is still negative...",
+      "range": {
+        "startLine": 2874,
+        "startChar": 21,
+        "endLine": 2874,
+        "endChar": 23
+      },
+      "revId": "564be7f988869953196308b9ec377938a2c26103",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46c33a74_8286acbb",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 2889,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2019-10-02T15:57:29Z",
+      "side": 1,
+      "message": "the length is still negative...",
+      "range": {
+        "startLine": 2889,
+        "startChar": 21,
+        "endLine": 2889,
+        "endChar": 23
+      },
+      "revId": "564be7f988869953196308b9ec377938a2c26103",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b913fcb8_68963571",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 2899,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2019-10-02T15:57:29Z",
+      "side": 1,
+      "message": "2 chars",
+      "range": {
+        "startLine": 2899,
+        "startChar": 25,
+        "endLine": 2899,
+        "endChar": 31
+      },
+      "revId": "564be7f988869953196308b9ec377938a2c26103",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f1be1df_91df2a05",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 2914,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2019-10-02T15:57:29Z",
+      "side": 1,
+      "message": "2 chars",
+      "range": {
+        "startLine": 2914,
+        "startChar": 21,
+        "endLine": 2914,
+        "endChar": 27
+      },
+      "revId": "564be7f988869953196308b9ec377938a2c26103",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
