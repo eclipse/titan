@@ -91,6 +91,30 @@
       "revId": "564be7f988869953196308b9ec377938a2c26103",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d2f42eb_2acd36ee",
+        "filename": "regression_test/predefFunction2/predefFunctTest.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 2914,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2019-10-03T10:40:33Z",
+      "side": 1,
+      "message": "Thanks, I will fix it in the next commit.",
+      "parentUuid": "2f1be1df_91df2a05",
+      "range": {
+        "startLine": 2914,
+        "startChar": 21,
+        "endLine": 2914,
+        "endChar": 27
+      },
+      "revId": "564be7f988869953196308b9ec377938a2c26103",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
