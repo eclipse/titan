@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eba1dbd0_f5dda9b7",
+        "filename": "function_test/BER_EncDec/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2020-01-04T20:31:33Z",
+      "side": 1,
+      "message": "COVERAGE is always defined! Use the original form:\nifeq ($(COVERAGE), yes)\nto avoid extremely huge logs",
+      "range": {
+        "startLine": 121,
+        "startChar": 6,
+        "endLine": 121,
+        "endChar": 14
+      },
+      "revId": "736891ddc0ba919cc0dac440d590246e7343e349",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0017a8f1_4b390759",
+        "filename": "function_test/RAW_EncDec/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2020-01-04T20:31:33Z",
+      "side": 1,
+      "message": "This line should follow the definition of the right side! The make is up-down utility.",
+      "range": {
+        "startLine": 106,
+        "startChar": 33,
+        "endLine": 106,
+        "endChar": 45
+      },
+      "revId": "736891ddc0ba919cc0dac440d590246e7343e349",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
