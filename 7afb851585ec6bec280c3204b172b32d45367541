@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55202b83_68f8e47c",
+        "filename": "regression_test/cfgFile/module_parameters/concat/concat1.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2020-01-07T15:51:50Z",
+      "side": 1,
+      "message": "Module name is still unchanged, even though the config file refers to it as \u0027concat1\u0027.",
+      "range": {
+        "startLine": 14,
+        "startChar": 7,
+        "endLine": 14,
+        "endChar": 13
+      },
+      "revId": "7afb851585ec6bec280c3204b172b32d45367541",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdf76025_dfb33ce4",
+        "filename": "regression_test/cfg_list_concat/concat.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2020-01-07T15:51:50Z",
+      "side": 1,
+      "message": "Module name changed, but other files still refer to it as \u0027concat\u0027.\nPerhaps this change was intended for the other \u0027concat.ttcn\u0027 file?",
+      "range": {
+        "startLine": 13,
+        "startChar": 13,
+        "endLine": 13,
+        "endChar": 14
+      },
+      "revId": "7afb851585ec6bec280c3204b172b32d45367541",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
