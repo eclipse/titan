@@ -69,6 +69,30 @@
       "revId": "7afb851585ec6bec280c3204b172b32d45367541",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "285e3fc6_d450feb6",
+        "filename": "regression_test/cfg_list_concat/concat.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2020-01-08T08:21:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bdf76025_dfb33ce4",
+      "range": {
+        "startLine": 13,
+        "startChar": 13,
+        "endLine": 13,
+        "endChar": 14
+      },
+      "revId": "7afb851585ec6bec280c3204b172b32d45367541",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
