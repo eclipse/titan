@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b22cfdba_c8579e72",
+        "filename": "regression_test/cfgFile/module_parameters/concat/concat1.ttcn",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2020-01-08T08:20:26Z",
+      "side": 1,
+      "message": "you are right.",
+      "parentUuid": "55202b83_68f8e47c",
+      "range": {
+        "startLine": 14,
+        "startChar": 7,
+        "endLine": 14,
+        "endChar": 13
+      },
+      "revId": "7afb851585ec6bec280c3204b172b32d45367541",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bdf76025_dfb33ce4",
         "filename": "regression_test/cfg_list_concat/concat.ttcn",
         "patchSetId": 1
