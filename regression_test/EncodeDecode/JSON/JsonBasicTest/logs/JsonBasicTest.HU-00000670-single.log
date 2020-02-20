@@ -1,0 +1,991 @@
+2020/Feb/20 17:51:47.133279 EXECUTOR - TTCN-3 Test Executor started in single mode. Version: CRL 113 200/6 R6B.
+2020/Feb/20 17:51:47.133365 EXECUTOR - Using configuration file: `JsonBasicTest.cfg'.
+2020/Feb/20 17:51:47.133368 EXECUTOR - Maximum number of open file descriptors: 256,   FD_SETSIZE = 64
+2020/Feb/20 17:51:47.134152 WARNING - Warning: Section [GROUPS] of configuration file is ignored in single mode.
+2020/Feb/20 17:51:47.134171 WARNING - Warning: Section [COMPONENTS] of configuration file is ignored in single mode.
+2020/Feb/20 17:51:47.134196 WARNING - Warning: Section [MAIN_CONTROLLER] of configuration file is ignored in single mode.
+2020/Feb/20 17:51:47.149740 EXECUTOR - TTCN Logger v2.2 options: TimeStampFormat:=DateTime; LogEntityName:=Yes; LogEventTypes:=Yes; SourceInfoFormat:=Single; *.FileMask:=LOG_ALL | MATCHING | DEBUG; *.ConsoleMask:=ERROR | TESTCASE | PORTEVENT | STATISTICS | WARNING; LogFileSize:=0; LogFileNumber:=1; DiskFullAction:=Error
+2020/Feb/20 17:51:47.149754 EXECUTOR - Initializing module JsonBasicASN1EncDecTest1.
+2020/Feb/20 17:51:47.149764 EXECUTOR - Initialization of module JsonBasicASN1EncDecTest1 finished.
+2020/Feb/20 17:51:47.149773 EXECUTOR - Initializing module JsonBasicASN1Types.
+2020/Feb/20 17:51:47.149783 EXECUTOR - Initialization of module JsonBasicASN1Types finished.
+2020/Feb/20 17:51:47.149792 EXECUTOR - Initializing module JsonBasicAttributeTest.
+2020/Feb/20 17:51:47.149801 EXECUTOR - Initialization of module JsonBasicAttributeTest finished.
+2020/Feb/20 17:51:47.149809 EXECUTOR - Initializing module JsonBasicEncDecTest_bs.
+2020/Feb/20 17:51:47.149818 EXECUTOR JsonBasicEncDecTest_bs.ttcn:0 Initializing module JsonEncDecFunctions.
+2020/Feb/20 17:51:47.149831 EXECUTOR JsonEncDecFunctions.ttcn:0 Initializing module JsonBasicTypes.
+2020/Feb/20 17:51:47.149841 EXECUTOR JsonEncDecFunctions.ttcn:0 Initialization of module JsonBasicTypes finished.
+2020/Feb/20 17:51:47.149851 EXECUTOR JsonBasicEncDecTest_bs.ttcn:0 Initialization of module JsonEncDecFunctions finished.
+2020/Feb/20 17:51:47.149861 EXECUTOR - Initialization of module JsonBasicEncDecTest_bs finished.
+2020/Feb/20 17:51:47.149869 EXECUTOR - Initializing module JsonBasicEncDecTest_os.
+2020/Feb/20 17:51:47.149878 EXECUTOR - Initialization of module JsonBasicEncDecTest_os finished.
+2020/Feb/20 17:51:47.149887 EXECUTOR - Initializing module JsonBasicTypeAltstep.
+2020/Feb/20 17:51:47.149895 EXECUTOR - Initialization of module JsonBasicTypeAltstep finished.
+2020/Feb/20 17:51:47.149904 EXECUTOR - Initializing module JsonBasicTypeBS.
+2020/Feb/20 17:51:47.149912 EXECUTOR - Initialization of module JsonBasicTypeBS finished.
+2020/Feb/20 17:51:47.149921 EXECUTOR - Initializing module JsonBasicTypeE.
+2020/Feb/20 17:51:47.149930 EXECUTOR - Initialization of module JsonBasicTypeE finished.
+2020/Feb/20 17:51:47.149938 EXECUTOR - Initializing module JsonBasicTypeF.
+2020/Feb/20 17:51:47.149947 EXECUTOR - Initialization of module JsonBasicTypeF finished.
+2020/Feb/20 17:51:47.149956 EXECUTOR - Initializing module JsonBasicTypeFuncRef.
+2020/Feb/20 17:51:47.149964 EXECUTOR - Initialization of module JsonBasicTypeFuncRef finished.
+2020/Feb/20 17:51:47.149973 EXECUTOR - Initializing module JsonBasicTypeHS.
+2020/Feb/20 17:51:47.149981 EXECUTOR - Initialization of module JsonBasicTypeHS finished.
+2020/Feb/20 17:51:47.149990 EXECUTOR - Initializing module JsonBasicTypeI.
+2020/Feb/20 17:51:47.149999 EXECUTOR - Initialization of module JsonBasicTypeI finished.
+2020/Feb/20 17:51:47.150007 EXECUTOR - Initializing module JsonBasicTypeOS.
+2020/Feb/20 17:51:47.150016 EXECUTOR - Initialization of module JsonBasicTypeOS finished.
+2020/Feb/20 17:51:47.150025 EXECUTOR - Initializing module JsonRoUBug1.
+2020/Feb/20 17:51:47.150033 EXECUTOR - Initialization of module JsonRoUBug1 finished.
+2020/Feb/20 17:51:47.150042 EXECUTOR - Initializing module JsonTypeAny.
+2020/Feb/20 17:51:47.150051 EXECUTOR - Initialization of module JsonTypeAny finished.
+2020/Feb/20 17:51:47.150059 EXECUTOR - Initializing module JsonTypeAny2.
+2020/Feb/20 17:51:47.150068 EXECUTOR - Initialization of module JsonTypeAny2 finished.
+2020/Feb/20 17:51:47.150078 EXECUTOR - Initializing module JsonTypeRec.
+2020/Feb/20 17:51:47.150087 EXECUTOR - Initialization of module JsonTypeRec finished.
+2020/Feb/20 17:51:47.150096 EXECUTOR - Initializing module PreGenRecordOf.
+2020/Feb/20 17:51:47.150105 EXECUTOR - Initialization of module PreGenRecordOf finished.
+2020/Feb/20 17:51:47.150114 EXECUTOR - Initializing module TitanLoggerApi.
+2020/Feb/20 17:51:47.150122 EXECUTOR - Initialization of module TitanLoggerApi finished.
+2020/Feb/20 17:51:47.150132 STATISTICS JsonBasicASN1EncDecTest1.ttcn:139(controlpart:JsonBasicASN1EncDecTest1) Execution of control part in module JsonBasicASN1EncDecTest1 started.
+2020/Feb/20 17:51:47.150170 TESTCASE JsonBasicASN1EncDecTest1.ttcn:126(testcase:tc_asn1_i2bs) Test case tc_asn1_i2bs started.
+2020/Feb/20 17:51:47.150196 PARALLEL JsonBasicASN1EncDecTest1.ttcn:126(testcase:tc_asn1_i2bs) Initializing variables, timers and ports of component type JsonBasicASN1EncDecTest1.CT inside testcase tc_asn1_i2bs.
+2020/Feb/20 17:51:47.150213 PARALLEL JsonBasicASN1EncDecTest1.ttcn:126(testcase:tc_asn1_i2bs) Component type JsonBasicASN1EncDecTest1.CT was initialized.
+2020/Feb/20 17:51:47.150227 DEBUG JsonBasicASN1EncDecTest1.ttcn:128(testcase:tc_asn1_i2bs) f_json_enc_ai2bs(): Encoding integer: 12
+2020/Feb/20 17:51:47.150256 DEBUG JsonBasicASN1EncDecTest1.ttcn:128(testcase:tc_asn1_i2bs) f_json_enc_ai2bs(): Stream after encoding: '0011000100110010'B
+2020/Feb/20 17:51:47.150272 USER JsonBasicASN1EncDecTest1.ttcn:129(testcase:tc_asn1_i2bs) encoded1:'0011000100110010'B
+2020/Feb/20 17:51:47.150300 VERDICTOP JsonBasicASN1EncDecTest1.ttcn:133(testcase:tc_asn1_i2bs) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.150323 PARALLEL JsonBasicASN1EncDecTest1.ttcn:133(testcase:tc_asn1_i2bs) Terminating component type JsonBasicASN1EncDecTest1.CT.
+2020/Feb/20 17:51:47.150337 PARALLEL JsonBasicASN1EncDecTest1.ttcn:133(testcase:tc_asn1_i2bs) Component type JsonBasicASN1EncDecTest1.CT was shut down inside testcase tc_asn1_i2bs.
+2020/Feb/20 17:51:47.150349 TESTCASE JsonBasicASN1EncDecTest1.ttcn:133(testcase:tc_asn1_i2bs) Test case tc_asn1_i2bs finished. Verdict: pass
+2020/Feb/20 17:51:47.150377 TESTCASE JsonBasicASN1EncDecTest1.ttcn:105(testcase:tc_asn1_bool2bs) Test case tc_asn1_bool2bs started.
+2020/Feb/20 17:51:47.150399 PARALLEL JsonBasicASN1EncDecTest1.ttcn:105(testcase:tc_asn1_bool2bs) Initializing variables, timers and ports of component type JsonBasicASN1EncDecTest1.CT inside testcase tc_asn1_bool2bs.
+2020/Feb/20 17:51:47.150412 PARALLEL JsonBasicASN1EncDecTest1.ttcn:105(testcase:tc_asn1_bool2bs) Component type JsonBasicASN1EncDecTest1.CT was initialized.
+2020/Feb/20 17:51:47.150423 DEBUG JsonBasicASN1EncDecTest1.ttcn:107(testcase:tc_asn1_bool2bs) f_json_enc_abool2bs(): Encoding boolean: true
+2020/Feb/20 17:51:47.150443 DEBUG JsonBasicASN1EncDecTest1.ttcn:107(testcase:tc_asn1_bool2bs) f_json_enc_abool2bs(): Stream after encoding: '01110100011100100111010101100101'B
+2020/Feb/20 17:51:47.150457 USER JsonBasicASN1EncDecTest1.ttcn:108(testcase:tc_asn1_bool2bs) encoded1:'01110100011100100111010101100101'B
+2020/Feb/20 17:51:47.150490 VERDICTOP JsonBasicASN1EncDecTest1.ttcn:112(testcase:tc_asn1_bool2bs) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.150502 DEBUG JsonBasicASN1EncDecTest1.ttcn:114(testcase:tc_asn1_bool2bs) f_json_dec_bs2abool(): Stream before decoding: '01110100011100100111010101100101'B
+2020/Feb/20 17:51:47.150519 DEBUG JsonBasicASN1EncDecTest1.ttcn:114(testcase:tc_asn1_bool2bs) f_json_dec_bs2abool(): Decoded boolean: true
+2020/Feb/20 17:51:47.150532 VERDICTOP JsonBasicASN1EncDecTest1.ttcn:116(testcase:tc_asn1_bool2bs) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.150543 PARALLEL JsonBasicASN1EncDecTest1.ttcn:116(testcase:tc_asn1_bool2bs) Terminating component type JsonBasicASN1EncDecTest1.CT.
+2020/Feb/20 17:51:47.150554 PARALLEL JsonBasicASN1EncDecTest1.ttcn:116(testcase:tc_asn1_bool2bs) Component type JsonBasicASN1EncDecTest1.CT was shut down inside testcase tc_asn1_bool2bs.
+2020/Feb/20 17:51:47.150567 TESTCASE JsonBasicASN1EncDecTest1.ttcn:116(testcase:tc_asn1_bool2bs) Test case tc_asn1_bool2bs finished. Verdict: pass
+2020/Feb/20 17:51:47.150592 STATISTICS JsonBasicASN1EncDecTest1.ttcn:143(controlpart:JsonBasicASN1EncDecTest1) Execution of control part in module JsonBasicASN1EncDecTest1 finished.
+2020/Feb/20 17:51:47.150615 STATISTICS JsonBasicAttributeTest.ttcn:136(controlpart:JsonBasicAttributeTest) Execution of control part in module JsonBasicAttributeTest started.
+2020/Feb/20 17:51:47.150640 TESTCASE JsonBasicAttributeTest.ttcn:44(testcase:tc_attr0_0) Test case tc_attr0_0 started.
+2020/Feb/20 17:51:47.150662 PARALLEL JsonBasicAttributeTest.ttcn:44(testcase:tc_attr0_0) Initializing variables, timers and ports of component type JsonBasicAttributeTest.CT inside testcase tc_attr0_0.
+2020/Feb/20 17:51:47.150675 PARALLEL JsonBasicAttributeTest.ttcn:44(testcase:tc_attr0_0) Component type JsonBasicAttributeTest.CT was initialized.
+2020/Feb/20 17:51:47.150700 USER JsonBasicAttributeTest.ttcn:48(testcase:tc_attr0_0) { i := omit }
+2020/Feb/20 17:51:47.150713 USER JsonBasicAttributeTest.ttcn:49(testcase:tc_attr0_0) '7B7D'O ("{}")
+2020/Feb/20 17:51:47.150732 VERDICTOP JsonBasicAttributeTest.ttcn:50(testcase:tc_attr0_0) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.150742 PARALLEL JsonBasicAttributeTest.ttcn:50(testcase:tc_attr0_0) Terminating component type JsonBasicAttributeTest.CT.
+2020/Feb/20 17:51:47.150754 PARALLEL JsonBasicAttributeTest.ttcn:50(testcase:tc_attr0_0) Component type JsonBasicAttributeTest.CT was shut down inside testcase tc_attr0_0.
+2020/Feb/20 17:51:47.150766 TESTCASE JsonBasicAttributeTest.ttcn:50(testcase:tc_attr0_0) Test case tc_attr0_0 finished. Verdict: pass
+2020/Feb/20 17:51:47.150790 TESTCASE JsonBasicAttributeTest.ttcn:53(testcase:tc_attr0_1) Test case tc_attr0_1 started.
+2020/Feb/20 17:51:47.150811 PARALLEL JsonBasicAttributeTest.ttcn:53(testcase:tc_attr0_1) Initializing variables, timers and ports of component type JsonBasicAttributeTest.CT inside testcase tc_attr0_1.
+2020/Feb/20 17:51:47.150823 PARALLEL JsonBasicAttributeTest.ttcn:53(testcase:tc_attr0_1) Component type JsonBasicAttributeTest.CT was initialized.
+2020/Feb/20 17:51:47.150838 USER JsonBasicAttributeTest.ttcn:57(testcase:tc_attr0_1) { i := 1 }
+2020/Feb/20 17:51:47.150850 USER JsonBasicAttributeTest.ttcn:58(testcase:tc_attr0_1) '7B2269223A317D'O ("{\"i\":1}")
+2020/Feb/20 17:51:47.150874 VERDICTOP JsonBasicAttributeTest.ttcn:59(testcase:tc_attr0_1) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.150885 PARALLEL JsonBasicAttributeTest.ttcn:59(testcase:tc_attr0_1) Terminating component type JsonBasicAttributeTest.CT.
+2020/Feb/20 17:51:47.150896 PARALLEL JsonBasicAttributeTest.ttcn:59(testcase:tc_attr0_1) Component type JsonBasicAttributeTest.CT was shut down inside testcase tc_attr0_1.
+2020/Feb/20 17:51:47.150908 TESTCASE JsonBasicAttributeTest.ttcn:59(testcase:tc_attr0_1) Test case tc_attr0_1 finished. Verdict: pass
+2020/Feb/20 17:51:47.150932 TESTCASE JsonBasicAttributeTest.ttcn:63(testcase:tc_attr1_0) Test case tc_attr1_0 started.
+2020/Feb/20 17:51:47.150953 PARALLEL JsonBasicAttributeTest.ttcn:63(testcase:tc_attr1_0) Initializing variables, timers and ports of component type JsonBasicAttributeTest.CT inside testcase tc_attr1_0.
+2020/Feb/20 17:51:47.150965 PARALLEL JsonBasicAttributeTest.ttcn:63(testcase:tc_attr1_0) Component type JsonBasicAttributeTest.CT was initialized.
+2020/Feb/20 17:51:47.150985 USER JsonBasicAttributeTest.ttcn:67(testcase:tc_attr1_0) { i := omit }
+2020/Feb/20 17:51:47.150998 USER JsonBasicAttributeTest.ttcn:68(testcase:tc_attr1_0) '7B2269223A6E756C6C7D'O ("{\"i\":null}")
+2020/Feb/20 17:51:47.151026 VERDICTOP JsonBasicAttributeTest.ttcn:69(testcase:tc_attr1_0) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.151037 PARALLEL JsonBasicAttributeTest.ttcn:69(testcase:tc_attr1_0) Terminating component type JsonBasicAttributeTest.CT.
+2020/Feb/20 17:51:47.151049 PARALLEL JsonBasicAttributeTest.ttcn:69(testcase:tc_attr1_0) Component type JsonBasicAttributeTest.CT was shut down inside testcase tc_attr1_0.
+2020/Feb/20 17:51:47.151061 TESTCASE JsonBasicAttributeTest.ttcn:69(testcase:tc_attr1_0) Test case tc_attr1_0 finished. Verdict: pass
+2020/Feb/20 17:51:47.151086 TESTCASE JsonBasicAttributeTest.ttcn:72(testcase:tc_attr1_1) Test case tc_attr1_1 started.
+2020/Feb/20 17:51:47.151108 PARALLEL JsonBasicAttributeTest.ttcn:72(testcase:tc_attr1_1) Initializing variables, timers and ports of component type JsonBasicAttributeTest.CT inside testcase tc_attr1_1.
+2020/Feb/20 17:51:47.151120 PARALLEL JsonBasicAttributeTest.ttcn:72(testcase:tc_attr1_1) Component type JsonBasicAttributeTest.CT was initialized.
+2020/Feb/20 17:51:47.151134 USER JsonBasicAttributeTest.ttcn:76(testcase:tc_attr1_1) { i := 1 }
+2020/Feb/20 17:51:47.151146 USER JsonBasicAttributeTest.ttcn:77(testcase:tc_attr1_1) '7B2269223A317D'O ("{\"i\":1}")
+2020/Feb/20 17:51:47.151170 VERDICTOP JsonBasicAttributeTest.ttcn:78(testcase:tc_attr1_1) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.151180 PARALLEL JsonBasicAttributeTest.ttcn:78(testcase:tc_attr1_1) Terminating component type JsonBasicAttributeTest.CT.
+2020/Feb/20 17:51:47.151192 PARALLEL JsonBasicAttributeTest.ttcn:78(testcase:tc_attr1_1) Component type JsonBasicAttributeTest.CT was shut down inside testcase tc_attr1_1.
+2020/Feb/20 17:51:47.151203 TESTCASE JsonBasicAttributeTest.ttcn:78(testcase:tc_attr1_1) Test case tc_attr1_1 finished. Verdict: pass
+2020/Feb/20 17:51:47.151229 TESTCASE JsonBasicAttributeTest.ttcn:82(testcase:tc_attr2_0) Test case tc_attr2_0 started.
+2020/Feb/20 17:51:47.151250 PARALLEL JsonBasicAttributeTest.ttcn:82(testcase:tc_attr2_0) Initializing variables, timers and ports of component type JsonBasicAttributeTest.CT inside testcase tc_attr2_0.
+2020/Feb/20 17:51:47.151262 PARALLEL JsonBasicAttributeTest.ttcn:82(testcase:tc_attr2_0) Component type JsonBasicAttributeTest.CT was initialized.
+2020/Feb/20 17:51:47.151281 USER JsonBasicAttributeTest.ttcn:86(testcase:tc_attr2_0) { i := omit }
+2020/Feb/20 17:51:47.151293 USER JsonBasicAttributeTest.ttcn:87(testcase:tc_attr2_0) '7B7D'O ("{}")
+2020/Feb/20 17:51:47.151309 VERDICTOP JsonBasicAttributeTest.ttcn:88(testcase:tc_attr2_0) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.151320 PARALLEL JsonBasicAttributeTest.ttcn:88(testcase:tc_attr2_0) Terminating component type JsonBasicAttributeTest.CT.
+2020/Feb/20 17:51:47.151331 PARALLEL JsonBasicAttributeTest.ttcn:88(testcase:tc_attr2_0) Component type JsonBasicAttributeTest.CT was shut down inside testcase tc_attr2_0.
+2020/Feb/20 17:51:47.151343 TESTCASE JsonBasicAttributeTest.ttcn:88(testcase:tc_attr2_0) Test case tc_attr2_0 finished. Verdict: pass
+2020/Feb/20 17:51:47.151366 TESTCASE JsonBasicAttributeTest.ttcn:91(testcase:tc_attr2_1) Test case tc_attr2_1 started.
+2020/Feb/20 17:51:47.151387 PARALLEL JsonBasicAttributeTest.ttcn:91(testcase:tc_attr2_1) Initializing variables, timers and ports of component type JsonBasicAttributeTest.CT inside testcase tc_attr2_1.
+2020/Feb/20 17:51:47.151399 PARALLEL JsonBasicAttributeTest.ttcn:91(testcase:tc_attr2_1) Component type JsonBasicAttributeTest.CT was initialized.
+2020/Feb/20 17:51:47.151413 USER JsonBasicAttributeTest.ttcn:95(testcase:tc_attr2_1) { i := 1 }
+2020/Feb/20 17:51:47.151426 USER JsonBasicAttributeTest.ttcn:96(testcase:tc_attr2_1) '7B22496E7465676572223A317D'O ("{\"Integer\":1}")
+2020/Feb/20 17:51:47.151459 VERDICTOP JsonBasicAttributeTest.ttcn:97(testcase:tc_attr2_1) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.151472 PARALLEL JsonBasicAttributeTest.ttcn:97(testcase:tc_attr2_1) Terminating component type JsonBasicAttributeTest.CT.
+2020/Feb/20 17:51:47.151483 PARALLEL JsonBasicAttributeTest.ttcn:97(testcase:tc_attr2_1) Component type JsonBasicAttributeTest.CT was shut down inside testcase tc_attr2_1.
+2020/Feb/20 17:51:47.151495 TESTCASE JsonBasicAttributeTest.ttcn:97(testcase:tc_attr2_1) Test case tc_attr2_1 finished. Verdict: pass
+2020/Feb/20 17:51:47.151518 TESTCASE JsonBasicAttributeTest.ttcn:101(testcase:tc_attr3_0) Test case tc_attr3_0 started.
+2020/Feb/20 17:51:47.151539 PARALLEL JsonBasicAttributeTest.ttcn:101(testcase:tc_attr3_0) Initializing variables, timers and ports of component type JsonBasicAttributeTest.CT inside testcase tc_attr3_0.
+2020/Feb/20 17:51:47.151553 PARALLEL JsonBasicAttributeTest.ttcn:101(testcase:tc_attr3_0) Component type JsonBasicAttributeTest.CT was initialized.
+2020/Feb/20 17:51:47.151573 USER JsonBasicAttributeTest.ttcn:105(testcase:tc_attr3_0) { i := omit }
+2020/Feb/20 17:51:47.151586 USER JsonBasicAttributeTest.ttcn:106(testcase:tc_attr3_0) '7B22496E7465676572223A6E756C6C7D'O ("{\"Integer\":null}")
+2020/Feb/20 17:51:47.151624 VERDICTOP JsonBasicAttributeTest.ttcn:107(testcase:tc_attr3_0) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.151635 PARALLEL JsonBasicAttributeTest.ttcn:107(testcase:tc_attr3_0) Terminating component type JsonBasicAttributeTest.CT.
+2020/Feb/20 17:51:47.151646 PARALLEL JsonBasicAttributeTest.ttcn:107(testcase:tc_attr3_0) Component type JsonBasicAttributeTest.CT was shut down inside testcase tc_attr3_0.
+2020/Feb/20 17:51:47.151658 TESTCASE JsonBasicAttributeTest.ttcn:107(testcase:tc_attr3_0) Test case tc_attr3_0 finished. Verdict: pass
+2020/Feb/20 17:51:47.151681 TESTCASE JsonBasicAttributeTest.ttcn:110(testcase:tc_attr3_1) Test case tc_attr3_1 started.
+2020/Feb/20 17:51:47.151702 PARALLEL JsonBasicAttributeTest.ttcn:110(testcase:tc_attr3_1) Initializing variables, timers and ports of component type JsonBasicAttributeTest.CT inside testcase tc_attr3_1.
+2020/Feb/20 17:51:47.151714 PARALLEL JsonBasicAttributeTest.ttcn:110(testcase:tc_attr3_1) Component type JsonBasicAttributeTest.CT was initialized.
+2020/Feb/20 17:51:47.151729 USER JsonBasicAttributeTest.ttcn:114(testcase:tc_attr3_1) { i := 1 }
+2020/Feb/20 17:51:47.151741 USER JsonBasicAttributeTest.ttcn:115(testcase:tc_attr3_1) '7B22496E7465676572223A317D'O ("{\"Integer\":1}")
+2020/Feb/20 17:51:47.151774 VERDICTOP JsonBasicAttributeTest.ttcn:116(testcase:tc_attr3_1) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.151785 PARALLEL JsonBasicAttributeTest.ttcn:116(testcase:tc_attr3_1) Terminating component type JsonBasicAttributeTest.CT.
+2020/Feb/20 17:51:47.151796 PARALLEL JsonBasicAttributeTest.ttcn:116(testcase:tc_attr3_1) Component type JsonBasicAttributeTest.CT was shut down inside testcase tc_attr3_1.
+2020/Feb/20 17:51:47.151808 TESTCASE JsonBasicAttributeTest.ttcn:116(testcase:tc_attr3_1) Test case tc_attr3_1 finished. Verdict: pass
+2020/Feb/20 17:51:47.151831 TESTCASE JsonBasicAttributeTest.ttcn:120(testcase:tc_attr4_0) Test case tc_attr4_0 started.
+2020/Feb/20 17:51:47.151852 PARALLEL JsonBasicAttributeTest.ttcn:120(testcase:tc_attr4_0) Initializing variables, timers and ports of component type JsonBasicAttributeTest.CT inside testcase tc_attr4_0.
+2020/Feb/20 17:51:47.151864 PARALLEL JsonBasicAttributeTest.ttcn:120(testcase:tc_attr4_0) Component type JsonBasicAttributeTest.CT was initialized.
+2020/Feb/20 17:51:47.151881 USER JsonBasicAttributeTest.ttcn:124(testcase:tc_attr4_0) '6E756C6C'O ("null")
+2020/Feb/20 17:51:47.151901 VERDICTOP JsonBasicAttributeTest.ttcn:125(testcase:tc_attr4_0) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.151911 PARALLEL JsonBasicAttributeTest.ttcn:125(testcase:tc_attr4_0) Terminating component type JsonBasicAttributeTest.CT.
+2020/Feb/20 17:51:47.151923 PARALLEL JsonBasicAttributeTest.ttcn:125(testcase:tc_attr4_0) Component type JsonBasicAttributeTest.CT was shut down inside testcase tc_attr4_0.
+2020/Feb/20 17:51:47.151934 TESTCASE JsonBasicAttributeTest.ttcn:125(testcase:tc_attr4_0) Test case tc_attr4_0 finished. Verdict: pass
+2020/Feb/20 17:51:47.151958 TESTCASE JsonBasicAttributeTest.ttcn:128(testcase:tc_attr4_1) Test case tc_attr4_1 started.
+2020/Feb/20 17:51:47.151979 PARALLEL JsonBasicAttributeTest.ttcn:128(testcase:tc_attr4_1) Initializing variables, timers and ports of component type JsonBasicAttributeTest.CT inside testcase tc_attr4_1.
+2020/Feb/20 17:51:47.151991 PARALLEL JsonBasicAttributeTest.ttcn:128(testcase:tc_attr4_1) Component type JsonBasicAttributeTest.CT was initialized.
+2020/Feb/20 17:51:47.152004 USER JsonBasicAttributeTest.ttcn:132(testcase:tc_attr4_1) { i := 1 }
+2020/Feb/20 17:51:47.152019 USER JsonBasicAttributeTest.ttcn:133(testcase:tc_attr4_1) '31'O ("1")
+2020/Feb/20 17:51:47.152034 VERDICTOP JsonBasicAttributeTest.ttcn:134(testcase:tc_attr4_1) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.152045 PARALLEL JsonBasicAttributeTest.ttcn:134(testcase:tc_attr4_1) Terminating component type JsonBasicAttributeTest.CT.
+2020/Feb/20 17:51:47.152057 PARALLEL JsonBasicAttributeTest.ttcn:134(testcase:tc_attr4_1) Component type JsonBasicAttributeTest.CT was shut down inside testcase tc_attr4_1.
+2020/Feb/20 17:51:47.152068 TESTCASE JsonBasicAttributeTest.ttcn:134(testcase:tc_attr4_1) Test case tc_attr4_1 finished. Verdict: pass
+2020/Feb/20 17:51:47.152091 STATISTICS JsonBasicAttributeTest.ttcn:146(controlpart:JsonBasicAttributeTest) Execution of control part in module JsonBasicAttributeTest finished.
+2020/Feb/20 17:51:47.152114 STATISTICS JsonBasicEncDecTest_bs.ttcn:934(controlpart:JsonBasicEncDecTest_bs) Execution of control part in module JsonBasicEncDecTest_bs started.
+2020/Feb/20 17:51:47.152139 TESTCASE JsonBasicEncDecTest_bs.ttcn:28(testcase:tc_jsonBasic_encdec_integer) Test case tc_jsonBasic_encdec_integer started.
+2020/Feb/20 17:51:47.152161 PARALLEL JsonBasicEncDecTest_bs.ttcn:28(testcase:tc_jsonBasic_encdec_integer) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_integer.
+2020/Feb/20 17:51:47.152173 PARALLEL JsonBasicEncDecTest_bs.ttcn:28(testcase:tc_jsonBasic_encdec_integer) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.152185 USER JsonBasicEncDecTest_bs.ttcn:33(testcase:tc_jsonBasic_encdec_integer) expected:'00110010'B
+2020/Feb/20 17:51:47.152201 DEBUG JsonBasicEncDecTest_bs.ttcn:34(testcase:tc_jsonBasic_encdec_integer) f_json_enc_i2bs(): Encoding integer: 2
+2020/Feb/20 17:51:47.152214 DEBUG JsonBasicEncDecTest_bs.ttcn:34(testcase:tc_jsonBasic_encdec_integer) f_json_enc_i2bs(): Stream after encoding: '00110010'B
+2020/Feb/20 17:51:47.152228 VERDICTOP JsonBasicEncDecTest_bs.ttcn:35(testcase:tc_jsonBasic_encdec_integer) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.152239 DEBUG JsonBasicEncDecTest_bs.ttcn:37(testcase:tc_jsonBasic_encdec_integer) f_json_enc_i2bs(): Encoding integer: 2
+2020/Feb/20 17:51:47.152251 DEBUG JsonBasicEncDecTest_bs.ttcn:37(testcase:tc_jsonBasic_encdec_integer) f_json_enc_i2bs(): Stream after encoding: '00110010'B
+2020/Feb/20 17:51:47.152263 VERDICTOP JsonBasicEncDecTest_bs.ttcn:38(testcase:tc_jsonBasic_encdec_integer) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.152279 VERDICTOP JsonBasicEncDecTest_bs.ttcn:42(testcase:tc_jsonBasic_encdec_integer) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.152293 DEBUG JsonBasicEncDecTest_bs.ttcn:45(testcase:tc_jsonBasic_encdec_integer) f_json_dec_bs2i(): Stream before decoding: '00110010'B
+2020/Feb/20 17:51:47.152310 DEBUG JsonBasicEncDecTest_bs.ttcn:45(testcase:tc_jsonBasic_encdec_integer) f_json_dec_bs2i(): Decoded integer: 2
+2020/Feb/20 17:51:47.152321 VERDICTOP JsonBasicEncDecTest_bs.ttcn:47(testcase:tc_jsonBasic_encdec_integer) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.152334 VERDICTOP JsonBasicEncDecTest_bs.ttcn:54(testcase:tc_jsonBasic_encdec_integer) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.152346 PARALLEL JsonBasicEncDecTest_bs.ttcn:54(testcase:tc_jsonBasic_encdec_integer) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.152357 PARALLEL JsonBasicEncDecTest_bs.ttcn:54(testcase:tc_jsonBasic_encdec_integer) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_integer.
+2020/Feb/20 17:51:47.152369 TESTCASE JsonBasicEncDecTest_bs.ttcn:54(testcase:tc_jsonBasic_encdec_integer) Test case tc_jsonBasic_encdec_integer finished. Verdict: pass
+2020/Feb/20 17:51:47.152393 TESTCASE JsonBasicEncDecTest_bs.ttcn:61(testcase:tc_jsonBasic_encdec_float1) Test case tc_jsonBasic_encdec_float1 started.
+2020/Feb/20 17:51:47.152416 PARALLEL JsonBasicEncDecTest_bs.ttcn:61(testcase:tc_jsonBasic_encdec_float1) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_float1.
+2020/Feb/20 17:51:47.152429 PARALLEL JsonBasicEncDecTest_bs.ttcn:61(testcase:tc_jsonBasic_encdec_float1) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.152441 USER JsonBasicEncDecTest_bs.ttcn:66(testcase:tc_jsonBasic_encdec_float1) expected:'0011001000101110001100000011000000110000001100000011000000110000'B
+2020/Feb/20 17:51:47.152487 DEBUG JsonBasicEncDecTest_bs.ttcn:67(testcase:tc_jsonBasic_encdec_float1) f_json_enc_f2bs(): Encoding float: 2.000000
+2020/Feb/20 17:51:47.152524 DEBUG JsonBasicEncDecTest_bs.ttcn:67(testcase:tc_jsonBasic_encdec_float1) f_json_enc_f2bs(): Stream after encoding: '0011001000101110001100000011000000110000001100000011000000110000'B
+2020/Feb/20 17:51:47.152542 VERDICTOP JsonBasicEncDecTest_bs.ttcn:68(testcase:tc_jsonBasic_encdec_float1) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.152554 DEBUG JsonBasicEncDecTest_bs.ttcn:70(testcase:tc_jsonBasic_encdec_float1) f_json_enc_f2bs(): Encoding float: 2.000000
+2020/Feb/20 17:51:47.152576 DEBUG JsonBasicEncDecTest_bs.ttcn:70(testcase:tc_jsonBasic_encdec_float1) f_json_enc_f2bs(): Stream after encoding: '0011001000101110001100000011000000110000001100000011000000110000'B
+2020/Feb/20 17:51:47.152593 VERDICTOP JsonBasicEncDecTest_bs.ttcn:71(testcase:tc_jsonBasic_encdec_float1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.152612 VERDICTOP JsonBasicEncDecTest_bs.ttcn:75(testcase:tc_jsonBasic_encdec_float1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.152623 DEBUG JsonBasicEncDecTest_bs.ttcn:78(testcase:tc_jsonBasic_encdec_float1) f_json_dec_bs2f(): Stream before decoding: '0011001000101110001100000011000000110000001100000011000000110000'B
+2020/Feb/20 17:51:47.152651 DEBUG JsonBasicEncDecTest_bs.ttcn:78(testcase:tc_jsonBasic_encdec_float1) f_json_dec_bs2f(): Decoded float: 2.000000
+2020/Feb/20 17:51:47.152668 VERDICTOP JsonBasicEncDecTest_bs.ttcn:80(testcase:tc_jsonBasic_encdec_float1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.152682 VERDICTOP JsonBasicEncDecTest_bs.ttcn:87(testcase:tc_jsonBasic_encdec_float1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.152693 PARALLEL JsonBasicEncDecTest_bs.ttcn:87(testcase:tc_jsonBasic_encdec_float1) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.152705 PARALLEL JsonBasicEncDecTest_bs.ttcn:87(testcase:tc_jsonBasic_encdec_float1) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_float1.
+2020/Feb/20 17:51:47.152717 TESTCASE JsonBasicEncDecTest_bs.ttcn:87(testcase:tc_jsonBasic_encdec_float1) Test case tc_jsonBasic_encdec_float1 finished. Verdict: pass
+2020/Feb/20 17:51:47.152741 TESTCASE JsonBasicEncDecTest_bs.ttcn:95(testcase:tc_jsonBasic_encdec_float2) Test case tc_jsonBasic_encdec_float2 started.
+2020/Feb/20 17:51:47.152763 PARALLEL JsonBasicEncDecTest_bs.ttcn:95(testcase:tc_jsonBasic_encdec_float2) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_float2.
+2020/Feb/20 17:51:47.152775 PARALLEL JsonBasicEncDecTest_bs.ttcn:95(testcase:tc_jsonBasic_encdec_float2) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.152787 USER JsonBasicEncDecTest_bs.ttcn:100(testcase:tc_jsonBasic_encdec_float2) expected:'00100010011010010110111001100110011010010110111001101001011101000111100100100010'B oct: '22696E66696E69747922'O ("\"infinity\"")
+2020/Feb/20 17:51:47.152859 DEBUG JsonBasicEncDecTest_bs.ttcn:101(testcase:tc_jsonBasic_encdec_float2) f_json_enc_f2bs(): Encoding float: infinity
+2020/Feb/20 17:51:47.152872 DEBUG JsonBasicEncDecTest_bs.ttcn:101(testcase:tc_jsonBasic_encdec_float2) f_json_enc_f2bs(): Stream after encoding: '00100010011010010110111001100110011010010110111001101001011101000111100100100010'B
+2020/Feb/20 17:51:47.152894 VERDICTOP JsonBasicEncDecTest_bs.ttcn:102(testcase:tc_jsonBasic_encdec_float2) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.152907 DEBUG JsonBasicEncDecTest_bs.ttcn:104(testcase:tc_jsonBasic_encdec_float2) f_json_enc_f2bs(): Encoding float: infinity
+2020/Feb/20 17:51:47.152920 DEBUG JsonBasicEncDecTest_bs.ttcn:104(testcase:tc_jsonBasic_encdec_float2) f_json_enc_f2bs(): Stream after encoding: '00100010011010010110111001100110011010010110111001101001011101000111100100100010'B
+2020/Feb/20 17:51:47.152939 VERDICTOP JsonBasicEncDecTest_bs.ttcn:105(testcase:tc_jsonBasic_encdec_float2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.152952 VERDICTOP JsonBasicEncDecTest_bs.ttcn:109(testcase:tc_jsonBasic_encdec_float2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.152964 DEBUG JsonBasicEncDecTest_bs.ttcn:112(testcase:tc_jsonBasic_encdec_float2) f_json_dec_bs2f(): Stream before decoding: '00100010011010010110111001100110011010010110111001101001011101000111100100100010'B
+2020/Feb/20 17:51:47.152984 DEBUG JsonBasicEncDecTest_bs.ttcn:112(testcase:tc_jsonBasic_encdec_float2) f_json_dec_bs2f(): Decoded float: infinity
+2020/Feb/20 17:51:47.152995 VERDICTOP JsonBasicEncDecTest_bs.ttcn:114(testcase:tc_jsonBasic_encdec_float2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153008 VERDICTOP JsonBasicEncDecTest_bs.ttcn:121(testcase:tc_jsonBasic_encdec_float2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153022 PARALLEL JsonBasicEncDecTest_bs.ttcn:121(testcase:tc_jsonBasic_encdec_float2) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.153035 PARALLEL JsonBasicEncDecTest_bs.ttcn:121(testcase:tc_jsonBasic_encdec_float2) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_float2.
+2020/Feb/20 17:51:47.153047 TESTCASE JsonBasicEncDecTest_bs.ttcn:121(testcase:tc_jsonBasic_encdec_float2) Test case tc_jsonBasic_encdec_float2 finished. Verdict: pass
+2020/Feb/20 17:51:47.153071 TESTCASE JsonBasicEncDecTest_bs.ttcn:127(testcase:tc_jsonBasic_encdec_float3) Test case tc_jsonBasic_encdec_float3 started.
+2020/Feb/20 17:51:47.153094 PARALLEL JsonBasicEncDecTest_bs.ttcn:127(testcase:tc_jsonBasic_encdec_float3) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_float3.
+2020/Feb/20 17:51:47.153106 PARALLEL JsonBasicEncDecTest_bs.ttcn:127(testcase:tc_jsonBasic_encdec_float3) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.153118 USER JsonBasicEncDecTest_bs.ttcn:132(testcase:tc_jsonBasic_encdec_float3) expected:'0010001000101101011010010110111001100110011010010110111001101001011101000111100100100010'B oct: '222D696E66696E69747922'O ("\"-infinity\"")
+2020/Feb/20 17:51:47.153195 DEBUG JsonBasicEncDecTest_bs.ttcn:133(testcase:tc_jsonBasic_encdec_float3) f_json_enc_f2bs(): Encoding float: -infinity
+2020/Feb/20 17:51:47.153207 DEBUG JsonBasicEncDecTest_bs.ttcn:133(testcase:tc_jsonBasic_encdec_float3) f_json_enc_f2bs(): Stream after encoding: '0010001000101101011010010110111001100110011010010110111001101001011101000111100100100010'B
+2020/Feb/20 17:51:47.153227 VERDICTOP JsonBasicEncDecTest_bs.ttcn:134(testcase:tc_jsonBasic_encdec_float3) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.153238 DEBUG JsonBasicEncDecTest_bs.ttcn:136(testcase:tc_jsonBasic_encdec_float3) f_json_enc_f2bs(): Encoding float: -infinity
+2020/Feb/20 17:51:47.153249 DEBUG JsonBasicEncDecTest_bs.ttcn:136(testcase:tc_jsonBasic_encdec_float3) f_json_enc_f2bs(): Stream after encoding: '0010001000101101011010010110111001100110011010010110111001101001011101000111100100100010'B
+2020/Feb/20 17:51:47.153269 VERDICTOP JsonBasicEncDecTest_bs.ttcn:137(testcase:tc_jsonBasic_encdec_float3) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153281 VERDICTOP JsonBasicEncDecTest_bs.ttcn:141(testcase:tc_jsonBasic_encdec_float3) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153294 DEBUG JsonBasicEncDecTest_bs.ttcn:144(testcase:tc_jsonBasic_encdec_float3) f_json_dec_bs2f(): Stream before decoding: '0010001000101101011010010110111001100110011010010110111001101001011101000111100100100010'B
+2020/Feb/20 17:51:47.153315 DEBUG JsonBasicEncDecTest_bs.ttcn:144(testcase:tc_jsonBasic_encdec_float3) f_json_dec_bs2f(): Decoded float: -infinity
+2020/Feb/20 17:51:47.153326 VERDICTOP JsonBasicEncDecTest_bs.ttcn:146(testcase:tc_jsonBasic_encdec_float3) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153339 VERDICTOP JsonBasicEncDecTest_bs.ttcn:153(testcase:tc_jsonBasic_encdec_float3) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153350 PARALLEL JsonBasicEncDecTest_bs.ttcn:153(testcase:tc_jsonBasic_encdec_float3) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.153362 PARALLEL JsonBasicEncDecTest_bs.ttcn:153(testcase:tc_jsonBasic_encdec_float3) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_float3.
+2020/Feb/20 17:51:47.153374 TESTCASE JsonBasicEncDecTest_bs.ttcn:153(testcase:tc_jsonBasic_encdec_float3) Test case tc_jsonBasic_encdec_float3 finished. Verdict: pass
+2020/Feb/20 17:51:47.153398 TESTCASE JsonBasicEncDecTest_bs.ttcn:159(testcase:tc_jsonBasic_encdec_float4) Test case tc_jsonBasic_encdec_float4 started.
+2020/Feb/20 17:51:47.153420 PARALLEL JsonBasicEncDecTest_bs.ttcn:159(testcase:tc_jsonBasic_encdec_float4) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_float4.
+2020/Feb/20 17:51:47.153432 PARALLEL JsonBasicEncDecTest_bs.ttcn:159(testcase:tc_jsonBasic_encdec_float4) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.153443 USER JsonBasicEncDecTest_bs.ttcn:164(testcase:tc_jsonBasic_encdec_float4) expected:'0010001001101110011011110111010001011111011000010101111101101110011101010110110101100010011001010111001000100010'B oct: '226E6F745F615F6E756D62657222'O ("\"not_a_number\"")
+2020/Feb/20 17:51:47.153536 DEBUG JsonBasicEncDecTest_bs.ttcn:165(testcase:tc_jsonBasic_encdec_float4) f_json_enc_f2bs(): Encoding float: not_a_number
+2020/Feb/20 17:51:47.153549 DEBUG JsonBasicEncDecTest_bs.ttcn:165(testcase:tc_jsonBasic_encdec_float4) f_json_enc_f2bs(): Stream after encoding: '0010001001101110011011110111010001011111011000010101111101101110011101010110110101100010011001010111001000100010'B
+2020/Feb/20 17:51:47.153571 VERDICTOP JsonBasicEncDecTest_bs.ttcn:166(testcase:tc_jsonBasic_encdec_float4) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.153583 DEBUG JsonBasicEncDecTest_bs.ttcn:168(testcase:tc_jsonBasic_encdec_float4) f_json_enc_f2bs(): Encoding float: not_a_number
+2020/Feb/20 17:51:47.153595 DEBUG JsonBasicEncDecTest_bs.ttcn:168(testcase:tc_jsonBasic_encdec_float4) f_json_enc_f2bs(): Stream after encoding: '0010001001101110011011110111010001011111011000010101111101101110011101010110110101100010011001010111001000100010'B
+2020/Feb/20 17:51:47.153617 VERDICTOP JsonBasicEncDecTest_bs.ttcn:169(testcase:tc_jsonBasic_encdec_float4) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153630 VERDICTOP JsonBasicEncDecTest_bs.ttcn:173(testcase:tc_jsonBasic_encdec_float4) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153641 DEBUG JsonBasicEncDecTest_bs.ttcn:176(testcase:tc_jsonBasic_encdec_float4) f_json_dec_bs2f(): Stream before decoding: '0010001001101110011011110111010001011111011000010101111101101110011101010110110101100010011001010111001000100010'B
+2020/Feb/20 17:51:47.153665 DEBUG JsonBasicEncDecTest_bs.ttcn:176(testcase:tc_jsonBasic_encdec_float4) f_json_dec_bs2f(): Decoded float: not_a_number
+2020/Feb/20 17:51:47.153676 VERDICTOP JsonBasicEncDecTest_bs.ttcn:178(testcase:tc_jsonBasic_encdec_float4) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153689 VERDICTOP JsonBasicEncDecTest_bs.ttcn:185(testcase:tc_jsonBasic_encdec_float4) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153704 PARALLEL JsonBasicEncDecTest_bs.ttcn:185(testcase:tc_jsonBasic_encdec_float4) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.153717 PARALLEL JsonBasicEncDecTest_bs.ttcn:185(testcase:tc_jsonBasic_encdec_float4) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_float4.
+2020/Feb/20 17:51:47.153730 TESTCASE JsonBasicEncDecTest_bs.ttcn:185(testcase:tc_jsonBasic_encdec_float4) Test case tc_jsonBasic_encdec_float4 finished. Verdict: pass
+2020/Feb/20 17:51:47.153754 TESTCASE JsonBasicEncDecTest_bs.ttcn:190(testcase:tc_jsonBasic_encdec_enum) Test case tc_jsonBasic_encdec_enum started.
+2020/Feb/20 17:51:47.153776 PARALLEL JsonBasicEncDecTest_bs.ttcn:190(testcase:tc_jsonBasic_encdec_enum) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_enum.
+2020/Feb/20 17:51:47.153789 PARALLEL JsonBasicEncDecTest_bs.ttcn:190(testcase:tc_jsonBasic_encdec_enum) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.153803 USER JsonBasicEncDecTest_bs.ttcn:195(testcase:tc_jsonBasic_encdec_enum) expected:'0010001001110011011001010110001101101111011011100110010000100010'B
+2020/Feb/20 17:51:47.153850 DEBUG JsonBasicEncDecTest_bs.ttcn:196(testcase:tc_jsonBasic_encdec_enum) f_json_enc_e2bs(): Encoding @JsonBasicTypes.E_json: second (1)
+2020/Feb/20 17:51:47.153868 DEBUG JsonBasicEncDecTest_bs.ttcn:196(testcase:tc_jsonBasic_encdec_enum) f_json_enc_e2bs(): Stream after encoding: '0010001001110011011001010110001101101111011011100110010000100010'B
+2020/Feb/20 17:51:47.153885 VERDICTOP JsonBasicEncDecTest_bs.ttcn:197(testcase:tc_jsonBasic_encdec_enum) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.153897 DEBUG JsonBasicEncDecTest_bs.ttcn:199(testcase:tc_jsonBasic_encdec_enum) f_json_enc_e2bs(): Encoding @JsonBasicTypes.E_json: second (1)
+2020/Feb/20 17:51:47.153909 DEBUG JsonBasicEncDecTest_bs.ttcn:199(testcase:tc_jsonBasic_encdec_enum) f_json_enc_e2bs(): Stream after encoding: '0010001001110011011001010110001101101111011011100110010000100010'B
+2020/Feb/20 17:51:47.153926 VERDICTOP JsonBasicEncDecTest_bs.ttcn:201(testcase:tc_jsonBasic_encdec_enum) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153939 VERDICTOP JsonBasicEncDecTest_bs.ttcn:208(testcase:tc_jsonBasic_encdec_enum) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153951 DEBUG JsonBasicEncDecTest_bs.ttcn:211(testcase:tc_jsonBasic_encdec_enum) f_json_dec_bs2e(): Stream before decoding: '0010001001110011011001010110001101101111011011100110010000100010'B
+2020/Feb/20 17:51:47.153970 DEBUG JsonBasicEncDecTest_bs.ttcn:211(testcase:tc_jsonBasic_encdec_enum) f_json_dec_bs2e(): Decoded @JsonBasicTypes.E_json: second (1)
+2020/Feb/20 17:51:47.153981 VERDICTOP JsonBasicEncDecTest_bs.ttcn:213(testcase:tc_jsonBasic_encdec_enum) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.153995 VERDICTOP JsonBasicEncDecTest_bs.ttcn:220(testcase:tc_jsonBasic_encdec_enum) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154007 PARALLEL JsonBasicEncDecTest_bs.ttcn:220(testcase:tc_jsonBasic_encdec_enum) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.154018 PARALLEL JsonBasicEncDecTest_bs.ttcn:220(testcase:tc_jsonBasic_encdec_enum) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_enum.
+2020/Feb/20 17:51:47.154031 TESTCASE JsonBasicEncDecTest_bs.ttcn:220(testcase:tc_jsonBasic_encdec_enum) Test case tc_jsonBasic_encdec_enum finished. Verdict: pass
+2020/Feb/20 17:51:47.154055 TESTCASE JsonBasicEncDecTest_bs.ttcn:227(testcase:tc_jsonBasic_encdec_bool1) Test case tc_jsonBasic_encdec_bool1 started.
+2020/Feb/20 17:51:47.154076 PARALLEL JsonBasicEncDecTest_bs.ttcn:227(testcase:tc_jsonBasic_encdec_bool1) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_bool1.
+2020/Feb/20 17:51:47.154090 PARALLEL JsonBasicEncDecTest_bs.ttcn:227(testcase:tc_jsonBasic_encdec_bool1) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.154102 USER JsonBasicEncDecTest_bs.ttcn:232(testcase:tc_jsonBasic_encdec_bool1) expected:'01110100011100100111010101100101'B
+2020/Feb/20 17:51:47.154132 DEBUG JsonBasicEncDecTest_bs.ttcn:233(testcase:tc_jsonBasic_encdec_bool1) f_json_enc_b2bs(): Encoding boolean: true
+2020/Feb/20 17:51:47.154146 DEBUG JsonBasicEncDecTest_bs.ttcn:233(testcase:tc_jsonBasic_encdec_bool1) f_json_enc_b2bs(): Stream after encoding: '01110100011100100111010101100101'B
+2020/Feb/20 17:51:47.154160 VERDICTOP JsonBasicEncDecTest_bs.ttcn:234(testcase:tc_jsonBasic_encdec_bool1) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.154171 DEBUG JsonBasicEncDecTest_bs.ttcn:236(testcase:tc_jsonBasic_encdec_bool1) f_json_enc_b2bs(): Encoding boolean: true
+2020/Feb/20 17:51:47.154183 DEBUG JsonBasicEncDecTest_bs.ttcn:236(testcase:tc_jsonBasic_encdec_bool1) f_json_enc_b2bs(): Stream after encoding: '01110100011100100111010101100101'B
+2020/Feb/20 17:51:47.154196 VERDICTOP JsonBasicEncDecTest_bs.ttcn:238(testcase:tc_jsonBasic_encdec_bool1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154209 VERDICTOP JsonBasicEncDecTest_bs.ttcn:245(testcase:tc_jsonBasic_encdec_bool1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154220 DEBUG JsonBasicEncDecTest_bs.ttcn:248(testcase:tc_jsonBasic_encdec_bool1) f_json_dec_bs2b(): Stream before decoding: '01110100011100100111010101100101'B
+2020/Feb/20 17:51:47.154235 DEBUG JsonBasicEncDecTest_bs.ttcn:248(testcase:tc_jsonBasic_encdec_bool1) f_json_dec_bs2b(): Decoded boolean: true
+2020/Feb/20 17:51:47.154245 VERDICTOP JsonBasicEncDecTest_bs.ttcn:250(testcase:tc_jsonBasic_encdec_bool1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154258 VERDICTOP JsonBasicEncDecTest_bs.ttcn:257(testcase:tc_jsonBasic_encdec_bool1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154269 PARALLEL JsonBasicEncDecTest_bs.ttcn:257(testcase:tc_jsonBasic_encdec_bool1) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.154281 PARALLEL JsonBasicEncDecTest_bs.ttcn:257(testcase:tc_jsonBasic_encdec_bool1) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_bool1.
+2020/Feb/20 17:51:47.154293 TESTCASE JsonBasicEncDecTest_bs.ttcn:257(testcase:tc_jsonBasic_encdec_bool1) Test case tc_jsonBasic_encdec_bool1 finished. Verdict: pass
+2020/Feb/20 17:51:47.154316 TESTCASE JsonBasicEncDecTest_bs.ttcn:264(testcase:tc_jsonBasic_encdec_bool2) Test case tc_jsonBasic_encdec_bool2 started.
+2020/Feb/20 17:51:47.154338 PARALLEL JsonBasicEncDecTest_bs.ttcn:264(testcase:tc_jsonBasic_encdec_bool2) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_bool2.
+2020/Feb/20 17:51:47.154350 PARALLEL JsonBasicEncDecTest_bs.ttcn:264(testcase:tc_jsonBasic_encdec_bool2) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.154362 USER JsonBasicEncDecTest_bs.ttcn:269(testcase:tc_jsonBasic_encdec_bool2) expected:'0110011001100001011011000111001101100101'B
+2020/Feb/20 17:51:47.154394 DEBUG JsonBasicEncDecTest_bs.ttcn:270(testcase:tc_jsonBasic_encdec_bool2) f_json_enc_b2bs(): Encoding boolean: false
+2020/Feb/20 17:51:47.154406 DEBUG JsonBasicEncDecTest_bs.ttcn:270(testcase:tc_jsonBasic_encdec_bool2) f_json_enc_b2bs(): Stream after encoding: '0110011001100001011011000111001101100101'B
+2020/Feb/20 17:51:47.154421 VERDICTOP JsonBasicEncDecTest_bs.ttcn:271(testcase:tc_jsonBasic_encdec_bool2) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.154432 DEBUG JsonBasicEncDecTest_bs.ttcn:273(testcase:tc_jsonBasic_encdec_bool2) f_json_enc_b2bs(): Encoding boolean: false
+2020/Feb/20 17:51:47.154443 DEBUG JsonBasicEncDecTest_bs.ttcn:273(testcase:tc_jsonBasic_encdec_bool2) f_json_enc_b2bs(): Stream after encoding: '0110011001100001011011000111001101100101'B
+2020/Feb/20 17:51:47.154460 VERDICTOP JsonBasicEncDecTest_bs.ttcn:275(testcase:tc_jsonBasic_encdec_bool2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154473 VERDICTOP JsonBasicEncDecTest_bs.ttcn:282(testcase:tc_jsonBasic_encdec_bool2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154485 DEBUG JsonBasicEncDecTest_bs.ttcn:285(testcase:tc_jsonBasic_encdec_bool2) f_json_dec_bs2b(): Stream before decoding: '0110011001100001011011000111001101100101'B
+2020/Feb/20 17:51:47.154500 DEBUG JsonBasicEncDecTest_bs.ttcn:285(testcase:tc_jsonBasic_encdec_bool2) f_json_dec_bs2b(): Decoded boolean: false
+2020/Feb/20 17:51:47.154511 VERDICTOP JsonBasicEncDecTest_bs.ttcn:287(testcase:tc_jsonBasic_encdec_bool2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154525 VERDICTOP JsonBasicEncDecTest_bs.ttcn:294(testcase:tc_jsonBasic_encdec_bool2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154537 PARALLEL JsonBasicEncDecTest_bs.ttcn:294(testcase:tc_jsonBasic_encdec_bool2) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.154549 PARALLEL JsonBasicEncDecTest_bs.ttcn:294(testcase:tc_jsonBasic_encdec_bool2) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_bool2.
+2020/Feb/20 17:51:47.154560 TESTCASE JsonBasicEncDecTest_bs.ttcn:294(testcase:tc_jsonBasic_encdec_bool2) Test case tc_jsonBasic_encdec_bool2 finished. Verdict: pass
+2020/Feb/20 17:51:47.154584 TESTCASE JsonBasicEncDecTest_bs.ttcn:300(testcase:tc_jsonBasic_encdec_bitstring) Test case tc_jsonBasic_encdec_bitstring started.
+2020/Feb/20 17:51:47.154606 PARALLEL JsonBasicEncDecTest_bs.ttcn:300(testcase:tc_jsonBasic_encdec_bitstring) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_bitstring.
+2020/Feb/20 17:51:47.154618 PARALLEL JsonBasicEncDecTest_bs.ttcn:300(testcase:tc_jsonBasic_encdec_bitstring) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.154630 USER JsonBasicEncDecTest_bs.ttcn:306(testcase:tc_jsonBasic_encdec_bitstring) expected:'001000100011000100100010'B
+2020/Feb/20 17:51:47.154655 DEBUG JsonBasicEncDecTest_bs.ttcn:307(testcase:tc_jsonBasic_encdec_bitstring) f_json_enc_bs2bs(): Encoding bitstring: '1'B
+2020/Feb/20 17:51:47.154670 DEBUG JsonBasicEncDecTest_bs.ttcn:307(testcase:tc_jsonBasic_encdec_bitstring) f_json_enc_bs2bs(): Stream after encoding: '001000100011000100100010'B
+2020/Feb/20 17:51:47.154684 VERDICTOP JsonBasicEncDecTest_bs.ttcn:308(testcase:tc_jsonBasic_encdec_bitstring) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.154695 DEBUG JsonBasicEncDecTest_bs.ttcn:310(testcase:tc_jsonBasic_encdec_bitstring) f_json_enc_bs2bs(): Encoding bitstring: '1'B
+2020/Feb/20 17:51:47.154707 DEBUG JsonBasicEncDecTest_bs.ttcn:310(testcase:tc_jsonBasic_encdec_bitstring) f_json_enc_bs2bs(): Stream after encoding: '001000100011000100100010'B
+2020/Feb/20 17:51:47.154720 VERDICTOP JsonBasicEncDecTest_bs.ttcn:311(testcase:tc_jsonBasic_encdec_bitstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154732 VERDICTOP JsonBasicEncDecTest_bs.ttcn:315(testcase:tc_jsonBasic_encdec_bitstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154744 DEBUG JsonBasicEncDecTest_bs.ttcn:318(testcase:tc_jsonBasic_encdec_bitstring) f_json_dec_bs2bs(): Stream before decoding: '001000100011000100100010'B
+2020/Feb/20 17:51:47.154758 DEBUG JsonBasicEncDecTest_bs.ttcn:318(testcase:tc_jsonBasic_encdec_bitstring) f_json_dec_bs2bs(): Decoded bitstring: '1'B
+2020/Feb/20 17:51:47.154769 VERDICTOP JsonBasicEncDecTest_bs.ttcn:320(testcase:tc_jsonBasic_encdec_bitstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154781 VERDICTOP JsonBasicEncDecTest_bs.ttcn:327(testcase:tc_jsonBasic_encdec_bitstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154796 PARALLEL JsonBasicEncDecTest_bs.ttcn:327(testcase:tc_jsonBasic_encdec_bitstring) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.154808 PARALLEL JsonBasicEncDecTest_bs.ttcn:327(testcase:tc_jsonBasic_encdec_bitstring) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_bitstring.
+2020/Feb/20 17:51:47.154820 TESTCASE JsonBasicEncDecTest_bs.ttcn:327(testcase:tc_jsonBasic_encdec_bitstring) Test case tc_jsonBasic_encdec_bitstring finished. Verdict: pass
+2020/Feb/20 17:51:47.154844 TESTCASE JsonBasicEncDecTest_bs.ttcn:333(testcase:tc_jsonBasic_encdec_charstring) Test case tc_jsonBasic_encdec_charstring started.
+2020/Feb/20 17:51:47.154866 PARALLEL JsonBasicEncDecTest_bs.ttcn:333(testcase:tc_jsonBasic_encdec_charstring) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_charstring.
+2020/Feb/20 17:51:47.154878 PARALLEL JsonBasicEncDecTest_bs.ttcn:333(testcase:tc_jsonBasic_encdec_charstring) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.154889 USER JsonBasicEncDecTest_bs.ttcn:338(testcase:tc_jsonBasic_encdec_charstring) expected:'001000100011000100100010'B
+2020/Feb/20 17:51:47.154916 DEBUG JsonBasicEncDecTest_bs.ttcn:339(testcase:tc_jsonBasic_encdec_charstring) f_json_enc_cs2bs(): Encoding charstring: "1"
+2020/Feb/20 17:51:47.154934 DEBUG JsonBasicEncDecTest_bs.ttcn:339(testcase:tc_jsonBasic_encdec_charstring) f_json_enc_cs2bs(): Stream after encoding: '001000100011000100100010'B
+2020/Feb/20 17:51:47.154947 VERDICTOP JsonBasicEncDecTest_bs.ttcn:340(testcase:tc_jsonBasic_encdec_charstring) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.154958 DEBUG JsonBasicEncDecTest_bs.ttcn:342(testcase:tc_jsonBasic_encdec_charstring) f_json_enc_cs2bs(): Encoding charstring: "1"
+2020/Feb/20 17:51:47.154970 DEBUG JsonBasicEncDecTest_bs.ttcn:342(testcase:tc_jsonBasic_encdec_charstring) f_json_enc_cs2bs(): Stream after encoding: '001000100011000100100010'B
+2020/Feb/20 17:51:47.154983 VERDICTOP JsonBasicEncDecTest_bs.ttcn:343(testcase:tc_jsonBasic_encdec_charstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.154996 VERDICTOP JsonBasicEncDecTest_bs.ttcn:347(testcase:tc_jsonBasic_encdec_charstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155009 DEBUG JsonBasicEncDecTest_bs.ttcn:350(testcase:tc_jsonBasic_encdec_charstring) f_json_dec_bs2cs(): Stream before decoding: '001000100011000100100010'B
+2020/Feb/20 17:51:47.155024 DEBUG JsonBasicEncDecTest_bs.ttcn:350(testcase:tc_jsonBasic_encdec_charstring) f_json_dec_bs2cs(): Decoded charstring: "1"
+2020/Feb/20 17:51:47.155035 VERDICTOP JsonBasicEncDecTest_bs.ttcn:352(testcase:tc_jsonBasic_encdec_charstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155046 USER JsonBasicEncDecTest_bs.ttcn:357(testcase:tc_jsonBasic_encdec_charstring) Encoded before decoding: '001000100011000100100010'B
+2020/Feb/20 17:51:47.155072 VERDICTOP JsonBasicEncDecTest_bs.ttcn:360(testcase:tc_jsonBasic_encdec_charstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155085 PARALLEL JsonBasicEncDecTest_bs.ttcn:360(testcase:tc_jsonBasic_encdec_charstring) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.155097 PARALLEL JsonBasicEncDecTest_bs.ttcn:360(testcase:tc_jsonBasic_encdec_charstring) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_charstring.
+2020/Feb/20 17:51:47.155109 TESTCASE JsonBasicEncDecTest_bs.ttcn:360(testcase:tc_jsonBasic_encdec_charstring) Test case tc_jsonBasic_encdec_charstring finished. Verdict: pass
+2020/Feb/20 17:51:47.155133 TESTCASE JsonBasicEncDecTest_bs.ttcn:366(testcase:tc_jsonBasic_encdec_hexstring) Test case tc_jsonBasic_encdec_hexstring started.
+2020/Feb/20 17:51:47.155155 PARALLEL JsonBasicEncDecTest_bs.ttcn:366(testcase:tc_jsonBasic_encdec_hexstring) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_hexstring.
+2020/Feb/20 17:51:47.155168 PARALLEL JsonBasicEncDecTest_bs.ttcn:366(testcase:tc_jsonBasic_encdec_hexstring) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.155181 USER JsonBasicEncDecTest_bs.ttcn:371(testcase:tc_jsonBasic_encdec_hexstring) expected:'001000100011000100100010'B
+2020/Feb/20 17:51:47.155205 DEBUG JsonBasicEncDecTest_bs.ttcn:372(testcase:tc_jsonBasic_encdec_hexstring) f_json_enc_hs2bs(): Encoding hexstring: '1'H
+2020/Feb/20 17:51:47.155225 DEBUG JsonBasicEncDecTest_bs.ttcn:372(testcase:tc_jsonBasic_encdec_hexstring) f_json_enc_hs2bs(): Stream after encoding: '001000100011000100100010'B
+2020/Feb/20 17:51:47.155238 VERDICTOP JsonBasicEncDecTest_bs.ttcn:373(testcase:tc_jsonBasic_encdec_hexstring) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.155249 DEBUG JsonBasicEncDecTest_bs.ttcn:375(testcase:tc_jsonBasic_encdec_hexstring) f_json_enc_hs2bs(): Encoding hexstring: '1'H
+2020/Feb/20 17:51:47.155261 DEBUG JsonBasicEncDecTest_bs.ttcn:375(testcase:tc_jsonBasic_encdec_hexstring) f_json_enc_hs2bs(): Stream after encoding: '001000100011000100100010'B
+2020/Feb/20 17:51:47.155274 VERDICTOP JsonBasicEncDecTest_bs.ttcn:376(testcase:tc_jsonBasic_encdec_hexstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155287 VERDICTOP JsonBasicEncDecTest_bs.ttcn:380(testcase:tc_jsonBasic_encdec_hexstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155298 DEBUG JsonBasicEncDecTest_bs.ttcn:383(testcase:tc_jsonBasic_encdec_hexstring) f_json_dec_bs2hs(): Stream before decoding: '001000100011000100100010'B
+2020/Feb/20 17:51:47.155315 DEBUG JsonBasicEncDecTest_bs.ttcn:383(testcase:tc_jsonBasic_encdec_hexstring) f_json_dec_bs2hs(): Decoded hexstring: '1'H
+2020/Feb/20 17:51:47.155326 VERDICTOP JsonBasicEncDecTest_bs.ttcn:385(testcase:tc_jsonBasic_encdec_hexstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155339 VERDICTOP JsonBasicEncDecTest_bs.ttcn:392(testcase:tc_jsonBasic_encdec_hexstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155350 PARALLEL JsonBasicEncDecTest_bs.ttcn:392(testcase:tc_jsonBasic_encdec_hexstring) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.155362 PARALLEL JsonBasicEncDecTest_bs.ttcn:392(testcase:tc_jsonBasic_encdec_hexstring) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_hexstring.
+2020/Feb/20 17:51:47.155373 TESTCASE JsonBasicEncDecTest_bs.ttcn:392(testcase:tc_jsonBasic_encdec_hexstring) Test case tc_jsonBasic_encdec_hexstring finished. Verdict: pass
+2020/Feb/20 17:51:47.155397 TESTCASE JsonBasicEncDecTest_bs.ttcn:398(testcase:tc_jsonBasic_encdec_octetstring) Test case tc_jsonBasic_encdec_octetstring started.
+2020/Feb/20 17:51:47.155419 PARALLEL JsonBasicEncDecTest_bs.ttcn:398(testcase:tc_jsonBasic_encdec_octetstring) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_octetstring.
+2020/Feb/20 17:51:47.155431 PARALLEL JsonBasicEncDecTest_bs.ttcn:398(testcase:tc_jsonBasic_encdec_octetstring) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.155443 USER JsonBasicEncDecTest_bs.ttcn:403(testcase:tc_jsonBasic_encdec_octetstring) expected:'00100010010001100011000100100010'B
+2020/Feb/20 17:51:47.155473 DEBUG JsonBasicEncDecTest_bs.ttcn:404(testcase:tc_jsonBasic_encdec_octetstring) f_json_enc_os2bs(): Encoding octetstring: 'F1'O
+2020/Feb/20 17:51:47.155491 DEBUG JsonBasicEncDecTest_bs.ttcn:404(testcase:tc_jsonBasic_encdec_octetstring) f_json_enc_os2bs(): Stream after encoding: '00100010010001100011000100100010'B
+2020/Feb/20 17:51:47.155505 VERDICTOP JsonBasicEncDecTest_bs.ttcn:405(testcase:tc_jsonBasic_encdec_octetstring) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.155516 DEBUG JsonBasicEncDecTest_bs.ttcn:407(testcase:tc_jsonBasic_encdec_octetstring) f_json_enc_os2bs(): Encoding octetstring: 'F1'O
+2020/Feb/20 17:51:47.155529 DEBUG JsonBasicEncDecTest_bs.ttcn:407(testcase:tc_jsonBasic_encdec_octetstring) f_json_enc_os2bs(): Stream after encoding: '00100010010001100011000100100010'B
+2020/Feb/20 17:51:47.155544 VERDICTOP JsonBasicEncDecTest_bs.ttcn:408(testcase:tc_jsonBasic_encdec_octetstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155557 VERDICTOP JsonBasicEncDecTest_bs.ttcn:412(testcase:tc_jsonBasic_encdec_octetstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155568 DEBUG JsonBasicEncDecTest_bs.ttcn:415(testcase:tc_jsonBasic_encdec_octetstring) f_json_dec_bs2os(): Stream before decoding: '00100010010001100011000100100010'B
+2020/Feb/20 17:51:47.155583 DEBUG JsonBasicEncDecTest_bs.ttcn:415(testcase:tc_jsonBasic_encdec_octetstring) f_json_dec_bs2os(): Decoded octetstring: 'F1'O
+2020/Feb/20 17:51:47.155594 VERDICTOP JsonBasicEncDecTest_bs.ttcn:417(testcase:tc_jsonBasic_encdec_octetstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155607 VERDICTOP JsonBasicEncDecTest_bs.ttcn:424(testcase:tc_jsonBasic_encdec_octetstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155618 PARALLEL JsonBasicEncDecTest_bs.ttcn:424(testcase:tc_jsonBasic_encdec_octetstring) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.155630 PARALLEL JsonBasicEncDecTest_bs.ttcn:424(testcase:tc_jsonBasic_encdec_octetstring) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_octetstring.
+2020/Feb/20 17:51:47.155642 TESTCASE JsonBasicEncDecTest_bs.ttcn:424(testcase:tc_jsonBasic_encdec_octetstring) Test case tc_jsonBasic_encdec_octetstring finished. Verdict: pass
+2020/Feb/20 17:51:47.155667 TESTCASE JsonBasicEncDecTest_bs.ttcn:430(testcase:tc_jsonBasic_encdec_ucharstring) Test case tc_jsonBasic_encdec_ucharstring started.
+2020/Feb/20 17:51:47.155689 PARALLEL JsonBasicEncDecTest_bs.ttcn:430(testcase:tc_jsonBasic_encdec_ucharstring) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_ucharstring.
+2020/Feb/20 17:51:47.155701 PARALLEL JsonBasicEncDecTest_bs.ttcn:430(testcase:tc_jsonBasic_encdec_ucharstring) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.155718 USER JsonBasicEncDecTest_bs.ttcn:436(testcase:tc_jsonBasic_encdec_ucharstring) expected:'001000100000000100100010'B
+2020/Feb/20 17:51:47.155743 DEBUG JsonBasicEncDecTest_bs.ttcn:437(testcase:tc_jsonBasic_encdec_ucharstring) f_json_enc_ucs2bs(): Encoding universal charstring: char(0, 0, 0, 1)
+2020/Feb/20 17:51:47.155763 DEBUG JsonBasicEncDecTest_bs.ttcn:437(testcase:tc_jsonBasic_encdec_ucharstring) f_json_enc_ucs2bs(): Stream after encoding: '001000100000000100100010'B
+2020/Feb/20 17:51:47.155777 VERDICTOP JsonBasicEncDecTest_bs.ttcn:441(testcase:tc_jsonBasic_encdec_ucharstring) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.155788 DEBUG JsonBasicEncDecTest_bs.ttcn:443(testcase:tc_jsonBasic_encdec_ucharstring) f_json_enc_ucs2bs(): Encoding universal charstring: char(0, 0, 0, 1)
+2020/Feb/20 17:51:47.155800 DEBUG JsonBasicEncDecTest_bs.ttcn:443(testcase:tc_jsonBasic_encdec_ucharstring) f_json_enc_ucs2bs(): Stream after encoding: '001000100000000100100010'B
+2020/Feb/20 17:51:47.155813 VERDICTOP JsonBasicEncDecTest_bs.ttcn:444(testcase:tc_jsonBasic_encdec_ucharstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155826 VERDICTOP JsonBasicEncDecTest_bs.ttcn:448(testcase:tc_jsonBasic_encdec_ucharstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155838 DEBUG JsonBasicEncDecTest_bs.ttcn:451(testcase:tc_jsonBasic_encdec_ucharstring) f_json_dec_bs2ucs(): Stream before decoding: '001000100000000100100010'B
+2020/Feb/20 17:51:47.155856 DEBUG JsonBasicEncDecTest_bs.ttcn:451(testcase:tc_jsonBasic_encdec_ucharstring) f_json_dec_bs2ucs(): Decoded universal charstring: char(0, 0, 0, 1)
+2020/Feb/20 17:51:47.155879 VERDICTOP JsonBasicEncDecTest_bs.ttcn:453(testcase:tc_jsonBasic_encdec_ucharstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155894 VERDICTOP JsonBasicEncDecTest_bs.ttcn:460(testcase:tc_jsonBasic_encdec_ucharstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.155906 PARALLEL JsonBasicEncDecTest_bs.ttcn:460(testcase:tc_jsonBasic_encdec_ucharstring) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.155917 PARALLEL JsonBasicEncDecTest_bs.ttcn:460(testcase:tc_jsonBasic_encdec_ucharstring) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_ucharstring.
+2020/Feb/20 17:51:47.155929 TESTCASE JsonBasicEncDecTest_bs.ttcn:460(testcase:tc_jsonBasic_encdec_ucharstring) Test case tc_jsonBasic_encdec_ucharstring finished. Verdict: pass
+2020/Feb/20 17:51:47.155953 TESTCASE JsonBasicEncDecTest_bs.ttcn:509(testcase:tc_jsonBasic_encdec_record) Test case tc_jsonBasic_encdec_record started.
+2020/Feb/20 17:51:47.155975 PARALLEL JsonBasicEncDecTest_bs.ttcn:509(testcase:tc_jsonBasic_encdec_record) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_record.
+2020/Feb/20 17:51:47.155987 PARALLEL JsonBasicEncDecTest_bs.ttcn:509(testcase:tc_jsonBasic_encdec_record) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.156003 USER JsonBasicEncDecTest_bs.ttcn:530(testcase:tc_jsonBasic_encdec_record) expected:'011110110010001001101001001000100011101000110001001011000010001001100010011100110010001000111010001000100011000100100010001011000010001001100011011100110010001000111010001000100011000100100010001011000010001001101000011100110010001000111010001000100011000100100010001011000010001001101111011100110010001000111010001000100011000000110001001000100010110000100010011101010110001101110011001000100011101000100010000000010010001000101100001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.156275 DEBUG JsonBasicEncDecTest_bs.ttcn:531(testcase:tc_jsonBasic_encdec_record) f_json_enc_r2bs(): Encoding @JsonBasicTypes.R_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.156306 DEBUG JsonBasicEncDecTest_bs.ttcn:531(testcase:tc_jsonBasic_encdec_record) f_json_enc_r2bs(): Stream after encoding: '011110110010001001101001001000100011101000110001001011000010001001100010011100110010001000111010001000100011000100100010001011000010001001100011011100110010001000111010001000100011000100100010001011000010001001101000011100110010001000111010001000100011000100100010001011000010001001101111011100110010001000111010001000100011000000110001001000100010110000100010011101010110001101110011001000100011101000100010000000010010001000101100001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.156369 USER JsonBasicEncDecTest_bs.ttcn:532(testcase:tc_jsonBasic_encdec_record) '011110110010001001101001001000100011101000110001001011000010001001100010011100110010001000111010001000100011000100100010001011000010001001100011011100110010001000111010001000100011000100100010001011000010001001101000011100110010001000111010001000100011000100100010001011000010001001101111011100110010001000111010001000100011000000110001001000100010110000100010011101010110001101110011001000100011101000100010000000010010001000101100001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.156639 USER JsonBasicEncDecTest_bs.ttcn:533(testcase:tc_jsonBasic_encdec_record) '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.156718 USER JsonBasicEncDecTest_bs.ttcn:534(testcase:tc_jsonBasic_encdec_record) "{\"i\":1,\"bs\":\"1\",\"cs\":\"1\",\"hs\":\"1\",\"os\":\"01\",\"ucs\":\"" & char(0, 0, 0, 1) & "\",\"e\":\"first\"}"
+2020/Feb/20 17:51:47.156737 VERDICTOP JsonBasicEncDecTest_bs.ttcn:535(testcase:tc_jsonBasic_encdec_record) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.156751 DEBUG JsonBasicEncDecTest_bs.ttcn:537(testcase:tc_jsonBasic_encdec_record) f_json_enc_r2bs(): Encoding @JsonBasicTypes.R_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.156775 DEBUG JsonBasicEncDecTest_bs.ttcn:537(testcase:tc_jsonBasic_encdec_record) f_json_enc_r2bs(): Stream after encoding: '011110110010001001101001001000100011101000110001001011000010001001100010011100110010001000111010001000100011000100100010001011000010001001100011011100110010001000111010001000100011000100100010001011000010001001101000011100110010001000111010001000100011000100100010001011000010001001101111011100110010001000111010001000100011000000110001001000100010110000100010011101010110001101110011001000100011101000100010000000010010001000101100001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.156836 USER JsonBasicEncDecTest_bs.ttcn:538(testcase:tc_jsonBasic_encdec_record) '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.156914 VERDICTOP JsonBasicEncDecTest_bs.ttcn:540(testcase:tc_jsonBasic_encdec_record) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.156936 VERDICTOP JsonBasicEncDecTest_bs.ttcn:547(testcase:tc_jsonBasic_encdec_record) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.156948 DEBUG JsonBasicEncDecTest_bs.ttcn:550(testcase:tc_jsonBasic_encdec_record) f_json_dec_bs2r(): Stream before decoding: '011110110010001001101001001000100011101000110001001011000010001001100010011100110010001000111010001000100011000100100010001011000010001001100011011100110010001000111010001000100011000100100010001011000010001001101000011100110010001000111010001000100011000100100010001011000010001001101111011100110010001000111010001000100011000000110001001000100010110000100010011101010110001101110011001000100011101000100010000000010010001000101100001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.157018 DEBUG JsonBasicEncDecTest_bs.ttcn:550(testcase:tc_jsonBasic_encdec_record) f_json_dec_bs2r(): Decoded @JsonBasicTypes.R_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.157034 VERDICTOP JsonBasicEncDecTest_bs.ttcn:552(testcase:tc_jsonBasic_encdec_record) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.157051 VERDICTOP JsonBasicEncDecTest_bs.ttcn:559(testcase:tc_jsonBasic_encdec_record) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.157063 PARALLEL JsonBasicEncDecTest_bs.ttcn:559(testcase:tc_jsonBasic_encdec_record) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.157075 PARALLEL JsonBasicEncDecTest_bs.ttcn:559(testcase:tc_jsonBasic_encdec_record) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_record.
+2020/Feb/20 17:51:47.157087 TESTCASE JsonBasicEncDecTest_bs.ttcn:559(testcase:tc_jsonBasic_encdec_record) Test case tc_jsonBasic_encdec_record finished. Verdict: pass
+2020/Feb/20 17:51:47.157112 TESTCASE JsonBasicEncDecTest_bs.ttcn:565(testcase:tc_jsonBasic_encdec_set) Test case tc_jsonBasic_encdec_set started.
+2020/Feb/20 17:51:47.157134 PARALLEL JsonBasicEncDecTest_bs.ttcn:565(testcase:tc_jsonBasic_encdec_set) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_set.
+2020/Feb/20 17:51:47.157147 PARALLEL JsonBasicEncDecTest_bs.ttcn:565(testcase:tc_jsonBasic_encdec_set) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.157163 USER JsonBasicEncDecTest_bs.ttcn:586(testcase:tc_jsonBasic_encdec_set) expected:'011110110010001001101001001000100011101000110001001011000010001001100010011100110010001000111010001000100011000100100010001011000010001001100011011100110010001000111010001000100011000100100010001011000010001001101000011100110010001000111010001000100011000100100010001011000010001001101111011100110010001000111010001000100011000000110001001000100010110000100010011101010110001101110011001000100011101000100010000000010010001000101100001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.157432 DEBUG JsonBasicEncDecTest_bs.ttcn:587(testcase:tc_jsonBasic_encdec_set) f_json_enc_s2bs(): Encoding @JsonBasicTypes.S_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.157465 DEBUG JsonBasicEncDecTest_bs.ttcn:587(testcase:tc_jsonBasic_encdec_set) f_json_enc_s2bs(): Stream after encoding: '011110110010001001101001001000100011101000110001001011000010001001100010011100110010001000111010001000100011000100100010001011000010001001100011011100110010001000111010001000100011000100100010001011000010001001101000011100110010001000111010001000100011000100100010001011000010001001101111011100110010001000111010001000100011000000110001001000100010110000100010011101010110001101110011001000100011101000100010000000010010001000101100001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.157528 VERDICTOP JsonBasicEncDecTest_bs.ttcn:591(testcase:tc_jsonBasic_encdec_set) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.157540 DEBUG JsonBasicEncDecTest_bs.ttcn:593(testcase:tc_jsonBasic_encdec_set) f_json_enc_s2bs(): Encoding @JsonBasicTypes.S_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.157562 DEBUG JsonBasicEncDecTest_bs.ttcn:593(testcase:tc_jsonBasic_encdec_set) f_json_enc_s2bs(): Stream after encoding: '011110110010001001101001001000100011101000110001001011000010001001100010011100110010001000111010001000100011000100100010001011000010001001100011011100110010001000111010001000100011000100100010001011000010001001101000011100110010001000111010001000100011000100100010001011000010001001101111011100110010001000111010001000100011000000110001001000100010110000100010011101010110001101110011001000100011101000100010000000010010001000101100001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.157624 USER JsonBasicEncDecTest_bs.ttcn:594(testcase:tc_jsonBasic_encdec_set) '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.157704 VERDICTOP JsonBasicEncDecTest_bs.ttcn:595(testcase:tc_jsonBasic_encdec_set) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.157723 VERDICTOP JsonBasicEncDecTest_bs.ttcn:599(testcase:tc_jsonBasic_encdec_set) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.157737 DEBUG JsonBasicEncDecTest_bs.ttcn:602(testcase:tc_jsonBasic_encdec_set) f_json_dec_bs2s(): Stream before decoding: '011110110010001001101001001000100011101000110001001011000010001001100010011100110010001000111010001000100011000100100010001011000010001001100011011100110010001000111010001000100011000100100010001011000010001001101000011100110010001000111010001000100011000100100010001011000010001001101111011100110010001000111010001000100011000000110001001000100010110000100010011101010110001101110011001000100011101000100010000000010010001000101100001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.157802 DEBUG JsonBasicEncDecTest_bs.ttcn:602(testcase:tc_jsonBasic_encdec_set) f_json_dec_bs2s(): Decoded @JsonBasicTypes.S_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.157819 VERDICTOP JsonBasicEncDecTest_bs.ttcn:604(testcase:tc_jsonBasic_encdec_set) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.157836 VERDICTOP JsonBasicEncDecTest_bs.ttcn:611(testcase:tc_jsonBasic_encdec_set) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.157849 PARALLEL JsonBasicEncDecTest_bs.ttcn:611(testcase:tc_jsonBasic_encdec_set) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.157861 PARALLEL JsonBasicEncDecTest_bs.ttcn:611(testcase:tc_jsonBasic_encdec_set) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_set.
+2020/Feb/20 17:51:47.157873 TESTCASE JsonBasicEncDecTest_bs.ttcn:611(testcase:tc_jsonBasic_encdec_set) Test case tc_jsonBasic_encdec_set finished. Verdict: pass
+2020/Feb/20 17:51:47.157900 TESTCASE JsonBasicEncDecTest_bs.ttcn:657(testcase:tc_jsonBasic_encdec_roi1) Test case tc_jsonBasic_encdec_roi1 started.
+2020/Feb/20 17:51:47.157923 PARALLEL JsonBasicEncDecTest_bs.ttcn:657(testcase:tc_jsonBasic_encdec_roi1) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_roi1.
+2020/Feb/20 17:51:47.157935 PARALLEL JsonBasicEncDecTest_bs.ttcn:657(testcase:tc_jsonBasic_encdec_roi1) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.157950 USER JsonBasicEncDecTest_bs.ttcn:662(testcase:tc_jsonBasic_encdec_roi1) expected:'0101101101011101'B
+2020/Feb/20 17:51:47.157971 DEBUG JsonBasicEncDecTest_bs.ttcn:663(testcase:tc_jsonBasic_encdec_roi1) f_json_enc_roi2bs(): Encoding @JsonBasicTypes.RoI_json: { }
+2020/Feb/20 17:51:47.157996 DEBUG JsonBasicEncDecTest_bs.ttcn:663(testcase:tc_jsonBasic_encdec_roi1) f_json_enc_roi2bs(): Stream after encoding: '0101101101011101'B
+2020/Feb/20 17:51:47.158009 USER JsonBasicEncDecTest_bs.ttcn:664(testcase:tc_jsonBasic_encdec_roi1) '0101101101011101'B
+2020/Feb/20 17:51:47.158028 USER JsonBasicEncDecTest_bs.ttcn:665(testcase:tc_jsonBasic_encdec_roi1) '5B5D'O ("[]")
+2020/Feb/20 17:51:47.158044 USER JsonBasicEncDecTest_bs.ttcn:666(testcase:tc_jsonBasic_encdec_roi1) "[]"
+2020/Feb/20 17:51:47.158056 VERDICTOP JsonBasicEncDecTest_bs.ttcn:667(testcase:tc_jsonBasic_encdec_roi1) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.158067 DEBUG JsonBasicEncDecTest_bs.ttcn:669(testcase:tc_jsonBasic_encdec_roi1) f_json_enc_roi2bs(): Encoding @JsonBasicTypes.RoI_json: { }
+2020/Feb/20 17:51:47.158079 DEBUG JsonBasicEncDecTest_bs.ttcn:669(testcase:tc_jsonBasic_encdec_roi1) f_json_enc_roi2bs(): Stream after encoding: '0101101101011101'B
+2020/Feb/20 17:51:47.158094 USER JsonBasicEncDecTest_bs.ttcn:670(testcase:tc_jsonBasic_encdec_roi1) '5B5D'O ("[]")
+2020/Feb/20 17:51:47.158110 VERDICTOP JsonBasicEncDecTest_bs.ttcn:671(testcase:tc_jsonBasic_encdec_roi1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.158123 VERDICTOP JsonBasicEncDecTest_bs.ttcn:675(testcase:tc_jsonBasic_encdec_roi1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.158134 DEBUG JsonBasicEncDecTest_bs.ttcn:678(testcase:tc_jsonBasic_encdec_roi1) f_json_dec_bs2roi(): Stream before decoding: '0101101101011101'B
+2020/Feb/20 17:51:47.158153 DEBUG JsonBasicEncDecTest_bs.ttcn:678(testcase:tc_jsonBasic_encdec_roi1) f_json_dec_bs2roi(): Decoded @JsonBasicTypes.RoI_json: { }
+2020/Feb/20 17:51:47.158164 VERDICTOP JsonBasicEncDecTest_bs.ttcn:680(testcase:tc_jsonBasic_encdec_roi1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.158177 VERDICTOP JsonBasicEncDecTest_bs.ttcn:687(testcase:tc_jsonBasic_encdec_roi1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.158189 PARALLEL JsonBasicEncDecTest_bs.ttcn:687(testcase:tc_jsonBasic_encdec_roi1) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.158200 PARALLEL JsonBasicEncDecTest_bs.ttcn:687(testcase:tc_jsonBasic_encdec_roi1) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_roi1.
+2020/Feb/20 17:51:47.158213 TESTCASE JsonBasicEncDecTest_bs.ttcn:687(testcase:tc_jsonBasic_encdec_roi1) Test case tc_jsonBasic_encdec_roi1 finished. Verdict: pass
+2020/Feb/20 17:51:47.158239 TESTCASE JsonBasicEncDecTest_bs.ttcn:693(testcase:tc_jsonBasic_encdec_roi2) Test case tc_jsonBasic_encdec_roi2 started.
+2020/Feb/20 17:51:47.158261 PARALLEL JsonBasicEncDecTest_bs.ttcn:693(testcase:tc_jsonBasic_encdec_roi2) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_roi2.
+2020/Feb/20 17:51:47.158273 PARALLEL JsonBasicEncDecTest_bs.ttcn:693(testcase:tc_jsonBasic_encdec_roi2) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.158288 USER JsonBasicEncDecTest_bs.ttcn:698(testcase:tc_jsonBasic_encdec_roi2) expected:'0101101100110000001011000011000100101100001110010010110000110001001100000010110000110001001100100011001100110100001101010011011000110111001110000011100100101100001011010011000100101100001011010011000100110010001100110011010000110101001101100011011100111000001110010011000000110001001100100011001101011101'B
+2020/Feb/20 17:51:47.158450 DEBUG JsonBasicEncDecTest_bs.ttcn:699(testcase:tc_jsonBasic_encdec_roi2) f_json_enc_roi2bs(): Encoding @JsonBasicTypes.RoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.158487 DEBUG JsonBasicEncDecTest_bs.ttcn:699(testcase:tc_jsonBasic_encdec_roi2) f_json_enc_roi2bs(): Stream after encoding: '0101101100110000001011000011000100101100001110010010110000110001001100000010110000110001001100100011001100110100001101010011011000110111001110000011100100101100001011010011000100101100001011010011000100110010001100110011010000110101001101100011011100111000001110010011000000110001001100100011001101011101'B
+2020/Feb/20 17:51:47.158529 USER JsonBasicEncDecTest_bs.ttcn:700(testcase:tc_jsonBasic_encdec_roi2) '0101101100110000001011000011000100101100001110010010110000110001001100000010110000110001001100100011001100110100001101010011011000110111001110000011100100101100001011010011000100101100001011010011000100110010001100110011010000110101001101100011011100111000001110010011000000110001001100100011001101011101'B
+2020/Feb/20 17:51:47.158689 USER JsonBasicEncDecTest_bs.ttcn:701(testcase:tc_jsonBasic_encdec_roi2) '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.158761 USER JsonBasicEncDecTest_bs.ttcn:702(testcase:tc_jsonBasic_encdec_roi2) "[0,1,9,10,123456789,-1,-1234567890123]"
+2020/Feb/20 17:51:47.158776 VERDICTOP JsonBasicEncDecTest_bs.ttcn:703(testcase:tc_jsonBasic_encdec_roi2) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.158787 DEBUG JsonBasicEncDecTest_bs.ttcn:705(testcase:tc_jsonBasic_encdec_roi2) f_json_enc_roi2bs(): Encoding @JsonBasicTypes.RoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.158810 DEBUG JsonBasicEncDecTest_bs.ttcn:705(testcase:tc_jsonBasic_encdec_roi2) f_json_enc_roi2bs(): Stream after encoding: '0101101100110000001011000011000100101100001110010010110000110001001100000010110000110001001100100011001100110100001101010011011000110111001110000011100100101100001011010011000100101100001011010011000100110010001100110011010000110101001101100011011100111000001110010011000000110001001100100011001101011101'B
+2020/Feb/20 17:51:47.158849 USER JsonBasicEncDecTest_bs.ttcn:706(testcase:tc_jsonBasic_encdec_roi2) '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.158920 VERDICTOP JsonBasicEncDecTest_bs.ttcn:707(testcase:tc_jsonBasic_encdec_roi2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.158938 VERDICTOP JsonBasicEncDecTest_bs.ttcn:711(testcase:tc_jsonBasic_encdec_roi2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.158949 DEBUG JsonBasicEncDecTest_bs.ttcn:714(testcase:tc_jsonBasic_encdec_roi2) f_json_dec_bs2roi(): Stream before decoding: '0101101100110000001011000011000100101100001110010010110000110001001100000010110000110001001100100011001100110100001101010011011000110111001110000011100100101100001011010011000100101100001011010011000100110010001100110011010000110101001101100011011100111000001110010011000000110001001100100011001101011101'B
+2020/Feb/20 17:51:47.158998 DEBUG JsonBasicEncDecTest_bs.ttcn:714(testcase:tc_jsonBasic_encdec_roi2) f_json_dec_bs2roi(): Decoded @JsonBasicTypes.RoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.159016 VERDICTOP JsonBasicEncDecTest_bs.ttcn:716(testcase:tc_jsonBasic_encdec_roi2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.159037 VERDICTOP JsonBasicEncDecTest_bs.ttcn:723(testcase:tc_jsonBasic_encdec_roi2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.159051 PARALLEL JsonBasicEncDecTest_bs.ttcn:723(testcase:tc_jsonBasic_encdec_roi2) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.159063 PARALLEL JsonBasicEncDecTest_bs.ttcn:723(testcase:tc_jsonBasic_encdec_roi2) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_roi2.
+2020/Feb/20 17:51:47.159075 TESTCASE JsonBasicEncDecTest_bs.ttcn:723(testcase:tc_jsonBasic_encdec_roi2) Test case tc_jsonBasic_encdec_roi2 finished. Verdict: pass
+2020/Feb/20 17:51:47.159102 TESTCASE JsonBasicEncDecTest_bs.ttcn:730(testcase:tc_jsonBasic_encdec_soi1) Test case tc_jsonBasic_encdec_soi1 started.
+2020/Feb/20 17:51:47.159125 PARALLEL JsonBasicEncDecTest_bs.ttcn:730(testcase:tc_jsonBasic_encdec_soi1) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_soi1.
+2020/Feb/20 17:51:47.159137 PARALLEL JsonBasicEncDecTest_bs.ttcn:730(testcase:tc_jsonBasic_encdec_soi1) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.159152 USER JsonBasicEncDecTest_bs.ttcn:735(testcase:tc_jsonBasic_encdec_soi1) expected:'0101101101011101'B
+2020/Feb/20 17:51:47.159173 DEBUG JsonBasicEncDecTest_bs.ttcn:736(testcase:tc_jsonBasic_encdec_soi1) f_json_enc_soi2bs(): Encoding @JsonBasicTypes.SoI_json: { }
+2020/Feb/20 17:51:47.159191 DEBUG JsonBasicEncDecTest_bs.ttcn:736(testcase:tc_jsonBasic_encdec_soi1) f_json_enc_soi2bs(): Stream after encoding: '0101101101011101'B
+2020/Feb/20 17:51:47.159204 USER JsonBasicEncDecTest_bs.ttcn:737(testcase:tc_jsonBasic_encdec_soi1) '0101101101011101'B
+2020/Feb/20 17:51:47.159224 USER JsonBasicEncDecTest_bs.ttcn:738(testcase:tc_jsonBasic_encdec_soi1) '5B5D'O ("[]")
+2020/Feb/20 17:51:47.159240 USER JsonBasicEncDecTest_bs.ttcn:739(testcase:tc_jsonBasic_encdec_soi1) "[]"
+2020/Feb/20 17:51:47.159251 VERDICTOP JsonBasicEncDecTest_bs.ttcn:740(testcase:tc_jsonBasic_encdec_soi1) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.159262 DEBUG JsonBasicEncDecTest_bs.ttcn:742(testcase:tc_jsonBasic_encdec_soi1) f_json_enc_soi2bs(): Encoding @JsonBasicTypes.SoI_json: { }
+2020/Feb/20 17:51:47.159275 DEBUG JsonBasicEncDecTest_bs.ttcn:742(testcase:tc_jsonBasic_encdec_soi1) f_json_enc_soi2bs(): Stream after encoding: '0101101101011101'B
+2020/Feb/20 17:51:47.159287 USER JsonBasicEncDecTest_bs.ttcn:743(testcase:tc_jsonBasic_encdec_soi1) '5B5D'O ("[]")
+2020/Feb/20 17:51:47.159303 VERDICTOP JsonBasicEncDecTest_bs.ttcn:744(testcase:tc_jsonBasic_encdec_soi1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.159316 VERDICTOP JsonBasicEncDecTest_bs.ttcn:748(testcase:tc_jsonBasic_encdec_soi1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.159327 DEBUG JsonBasicEncDecTest_bs.ttcn:751(testcase:tc_jsonBasic_encdec_soi1) f_json_dec_bs2soi(): Stream before decoding: '0101101101011101'B
+2020/Feb/20 17:51:47.159341 DEBUG JsonBasicEncDecTest_bs.ttcn:751(testcase:tc_jsonBasic_encdec_soi1) f_json_dec_bs2soi(): Decoded @JsonBasicTypes.SoI_json: { }
+2020/Feb/20 17:51:47.159352 VERDICTOP JsonBasicEncDecTest_bs.ttcn:753(testcase:tc_jsonBasic_encdec_soi1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.159365 VERDICTOP JsonBasicEncDecTest_bs.ttcn:760(testcase:tc_jsonBasic_encdec_soi1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.159377 PARALLEL JsonBasicEncDecTest_bs.ttcn:760(testcase:tc_jsonBasic_encdec_soi1) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.159390 PARALLEL JsonBasicEncDecTest_bs.ttcn:760(testcase:tc_jsonBasic_encdec_soi1) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_soi1.
+2020/Feb/20 17:51:47.159402 TESTCASE JsonBasicEncDecTest_bs.ttcn:760(testcase:tc_jsonBasic_encdec_soi1) Test case tc_jsonBasic_encdec_soi1 finished. Verdict: pass
+2020/Feb/20 17:51:47.159426 TESTCASE JsonBasicEncDecTest_bs.ttcn:766(testcase:tc_jsonBasic_encdec_soi2) Test case tc_jsonBasic_encdec_soi2 started.
+2020/Feb/20 17:51:47.159449 PARALLEL JsonBasicEncDecTest_bs.ttcn:766(testcase:tc_jsonBasic_encdec_soi2) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_soi2.
+2020/Feb/20 17:51:47.159462 PARALLEL JsonBasicEncDecTest_bs.ttcn:766(testcase:tc_jsonBasic_encdec_soi2) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.159475 USER JsonBasicEncDecTest_bs.ttcn:771(testcase:tc_jsonBasic_encdec_soi2) expected:'010110110011000001011101'B
+2020/Feb/20 17:51:47.159499 DEBUG JsonBasicEncDecTest_bs.ttcn:772(testcase:tc_jsonBasic_encdec_soi2) f_json_enc_soi2bs(): Encoding @JsonBasicTypes.SoI_json: { 0 }
+2020/Feb/20 17:51:47.159512 DEBUG JsonBasicEncDecTest_bs.ttcn:772(testcase:tc_jsonBasic_encdec_soi2) f_json_enc_soi2bs(): Stream after encoding: '010110110011000001011101'B
+2020/Feb/20 17:51:47.159525 USER JsonBasicEncDecTest_bs.ttcn:773(testcase:tc_jsonBasic_encdec_soi2) '010110110011000001011101'B
+2020/Feb/20 17:51:47.159549 USER JsonBasicEncDecTest_bs.ttcn:774(testcase:tc_jsonBasic_encdec_soi2) '5B305D'O ("[0]")
+2020/Feb/20 17:51:47.159566 USER JsonBasicEncDecTest_bs.ttcn:775(testcase:tc_jsonBasic_encdec_soi2) "[0]"
+2020/Feb/20 17:51:47.159578 VERDICTOP JsonBasicEncDecTest_bs.ttcn:776(testcase:tc_jsonBasic_encdec_soi2) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.159589 DEBUG JsonBasicEncDecTest_bs.ttcn:778(testcase:tc_jsonBasic_encdec_soi2) f_json_enc_soi2bs(): Encoding @JsonBasicTypes.SoI_json: { 0 }
+2020/Feb/20 17:51:47.159602 DEBUG JsonBasicEncDecTest_bs.ttcn:778(testcase:tc_jsonBasic_encdec_soi2) f_json_enc_soi2bs(): Stream after encoding: '010110110011000001011101'B
+2020/Feb/20 17:51:47.159615 USER JsonBasicEncDecTest_bs.ttcn:779(testcase:tc_jsonBasic_encdec_soi2) '5B305D'O ("[0]")
+2020/Feb/20 17:51:47.159635 VERDICTOP JsonBasicEncDecTest_bs.ttcn:780(testcase:tc_jsonBasic_encdec_soi2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.159648 VERDICTOP JsonBasicEncDecTest_bs.ttcn:784(testcase:tc_jsonBasic_encdec_soi2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.159660 DEBUG JsonBasicEncDecTest_bs.ttcn:787(testcase:tc_jsonBasic_encdec_soi2) f_json_dec_bs2soi(): Stream before decoding: '010110110011000001011101'B
+2020/Feb/20 17:51:47.159675 DEBUG JsonBasicEncDecTest_bs.ttcn:787(testcase:tc_jsonBasic_encdec_soi2) f_json_dec_bs2soi(): Decoded @JsonBasicTypes.SoI_json: { 0 }
+2020/Feb/20 17:51:47.159687 VERDICTOP JsonBasicEncDecTest_bs.ttcn:789(testcase:tc_jsonBasic_encdec_soi2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.159701 VERDICTOP JsonBasicEncDecTest_bs.ttcn:796(testcase:tc_jsonBasic_encdec_soi2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.159713 PARALLEL JsonBasicEncDecTest_bs.ttcn:796(testcase:tc_jsonBasic_encdec_soi2) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.159725 PARALLEL JsonBasicEncDecTest_bs.ttcn:796(testcase:tc_jsonBasic_encdec_soi2) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_soi2.
+2020/Feb/20 17:51:47.159737 TESTCASE JsonBasicEncDecTest_bs.ttcn:796(testcase:tc_jsonBasic_encdec_soi2) Test case tc_jsonBasic_encdec_soi2 finished. Verdict: pass
+2020/Feb/20 17:51:47.159764 TESTCASE JsonBasicEncDecTest_bs.ttcn:803(testcase:tc_jsonBasic_encdec_soi3) Test case tc_jsonBasic_encdec_soi3 started.
+2020/Feb/20 17:51:47.159787 PARALLEL JsonBasicEncDecTest_bs.ttcn:803(testcase:tc_jsonBasic_encdec_soi3) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_soi3.
+2020/Feb/20 17:51:47.159799 PARALLEL JsonBasicEncDecTest_bs.ttcn:803(testcase:tc_jsonBasic_encdec_soi3) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.159814 USER JsonBasicEncDecTest_bs.ttcn:808(testcase:tc_jsonBasic_encdec_soi3) expected:'0101101100110000001011000011000100101100001110010010110000110001001100000010110000110001001100100011001100110100001101010011011000110111001110000011100100101100001011010011000100101100001011010011000100110010001100110011010000110101001101100011011100111000001110010011000000110001001100100011001101011101'B
+2020/Feb/20 17:51:47.159976 DEBUG JsonBasicEncDecTest_bs.ttcn:809(testcase:tc_jsonBasic_encdec_soi3) f_json_enc_soi2bs(): Encoding @JsonBasicTypes.SoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.160000 DEBUG JsonBasicEncDecTest_bs.ttcn:809(testcase:tc_jsonBasic_encdec_soi3) f_json_enc_soi2bs(): Stream after encoding: '0101101100110000001011000011000100101100001110010010110000110001001100000010110000110001001100100011001100110100001101010011011000110111001110000011100100101100001011010011000100101100001011010011000100110010001100110011010000110101001101100011011100111000001110010011000000110001001100100011001101011101'B
+2020/Feb/20 17:51:47.160042 USER JsonBasicEncDecTest_bs.ttcn:810(testcase:tc_jsonBasic_encdec_soi3) '0101101100110000001011000011000100101100001110010010110000110001001100000010110000110001001100100011001100110100001101010011011000110111001110000011100100101100001011010011000100101100001011010011000100110010001100110011010000110101001101100011011100111000001110010011000000110001001100100011001101011101'B
+2020/Feb/20 17:51:47.160202 USER JsonBasicEncDecTest_bs.ttcn:811(testcase:tc_jsonBasic_encdec_soi3) '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.160274 USER JsonBasicEncDecTest_bs.ttcn:812(testcase:tc_jsonBasic_encdec_soi3) "[0,1,9,10,123456789,-1,-1234567890123]"
+2020/Feb/20 17:51:47.160288 VERDICTOP JsonBasicEncDecTest_bs.ttcn:813(testcase:tc_jsonBasic_encdec_soi3) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.160299 DEBUG JsonBasicEncDecTest_bs.ttcn:815(testcase:tc_jsonBasic_encdec_soi3) f_json_enc_soi2bs(): Encoding @JsonBasicTypes.SoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.160321 DEBUG JsonBasicEncDecTest_bs.ttcn:815(testcase:tc_jsonBasic_encdec_soi3) f_json_enc_soi2bs(): Stream after encoding: '0101101100110000001011000011000100101100001110010010110000110001001100000010110000110001001100100011001100110100001101010011011000110111001110000011100100101100001011010011000100101100001011010011000100110010001100110011010000110101001101100011011100111000001110010011000000110001001100100011001101011101'B
+2020/Feb/20 17:51:47.160360 USER JsonBasicEncDecTest_bs.ttcn:816(testcase:tc_jsonBasic_encdec_soi3) '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.160431 VERDICTOP JsonBasicEncDecTest_bs.ttcn:817(testcase:tc_jsonBasic_encdec_soi3) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.160450 VERDICTOP JsonBasicEncDecTest_bs.ttcn:821(testcase:tc_jsonBasic_encdec_soi3) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.160461 DEBUG JsonBasicEncDecTest_bs.ttcn:824(testcase:tc_jsonBasic_encdec_soi3) f_json_dec_bs2soi(): Stream before decoding: '0101101100110000001011000011000100101100001110010010110000110001001100000010110000110001001100100011001100110100001101010011011000110111001110000011100100101100001011010011000100101100001011010011000100110010001100110011010000110101001101100011011100111000001110010011000000110001001100100011001101011101'B
+2020/Feb/20 17:51:47.160510 DEBUG JsonBasicEncDecTest_bs.ttcn:824(testcase:tc_jsonBasic_encdec_soi3) f_json_dec_bs2soi(): Decoded @JsonBasicTypes.SoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.160528 VERDICTOP JsonBasicEncDecTest_bs.ttcn:826(testcase:tc_jsonBasic_encdec_soi3) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.160548 VERDICTOP JsonBasicEncDecTest_bs.ttcn:833(testcase:tc_jsonBasic_encdec_soi3) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.160563 PARALLEL JsonBasicEncDecTest_bs.ttcn:833(testcase:tc_jsonBasic_encdec_soi3) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.160575 PARALLEL JsonBasicEncDecTest_bs.ttcn:833(testcase:tc_jsonBasic_encdec_soi3) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_soi3.
+2020/Feb/20 17:51:47.160587 TESTCASE JsonBasicEncDecTest_bs.ttcn:833(testcase:tc_jsonBasic_encdec_soi3) Test case tc_jsonBasic_encdec_soi3 finished. Verdict: pass
+2020/Feb/20 17:51:47.160614 TESTCASE JsonBasicEncDecTest_bs.ttcn:841(testcase:tc_jsonBasic_encdec_union_const) Test case tc_jsonBasic_encdec_union_const started.
+2020/Feb/20 17:51:47.160636 PARALLEL JsonBasicEncDecTest_bs.ttcn:841(testcase:tc_jsonBasic_encdec_union_const) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_union_const.
+2020/Feb/20 17:51:47.160649 PARALLEL JsonBasicEncDecTest_bs.ttcn:841(testcase:tc_jsonBasic_encdec_union_const) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.160663 USER JsonBasicEncDecTest_bs.ttcn:845(testcase:tc_jsonBasic_encdec_union_const) expected:'01111011001000100110100100100010001110100011000101111101'B
+2020/Feb/20 17:51:47.160705 DEBUG JsonBasicEncDecTest_bs.ttcn:846(testcase:tc_jsonBasic_encdec_union_const) f_json_enc_u2bs(): Encoding @JsonBasicTypes.U_json: { i := 1 }
+2020/Feb/20 17:51:47.160725 DEBUG JsonBasicEncDecTest_bs.ttcn:846(testcase:tc_jsonBasic_encdec_union_const) f_json_enc_u2bs(): Stream after encoding: '01111011001000100110100100100010001110100011000101111101'B
+2020/Feb/20 17:51:47.160744 VERDICTOP JsonBasicEncDecTest_bs.ttcn:850(testcase:tc_jsonBasic_encdec_union_const) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.160756 PARALLEL JsonBasicEncDecTest_bs.ttcn:850(testcase:tc_jsonBasic_encdec_union_const) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.160768 PARALLEL JsonBasicEncDecTest_bs.ttcn:850(testcase:tc_jsonBasic_encdec_union_const) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_union_const.
+2020/Feb/20 17:51:47.160779 TESTCASE JsonBasicEncDecTest_bs.ttcn:850(testcase:tc_jsonBasic_encdec_union_const) Test case tc_jsonBasic_encdec_union_const finished. Verdict: pass
+2020/Feb/20 17:51:47.160804 TESTCASE JsonBasicEncDecTest_bs.ttcn:860(testcase:tc_jsonBasic_encdec_union) Test case tc_jsonBasic_encdec_union started.
+2020/Feb/20 17:51:47.160826 PARALLEL JsonBasicEncDecTest_bs.ttcn:860(testcase:tc_jsonBasic_encdec_union) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_union.
+2020/Feb/20 17:51:47.160838 PARALLEL JsonBasicEncDecTest_bs.ttcn:860(testcase:tc_jsonBasic_encdec_union) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.160862 USER JsonBasicEncDecTest_bs.ttcn:885(testcase:tc_jsonBasic_encdec_union) expected:'01111011001000100110100100100010001110100011000101111101'B
+2020/Feb/20 17:51:47.160903 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Encoding @JsonBasicTypes.U_json: { i := 1 }
+2020/Feb/20 17:51:47.160918 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Stream after encoding: '01111011001000100110100100100010001110100011000101111101'B
+2020/Feb/20 17:51:47.160937 USER JsonBasicEncDecTest_bs.ttcn:887(testcase:tc_jsonBasic_encdec_union) '01111011001000100110100100100010001110100011000101111101'B
+2020/Feb/20 17:51:47.160978 USER JsonBasicEncDecTest_bs.ttcn:888(testcase:tc_jsonBasic_encdec_union) '7B2269223A317D'O ("{\"i\":1}")
+2020/Feb/20 17:51:47.161002 USER JsonBasicEncDecTest_bs.ttcn:889(testcase:tc_jsonBasic_encdec_union) "{\"i\":1}"
+2020/Feb/20 17:51:47.161015 VERDICTOP JsonBasicEncDecTest_bs.ttcn:890(testcase:tc_jsonBasic_encdec_union) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.161029 VERDICTOP JsonBasicEncDecTest_bs.ttcn:894(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161040 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Stream before decoding: '01111011001000100110100100100010001110100011000101111101'B
+2020/Feb/20 17:51:47.161061 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Decoded @JsonBasicTypes.U_json: { i := 1 }
+2020/Feb/20 17:51:47.161073 VERDICTOP JsonBasicEncDecTest_bs.ttcn:899(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161087 VERDICTOP JsonBasicEncDecTest_bs.ttcn:906(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161099 USER JsonBasicEncDecTest_bs.ttcn:885(testcase:tc_jsonBasic_encdec_union) expected:'01111011001000100110001001110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161151 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Encoding @JsonBasicTypes.U_json: { bs := '1'B }
+2020/Feb/20 17:51:47.161165 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Stream after encoding: '01111011001000100110001001110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161184 USER JsonBasicEncDecTest_bs.ttcn:887(testcase:tc_jsonBasic_encdec_union) '01111011001000100110001001110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161236 USER JsonBasicEncDecTest_bs.ttcn:888(testcase:tc_jsonBasic_encdec_union) '7B226273223A2231227D'O ("{\"bs\":\"1\"}")
+2020/Feb/20 17:51:47.161266 USER JsonBasicEncDecTest_bs.ttcn:889(testcase:tc_jsonBasic_encdec_union) "{\"bs\":\"1\"}"
+2020/Feb/20 17:51:47.161278 VERDICTOP JsonBasicEncDecTest_bs.ttcn:890(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161293 VERDICTOP JsonBasicEncDecTest_bs.ttcn:894(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161304 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Stream before decoding: '01111011001000100110001001110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161325 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Decoded @JsonBasicTypes.U_json: { bs := '1'B }
+2020/Feb/20 17:51:47.161337 VERDICTOP JsonBasicEncDecTest_bs.ttcn:899(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161350 VERDICTOP JsonBasicEncDecTest_bs.ttcn:906(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161362 USER JsonBasicEncDecTest_bs.ttcn:885(testcase:tc_jsonBasic_encdec_union) expected:'01111011001000100110001101110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161415 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Encoding @JsonBasicTypes.U_json: { cs := "1" }
+2020/Feb/20 17:51:47.161429 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Stream after encoding: '01111011001000100110001101110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161451 USER JsonBasicEncDecTest_bs.ttcn:887(testcase:tc_jsonBasic_encdec_union) '01111011001000100110001101110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161503 USER JsonBasicEncDecTest_bs.ttcn:888(testcase:tc_jsonBasic_encdec_union) '7B226373223A2231227D'O ("{\"cs\":\"1\"}")
+2020/Feb/20 17:51:47.161533 USER JsonBasicEncDecTest_bs.ttcn:889(testcase:tc_jsonBasic_encdec_union) "{\"cs\":\"1\"}"
+2020/Feb/20 17:51:47.161546 VERDICTOP JsonBasicEncDecTest_bs.ttcn:890(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161560 VERDICTOP JsonBasicEncDecTest_bs.ttcn:894(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161572 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Stream before decoding: '01111011001000100110001101110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161593 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Decoded @JsonBasicTypes.U_json: { cs := "1" }
+2020/Feb/20 17:51:47.161604 VERDICTOP JsonBasicEncDecTest_bs.ttcn:899(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161618 VERDICTOP JsonBasicEncDecTest_bs.ttcn:906(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161629 USER JsonBasicEncDecTest_bs.ttcn:885(testcase:tc_jsonBasic_encdec_union) expected:'01111011001000100110100001110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161681 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Encoding @JsonBasicTypes.U_json: { hs := '1'H }
+2020/Feb/20 17:51:47.161695 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Stream after encoding: '01111011001000100110100001110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161715 USER JsonBasicEncDecTest_bs.ttcn:887(testcase:tc_jsonBasic_encdec_union) '01111011001000100110100001110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161766 USER JsonBasicEncDecTest_bs.ttcn:888(testcase:tc_jsonBasic_encdec_union) '7B226873223A2231227D'O ("{\"hs\":\"1\"}")
+2020/Feb/20 17:51:47.161794 USER JsonBasicEncDecTest_bs.ttcn:889(testcase:tc_jsonBasic_encdec_union) "{\"hs\":\"1\"}"
+2020/Feb/20 17:51:47.161807 VERDICTOP JsonBasicEncDecTest_bs.ttcn:890(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161821 VERDICTOP JsonBasicEncDecTest_bs.ttcn:894(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161832 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Stream before decoding: '01111011001000100110100001110011001000100011101000100010001100010010001001111101'B
+2020/Feb/20 17:51:47.161853 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Decoded @JsonBasicTypes.U_json: { hs := '1'H }
+2020/Feb/20 17:51:47.161864 VERDICTOP JsonBasicEncDecTest_bs.ttcn:899(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161878 VERDICTOP JsonBasicEncDecTest_bs.ttcn:906(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.161890 USER JsonBasicEncDecTest_bs.ttcn:885(testcase:tc_jsonBasic_encdec_union) expected:'0111101100100010011011110111001100100010001110100010001000110000001100010010001001111101'B
+2020/Feb/20 17:51:47.161945 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Encoding @JsonBasicTypes.U_json: { os := '01'O }
+2020/Feb/20 17:51:47.161959 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Stream after encoding: '0111101100100010011011110111001100100010001110100010001000110000001100010010001001111101'B
+2020/Feb/20 17:51:47.161982 USER JsonBasicEncDecTest_bs.ttcn:887(testcase:tc_jsonBasic_encdec_union) '0111101100100010011011110111001100100010001110100010001000110000001100010010001001111101'B
+2020/Feb/20 17:51:47.162037 USER JsonBasicEncDecTest_bs.ttcn:888(testcase:tc_jsonBasic_encdec_union) '7B226F73223A223031227D'O ("{\"os\":\"01\"}")
+2020/Feb/20 17:51:47.162068 USER JsonBasicEncDecTest_bs.ttcn:889(testcase:tc_jsonBasic_encdec_union) "{\"os\":\"01\"}"
+2020/Feb/20 17:51:47.162081 VERDICTOP JsonBasicEncDecTest_bs.ttcn:890(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162095 VERDICTOP JsonBasicEncDecTest_bs.ttcn:894(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162107 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Stream before decoding: '0111101100100010011011110111001100100010001110100010001000110000001100010010001001111101'B
+2020/Feb/20 17:51:47.162128 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Decoded @JsonBasicTypes.U_json: { os := '01'O }
+2020/Feb/20 17:51:47.162140 VERDICTOP JsonBasicEncDecTest_bs.ttcn:899(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162154 VERDICTOP JsonBasicEncDecTest_bs.ttcn:906(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162165 USER JsonBasicEncDecTest_bs.ttcn:885(testcase:tc_jsonBasic_encdec_union) expected:'0111101100100010011101010110001101110011001000100011101000100010000000010010001001111101'B
+2020/Feb/20 17:51:47.162221 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Encoding @JsonBasicTypes.U_json: { ucs := char(0, 0, 0, 1) }
+2020/Feb/20 17:51:47.162236 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Stream after encoding: '0111101100100010011101010110001101110011001000100011101000100010000000010010001001111101'B
+2020/Feb/20 17:51:47.162256 USER JsonBasicEncDecTest_bs.ttcn:887(testcase:tc_jsonBasic_encdec_union) '0111101100100010011101010110001101110011001000100011101000100010000000010010001001111101'B
+2020/Feb/20 17:51:47.162311 USER JsonBasicEncDecTest_bs.ttcn:888(testcase:tc_jsonBasic_encdec_union) '7B22756373223A2201227D'O
+2020/Feb/20 17:51:47.162334 USER JsonBasicEncDecTest_bs.ttcn:889(testcase:tc_jsonBasic_encdec_union) "{\"ucs\":\"" & char(0, 0, 0, 1) & "\"}"
+2020/Feb/20 17:51:47.162348 VERDICTOP JsonBasicEncDecTest_bs.ttcn:890(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162362 VERDICTOP JsonBasicEncDecTest_bs.ttcn:894(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162374 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Stream before decoding: '0111101100100010011101010110001101110011001000100011101000100010000000010010001001111101'B
+2020/Feb/20 17:51:47.162395 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Decoded @JsonBasicTypes.U_json: { ucs := char(0, 0, 0, 1) }
+2020/Feb/20 17:51:47.162407 VERDICTOP JsonBasicEncDecTest_bs.ttcn:899(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162421 VERDICTOP JsonBasicEncDecTest_bs.ttcn:906(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162434 USER JsonBasicEncDecTest_bs.ttcn:885(testcase:tc_jsonBasic_encdec_union) expected:'01111011001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.162498 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Encoding @JsonBasicTypes.U_json: { e := first (0) }
+2020/Feb/20 17:51:47.162513 DEBUG JsonBasicEncDecTest_bs.ttcn:886(testcase:tc_jsonBasic_encdec_union) f_json_enc_u2bs(): Stream after encoding: '01111011001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.162537 USER JsonBasicEncDecTest_bs.ttcn:887(testcase:tc_jsonBasic_encdec_union) '01111011001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.162600 USER JsonBasicEncDecTest_bs.ttcn:888(testcase:tc_jsonBasic_encdec_union) '7B2265223A226669727374227D'O ("{\"e\":\"first\"}")
+2020/Feb/20 17:51:47.162633 USER JsonBasicEncDecTest_bs.ttcn:889(testcase:tc_jsonBasic_encdec_union) "{\"e\":\"first\"}"
+2020/Feb/20 17:51:47.162646 VERDICTOP JsonBasicEncDecTest_bs.ttcn:890(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162660 VERDICTOP JsonBasicEncDecTest_bs.ttcn:894(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162671 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Stream before decoding: '01111011001000100110010100100010001110100010001001100110011010010111001001110011011101000010001001111101'B
+2020/Feb/20 17:51:47.162695 DEBUG JsonBasicEncDecTest_bs.ttcn:897(testcase:tc_jsonBasic_encdec_union) f_json_dec_bs2u(): Decoded @JsonBasicTypes.U_json: { e := first (0) }
+2020/Feb/20 17:51:47.162707 VERDICTOP JsonBasicEncDecTest_bs.ttcn:899(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162720 VERDICTOP JsonBasicEncDecTest_bs.ttcn:906(testcase:tc_jsonBasic_encdec_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.162735 PARALLEL JsonBasicEncDecTest_bs.ttcn:884(testcase:tc_jsonBasic_encdec_union) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.162747 PARALLEL JsonBasicEncDecTest_bs.ttcn:884(testcase:tc_jsonBasic_encdec_union) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_union.
+2020/Feb/20 17:51:47.162760 TESTCASE JsonBasicEncDecTest_bs.ttcn:884(testcase:tc_jsonBasic_encdec_union) Test case tc_jsonBasic_encdec_union finished. Verdict: pass
+2020/Feb/20 17:51:47.162785 TESTCASE JsonBasicEncDecTest_bs.ttcn:920(testcase:tc_jsonBasic_encdec_anytype_i) Test case tc_jsonBasic_encdec_anytype_i started.
+2020/Feb/20 17:51:47.162808 PARALLEL JsonBasicEncDecTest_bs.ttcn:920(testcase:tc_jsonBasic_encdec_anytype_i) Initializing variables, timers and ports of component type JsonBasicEncDecTest_bs.CT inside testcase tc_jsonBasic_encdec_anytype_i.
+2020/Feb/20 17:51:47.162820 PARALLEL JsonBasicEncDecTest_bs.ttcn:920(testcase:tc_jsonBasic_encdec_anytype_i) Component type JsonBasicEncDecTest_bs.CT was initialized.
+2020/Feb/20 17:51:47.162835 USER JsonBasicEncDecTest_bs.ttcn:922(testcase:tc_jsonBasic_encdec_anytype_i) { I := 1 }
+2020/Feb/20 17:51:47.162855 VERDICTOP JsonBasicEncDecTest_bs.ttcn:927(testcase:tc_jsonBasic_encdec_anytype_i) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.162867 PARALLEL JsonBasicEncDecTest_bs.ttcn:927(testcase:tc_jsonBasic_encdec_anytype_i) Terminating component type JsonBasicEncDecTest_bs.CT.
+2020/Feb/20 17:51:47.162879 PARALLEL JsonBasicEncDecTest_bs.ttcn:927(testcase:tc_jsonBasic_encdec_anytype_i) Component type JsonBasicEncDecTest_bs.CT was shut down inside testcase tc_jsonBasic_encdec_anytype_i.
+2020/Feb/20 17:51:47.162891 TESTCASE JsonBasicEncDecTest_bs.ttcn:927(testcase:tc_jsonBasic_encdec_anytype_i) Test case tc_jsonBasic_encdec_anytype_i finished. Verdict: pass
+2020/Feb/20 17:51:47.162914 STATISTICS JsonBasicEncDecTest_bs.ttcn:960(controlpart:JsonBasicEncDecTest_bs) Execution of control part in module JsonBasicEncDecTest_bs finished.
+2020/Feb/20 17:51:47.162939 STATISTICS JsonBasicEncDecTest_os.ttcn:535(controlpart:JsonBasicEncDecTest_os) Execution of control part in module JsonBasicEncDecTest_os started.
+2020/Feb/20 17:51:47.162966 TESTCASE JsonBasicEncDecTest_os.ttcn:28(testcase:tc_jsonBasic_encdec_os_integer) Test case tc_jsonBasic_encdec_os_integer started.
+2020/Feb/20 17:51:47.162989 PARALLEL JsonBasicEncDecTest_os.ttcn:28(testcase:tc_jsonBasic_encdec_os_integer) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_integer.
+2020/Feb/20 17:51:47.163002 PARALLEL JsonBasicEncDecTest_os.ttcn:28(testcase:tc_jsonBasic_encdec_os_integer) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.163014 USER JsonBasicEncDecTest_os.ttcn:33(testcase:tc_jsonBasic_encdec_os_integer) expected:'323334'O ("234")
+2020/Feb/20 17:51:47.163032 DEBUG JsonBasicEncDecTest_os.ttcn:34(testcase:tc_jsonBasic_encdec_os_integer) f_json_enc_i2os(): Encoding integer: 234
+2020/Feb/20 17:51:47.163045 DEBUG JsonBasicEncDecTest_os.ttcn:34(testcase:tc_jsonBasic_encdec_os_integer) f_json_enc_i2os(): Stream after encoding: '323334'O ("234")
+2020/Feb/20 17:51:47.163060 VERDICTOP JsonBasicEncDecTest_os.ttcn:35(testcase:tc_jsonBasic_encdec_os_integer) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.163072 DEBUG JsonBasicEncDecTest_os.ttcn:37(testcase:tc_jsonBasic_encdec_os_integer) f_json_enc_i2os(): Encoding integer: 234
+2020/Feb/20 17:51:47.163085 DEBUG JsonBasicEncDecTest_os.ttcn:37(testcase:tc_jsonBasic_encdec_os_integer) f_json_enc_i2os(): Stream after encoding: '323334'O ("234")
+2020/Feb/20 17:51:47.163096 VERDICTOP JsonBasicEncDecTest_os.ttcn:38(testcase:tc_jsonBasic_encdec_os_integer) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.163108 DEBUG JsonBasicEncDecTest_os.ttcn:41(testcase:tc_jsonBasic_encdec_os_integer) f_json_dec_os2i(): Stream before decoding: '323334'O ("234")
+2020/Feb/20 17:51:47.163122 DEBUG JsonBasicEncDecTest_os.ttcn:41(testcase:tc_jsonBasic_encdec_os_integer) f_json_dec_os2i(): Decoded integer: 234
+2020/Feb/20 17:51:47.163133 VERDICTOP JsonBasicEncDecTest_os.ttcn:43(testcase:tc_jsonBasic_encdec_os_integer) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.163145 PARALLEL JsonBasicEncDecTest_os.ttcn:43(testcase:tc_jsonBasic_encdec_os_integer) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.163156 PARALLEL JsonBasicEncDecTest_os.ttcn:43(testcase:tc_jsonBasic_encdec_os_integer) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_integer.
+2020/Feb/20 17:51:47.163168 TESTCASE JsonBasicEncDecTest_os.ttcn:43(testcase:tc_jsonBasic_encdec_os_integer) Test case tc_jsonBasic_encdec_os_integer finished. Verdict: pass
+2020/Feb/20 17:51:47.163192 TESTCASE JsonBasicEncDecTest_os.ttcn:60(testcase:tc_jsonBasic_encdec_os_float) Test case tc_jsonBasic_encdec_os_float started.
+2020/Feb/20 17:51:47.163214 PARALLEL JsonBasicEncDecTest_os.ttcn:60(testcase:tc_jsonBasic_encdec_os_float) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_float.
+2020/Feb/20 17:51:47.163227 PARALLEL JsonBasicEncDecTest_os.ttcn:60(testcase:tc_jsonBasic_encdec_os_float) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.163239 USER JsonBasicEncDecTest_os.ttcn:66(testcase:tc_jsonBasic_encdec_os_float) expected:'322E303030303030'O ("2.000000")
+2020/Feb/20 17:51:47.163265 DEBUG JsonBasicEncDecTest_os.ttcn:67(testcase:tc_jsonBasic_encdec_os_float) f_json_enc_f2os(): Encoding float: 2.000000
+2020/Feb/20 17:51:47.163290 DEBUG JsonBasicEncDecTest_os.ttcn:67(testcase:tc_jsonBasic_encdec_os_float) f_json_enc_f2os(): Stream after encoding: '322E303030303030'O ("2.000000")
+2020/Feb/20 17:51:47.163304 VERDICTOP JsonBasicEncDecTest_os.ttcn:68(testcase:tc_jsonBasic_encdec_os_float) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.163316 DEBUG JsonBasicEncDecTest_os.ttcn:70(testcase:tc_jsonBasic_encdec_os_float) f_json_enc_f2os(): Encoding float: 2.000000
+2020/Feb/20 17:51:47.163340 DEBUG JsonBasicEncDecTest_os.ttcn:70(testcase:tc_jsonBasic_encdec_os_float) f_json_enc_f2os(): Stream after encoding: '322E303030303030'O ("2.000000")
+2020/Feb/20 17:51:47.163354 VERDICTOP JsonBasicEncDecTest_os.ttcn:71(testcase:tc_jsonBasic_encdec_os_float) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.163366 DEBUG JsonBasicEncDecTest_os.ttcn:74(testcase:tc_jsonBasic_encdec_os_float) f_json_dec_os2f(): Stream before decoding: '322E303030303030'O ("2.000000")
+2020/Feb/20 17:51:47.163382 DEBUG JsonBasicEncDecTest_os.ttcn:74(testcase:tc_jsonBasic_encdec_os_float) f_json_dec_os2f(): Decoded float: 2.000000
+2020/Feb/20 17:51:47.163399 VERDICTOP JsonBasicEncDecTest_os.ttcn:76(testcase:tc_jsonBasic_encdec_os_float) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.163410 PARALLEL JsonBasicEncDecTest_os.ttcn:76(testcase:tc_jsonBasic_encdec_os_float) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.163422 PARALLEL JsonBasicEncDecTest_os.ttcn:76(testcase:tc_jsonBasic_encdec_os_float) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_float.
+2020/Feb/20 17:51:47.163435 TESTCASE JsonBasicEncDecTest_os.ttcn:76(testcase:tc_jsonBasic_encdec_os_float) Test case tc_jsonBasic_encdec_os_float finished. Verdict: pass
+2020/Feb/20 17:51:47.163459 TESTCASE JsonBasicEncDecTest_os.ttcn:83(testcase:tc_jsonBasic_encdec_os_enum) Test case tc_jsonBasic_encdec_os_enum started.
+2020/Feb/20 17:51:47.163482 PARALLEL JsonBasicEncDecTest_os.ttcn:83(testcase:tc_jsonBasic_encdec_os_enum) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_enum.
+2020/Feb/20 17:51:47.163494 PARALLEL JsonBasicEncDecTest_os.ttcn:83(testcase:tc_jsonBasic_encdec_os_enum) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.163506 USER JsonBasicEncDecTest_os.ttcn:89(testcase:tc_jsonBasic_encdec_os_enum) expected:'22666972737422'O ("\"first\"")
+2020/Feb/20 17:51:47.163531 DEBUG JsonBasicEncDecTest_os.ttcn:90(testcase:tc_jsonBasic_encdec_os_enum) f_json_enc_e2os(): Encoding @JsonBasicTypes.E_json: first (0)
+2020/Feb/20 17:51:47.163544 DEBUG JsonBasicEncDecTest_os.ttcn:90(testcase:tc_jsonBasic_encdec_os_enum) f_json_enc_e2os(): Stream after encoding: '22666972737422'O ("\"first\"")
+2020/Feb/20 17:51:47.163557 USER JsonBasicEncDecTest_os.ttcn:91(testcase:tc_jsonBasic_encdec_os_enum) os:'22666972737422'O ("\"first\"")
+2020/Feb/20 17:51:47.163582 VERDICTOP JsonBasicEncDecTest_os.ttcn:92(testcase:tc_jsonBasic_encdec_os_enum) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.163593 DEBUG JsonBasicEncDecTest_os.ttcn:94(testcase:tc_jsonBasic_encdec_os_enum) f_json_enc_e2os(): Encoding @JsonBasicTypes.E_json: first (0)
+2020/Feb/20 17:51:47.163606 DEBUG JsonBasicEncDecTest_os.ttcn:94(testcase:tc_jsonBasic_encdec_os_enum) f_json_enc_e2os(): Stream after encoding: '22666972737422'O ("\"first\"")
+2020/Feb/20 17:51:47.163619 VERDICTOP JsonBasicEncDecTest_os.ttcn:95(testcase:tc_jsonBasic_encdec_os_enum) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.163630 DEBUG JsonBasicEncDecTest_os.ttcn:98(testcase:tc_jsonBasic_encdec_os_enum) f_json_dec_os2e(): Stream before decoding: '22666972737422'O ("\"first\"")
+2020/Feb/20 17:51:47.163645 DEBUG JsonBasicEncDecTest_os.ttcn:98(testcase:tc_jsonBasic_encdec_os_enum) f_json_dec_os2e(): Decoded @JsonBasicTypes.E_json: first (0)
+2020/Feb/20 17:51:47.163656 VERDICTOP JsonBasicEncDecTest_os.ttcn:100(testcase:tc_jsonBasic_encdec_os_enum) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.163668 PARALLEL JsonBasicEncDecTest_os.ttcn:100(testcase:tc_jsonBasic_encdec_os_enum) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.163679 PARALLEL JsonBasicEncDecTest_os.ttcn:100(testcase:tc_jsonBasic_encdec_os_enum) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_enum.
+2020/Feb/20 17:51:47.163694 TESTCASE JsonBasicEncDecTest_os.ttcn:100(testcase:tc_jsonBasic_encdec_os_enum) Test case tc_jsonBasic_encdec_os_enum finished. Verdict: pass
+2020/Feb/20 17:51:47.163720 TESTCASE JsonBasicEncDecTest_os.ttcn:109(testcase:tc_jsonBasic_encdec_os_bitstring) Test case tc_jsonBasic_encdec_os_bitstring started.
+2020/Feb/20 17:51:47.163742 PARALLEL JsonBasicEncDecTest_os.ttcn:109(testcase:tc_jsonBasic_encdec_os_bitstring) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_bitstring.
+2020/Feb/20 17:51:47.163754 PARALLEL JsonBasicEncDecTest_os.ttcn:109(testcase:tc_jsonBasic_encdec_os_bitstring) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.163768 USER JsonBasicEncDecTest_os.ttcn:115(testcase:tc_jsonBasic_encdec_os_bitstring) expected:'223122'O ("\"1\"")
+2020/Feb/20 17:51:47.163787 DEBUG JsonBasicEncDecTest_os.ttcn:116(testcase:tc_jsonBasic_encdec_os_bitstring) f_json_enc_bs2os(): Encoding bitstring: '1'B
+2020/Feb/20 17:51:47.163800 DEBUG JsonBasicEncDecTest_os.ttcn:116(testcase:tc_jsonBasic_encdec_os_bitstring) f_json_enc_bs2os(): Stream after encoding: '223122'O ("\"1\"")
+2020/Feb/20 17:51:47.163812 VERDICTOP JsonBasicEncDecTest_os.ttcn:117(testcase:tc_jsonBasic_encdec_os_bitstring) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.163823 DEBUG JsonBasicEncDecTest_os.ttcn:119(testcase:tc_jsonBasic_encdec_os_bitstring) f_json_enc_bs2os(): Encoding bitstring: '1'B
+2020/Feb/20 17:51:47.163835 DEBUG JsonBasicEncDecTest_os.ttcn:119(testcase:tc_jsonBasic_encdec_os_bitstring) f_json_enc_bs2os(): Stream after encoding: '223122'O ("\"1\"")
+2020/Feb/20 17:51:47.163847 VERDICTOP JsonBasicEncDecTest_os.ttcn:120(testcase:tc_jsonBasic_encdec_os_bitstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.163858 DEBUG JsonBasicEncDecTest_os.ttcn:124(testcase:tc_jsonBasic_encdec_os_bitstring) f_json_dec_os2bs(): Stream before decoding: '223122'O ("\"1\"")
+2020/Feb/20 17:51:47.163873 DEBUG JsonBasicEncDecTest_os.ttcn:124(testcase:tc_jsonBasic_encdec_os_bitstring) f_json_dec_os2bs(): Decoded bitstring: '1'B
+2020/Feb/20 17:51:47.163884 VERDICTOP JsonBasicEncDecTest_os.ttcn:126(testcase:tc_jsonBasic_encdec_os_bitstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.163896 PARALLEL JsonBasicEncDecTest_os.ttcn:126(testcase:tc_jsonBasic_encdec_os_bitstring) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.163908 PARALLEL JsonBasicEncDecTest_os.ttcn:126(testcase:tc_jsonBasic_encdec_os_bitstring) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_bitstring.
+2020/Feb/20 17:51:47.163920 TESTCASE JsonBasicEncDecTest_os.ttcn:126(testcase:tc_jsonBasic_encdec_os_bitstring) Test case tc_jsonBasic_encdec_os_bitstring finished. Verdict: pass
+2020/Feb/20 17:51:47.163944 TESTCASE JsonBasicEncDecTest_os.ttcn:132(testcase:tc_jsonBasic_encdec_os_charstring) Test case tc_jsonBasic_encdec_os_charstring started.
+2020/Feb/20 17:51:47.163966 PARALLEL JsonBasicEncDecTest_os.ttcn:132(testcase:tc_jsonBasic_encdec_os_charstring) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_charstring.
+2020/Feb/20 17:51:47.163978 PARALLEL JsonBasicEncDecTest_os.ttcn:132(testcase:tc_jsonBasic_encdec_os_charstring) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.163990 USER JsonBasicEncDecTest_os.ttcn:137(testcase:tc_jsonBasic_encdec_os_charstring) expected:'223122'O ("\"1\"")
+2020/Feb/20 17:51:47.164008 DEBUG JsonBasicEncDecTest_os.ttcn:138(testcase:tc_jsonBasic_encdec_os_charstring) f_json_enc_cs2os(): Encoding charstring: "1"
+2020/Feb/20 17:51:47.164021 DEBUG JsonBasicEncDecTest_os.ttcn:138(testcase:tc_jsonBasic_encdec_os_charstring) f_json_enc_cs2os(): Stream after encoding: '223122'O ("\"1\"")
+2020/Feb/20 17:51:47.164033 VERDICTOP JsonBasicEncDecTest_os.ttcn:139(testcase:tc_jsonBasic_encdec_os_charstring) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.164045 DEBUG JsonBasicEncDecTest_os.ttcn:141(testcase:tc_jsonBasic_encdec_os_charstring) f_json_enc_cs2os(): Encoding charstring: "1"
+2020/Feb/20 17:51:47.164058 DEBUG JsonBasicEncDecTest_os.ttcn:141(testcase:tc_jsonBasic_encdec_os_charstring) f_json_enc_cs2os(): Stream after encoding: '223122'O ("\"1\"")
+2020/Feb/20 17:51:47.164070 VERDICTOP JsonBasicEncDecTest_os.ttcn:142(testcase:tc_jsonBasic_encdec_os_charstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.164082 DEBUG JsonBasicEncDecTest_os.ttcn:145(testcase:tc_jsonBasic_encdec_os_charstring) f_json_dec_os2cs(): Stream before decoding: '223122'O ("\"1\"")
+2020/Feb/20 17:51:47.164095 DEBUG JsonBasicEncDecTest_os.ttcn:145(testcase:tc_jsonBasic_encdec_os_charstring) f_json_dec_os2cs(): Decoded charstring: "1"
+2020/Feb/20 17:51:47.164106 VERDICTOP JsonBasicEncDecTest_os.ttcn:147(testcase:tc_jsonBasic_encdec_os_charstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.164118 PARALLEL JsonBasicEncDecTest_os.ttcn:147(testcase:tc_jsonBasic_encdec_os_charstring) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.164129 PARALLEL JsonBasicEncDecTest_os.ttcn:147(testcase:tc_jsonBasic_encdec_os_charstring) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_charstring.
+2020/Feb/20 17:51:47.164141 TESTCASE JsonBasicEncDecTest_os.ttcn:147(testcase:tc_jsonBasic_encdec_os_charstring) Test case tc_jsonBasic_encdec_os_charstring finished. Verdict: pass
+2020/Feb/20 17:51:47.164165 TESTCASE JsonBasicEncDecTest_os.ttcn:153(testcase:tc_jsonBasic_encdec_os_hexstring) Test case tc_jsonBasic_encdec_os_hexstring started.
+2020/Feb/20 17:51:47.164187 PARALLEL JsonBasicEncDecTest_os.ttcn:153(testcase:tc_jsonBasic_encdec_os_hexstring) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_hexstring.
+2020/Feb/20 17:51:47.164200 PARALLEL JsonBasicEncDecTest_os.ttcn:153(testcase:tc_jsonBasic_encdec_os_hexstring) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.164211 USER JsonBasicEncDecTest_os.ttcn:158(testcase:tc_jsonBasic_encdec_os_hexstring) expected:'223122'O ("\"1\"")
+2020/Feb/20 17:51:47.164229 DEBUG JsonBasicEncDecTest_os.ttcn:159(testcase:tc_jsonBasic_encdec_os_hexstring) f_json_enc_hs2os(): Encoding hexstring: '1'H
+2020/Feb/20 17:51:47.164242 DEBUG JsonBasicEncDecTest_os.ttcn:159(testcase:tc_jsonBasic_encdec_os_hexstring) f_json_enc_hs2os(): Stream after encoding: '223122'O ("\"1\"")
+2020/Feb/20 17:51:47.164253 VERDICTOP JsonBasicEncDecTest_os.ttcn:160(testcase:tc_jsonBasic_encdec_os_hexstring) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.164265 DEBUG JsonBasicEncDecTest_os.ttcn:162(testcase:tc_jsonBasic_encdec_os_hexstring) f_json_enc_hs2os(): Encoding hexstring: '1'H
+2020/Feb/20 17:51:47.164277 DEBUG JsonBasicEncDecTest_os.ttcn:162(testcase:tc_jsonBasic_encdec_os_hexstring) f_json_enc_hs2os(): Stream after encoding: '223122'O ("\"1\"")
+2020/Feb/20 17:51:47.164288 VERDICTOP JsonBasicEncDecTest_os.ttcn:163(testcase:tc_jsonBasic_encdec_os_hexstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.164300 DEBUG JsonBasicEncDecTest_os.ttcn:166(testcase:tc_jsonBasic_encdec_os_hexstring) f_json_dec_os2hs(): Stream before decoding: '223122'O ("\"1\"")
+2020/Feb/20 17:51:47.164313 DEBUG JsonBasicEncDecTest_os.ttcn:166(testcase:tc_jsonBasic_encdec_os_hexstring) f_json_dec_os2hs(): Decoded hexstring: '1'H
+2020/Feb/20 17:51:47.164323 VERDICTOP JsonBasicEncDecTest_os.ttcn:168(testcase:tc_jsonBasic_encdec_os_hexstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.164335 PARALLEL JsonBasicEncDecTest_os.ttcn:168(testcase:tc_jsonBasic_encdec_os_hexstring) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.164347 PARALLEL JsonBasicEncDecTest_os.ttcn:168(testcase:tc_jsonBasic_encdec_os_hexstring) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_hexstring.
+2020/Feb/20 17:51:47.164360 TESTCASE JsonBasicEncDecTest_os.ttcn:168(testcase:tc_jsonBasic_encdec_os_hexstring) Test case tc_jsonBasic_encdec_os_hexstring finished. Verdict: pass
+2020/Feb/20 17:51:47.164385 TESTCASE JsonBasicEncDecTest_os.ttcn:174(testcase:tc_jsonBasic_encdec_os_octetstring) Test case tc_jsonBasic_encdec_os_octetstring started.
+2020/Feb/20 17:51:47.164407 PARALLEL JsonBasicEncDecTest_os.ttcn:174(testcase:tc_jsonBasic_encdec_os_octetstring) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_octetstring.
+2020/Feb/20 17:51:47.164419 PARALLEL JsonBasicEncDecTest_os.ttcn:174(testcase:tc_jsonBasic_encdec_os_octetstring) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.164432 USER JsonBasicEncDecTest_os.ttcn:179(testcase:tc_jsonBasic_encdec_os_octetstring) expected:'22463122'O ("\"F1\"")
+2020/Feb/20 17:51:47.164452 DEBUG JsonBasicEncDecTest_os.ttcn:180(testcase:tc_jsonBasic_encdec_os_octetstring) f_json_enc_os2os(): Encoding octetstring: 'F1'O
+2020/Feb/20 17:51:47.164465 DEBUG JsonBasicEncDecTest_os.ttcn:180(testcase:tc_jsonBasic_encdec_os_octetstring) f_json_enc_os2os(): Stream after encoding: '22463122'O ("\"F1\"")
+2020/Feb/20 17:51:47.164478 VERDICTOP JsonBasicEncDecTest_os.ttcn:181(testcase:tc_jsonBasic_encdec_os_octetstring) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.164489 DEBUG JsonBasicEncDecTest_os.ttcn:183(testcase:tc_jsonBasic_encdec_os_octetstring) f_json_enc_os2os(): Encoding octetstring: 'F1'O
+2020/Feb/20 17:51:47.164501 DEBUG JsonBasicEncDecTest_os.ttcn:183(testcase:tc_jsonBasic_encdec_os_octetstring) f_json_enc_os2os(): Stream after encoding: '22463122'O ("\"F1\"")
+2020/Feb/20 17:51:47.164513 VERDICTOP JsonBasicEncDecTest_os.ttcn:184(testcase:tc_jsonBasic_encdec_os_octetstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.164525 DEBUG JsonBasicEncDecTest_os.ttcn:187(testcase:tc_jsonBasic_encdec_os_octetstring) f_json_dec_os2os(): Stream before decoding: '22463122'O ("\"F1\"")
+2020/Feb/20 17:51:47.164538 DEBUG JsonBasicEncDecTest_os.ttcn:187(testcase:tc_jsonBasic_encdec_os_octetstring) f_json_dec_os2os(): Decoded octetstring: 'F1'O
+2020/Feb/20 17:51:47.164549 VERDICTOP JsonBasicEncDecTest_os.ttcn:189(testcase:tc_jsonBasic_encdec_os_octetstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.164561 PARALLEL JsonBasicEncDecTest_os.ttcn:189(testcase:tc_jsonBasic_encdec_os_octetstring) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.164573 PARALLEL JsonBasicEncDecTest_os.ttcn:189(testcase:tc_jsonBasic_encdec_os_octetstring) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_octetstring.
+2020/Feb/20 17:51:47.164585 TESTCASE JsonBasicEncDecTest_os.ttcn:189(testcase:tc_jsonBasic_encdec_os_octetstring) Test case tc_jsonBasic_encdec_os_octetstring finished. Verdict: pass
+2020/Feb/20 17:51:47.164612 TESTCASE JsonBasicEncDecTest_os.ttcn:197(testcase:tc_jsonBasic_encdec_os_ucharstring) Test case tc_jsonBasic_encdec_os_ucharstring started.
+2020/Feb/20 17:51:47.164635 PARALLEL JsonBasicEncDecTest_os.ttcn:197(testcase:tc_jsonBasic_encdec_os_ucharstring) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_ucharstring.
+2020/Feb/20 17:51:47.164647 PARALLEL JsonBasicEncDecTest_os.ttcn:197(testcase:tc_jsonBasic_encdec_os_ucharstring) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.164659 USER JsonBasicEncDecTest_os.ttcn:203(testcase:tc_jsonBasic_encdec_os_ucharstring) expected:'220122'O
+2020/Feb/20 17:51:47.164675 DEBUG JsonBasicEncDecTest_os.ttcn:204(testcase:tc_jsonBasic_encdec_os_ucharstring) f_json_enc_ucs2os(): Encoding universal charstring: char(0, 0, 0, 1)
+2020/Feb/20 17:51:47.164688 DEBUG JsonBasicEncDecTest_os.ttcn:204(testcase:tc_jsonBasic_encdec_os_ucharstring) f_json_enc_ucs2os(): Stream after encoding: '220122'O
+2020/Feb/20 17:51:47.164701 USER JsonBasicEncDecTest_os.ttcn:205(testcase:tc_jsonBasic_encdec_os_ucharstring) '220122'O
+2020/Feb/20 17:51:47.164716 USER JsonBasicEncDecTest_os.ttcn:206(testcase:tc_jsonBasic_encdec_os_ucharstring) "\"" & char(0, 0, 0, 1) & "\""
+2020/Feb/20 17:51:47.164730 VERDICTOP JsonBasicEncDecTest_os.ttcn:207(testcase:tc_jsonBasic_encdec_os_ucharstring) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.164741 DEBUG JsonBasicEncDecTest_os.ttcn:209(testcase:tc_jsonBasic_encdec_os_ucharstring) f_json_enc_ucs2os(): Encoding universal charstring: char(0, 0, 0, 1)
+2020/Feb/20 17:51:47.164754 DEBUG JsonBasicEncDecTest_os.ttcn:209(testcase:tc_jsonBasic_encdec_os_ucharstring) f_json_enc_ucs2os(): Stream after encoding: '220122'O
+2020/Feb/20 17:51:47.164765 VERDICTOP JsonBasicEncDecTest_os.ttcn:210(testcase:tc_jsonBasic_encdec_os_ucharstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.164777 DEBUG JsonBasicEncDecTest_os.ttcn:213(testcase:tc_jsonBasic_encdec_os_ucharstring) f_json_dec_os2ucs(): Stream before decoding: '220122'O
+2020/Feb/20 17:51:47.164789 DEBUG JsonBasicEncDecTest_os.ttcn:213(testcase:tc_jsonBasic_encdec_os_ucharstring) f_json_dec_os2ucs(): Decoded universal charstring: char(0, 0, 0, 1)
+2020/Feb/20 17:51:47.164801 VERDICTOP JsonBasicEncDecTest_os.ttcn:215(testcase:tc_jsonBasic_encdec_os_ucharstring) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.164813 PARALLEL JsonBasicEncDecTest_os.ttcn:215(testcase:tc_jsonBasic_encdec_os_ucharstring) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.164824 PARALLEL JsonBasicEncDecTest_os.ttcn:215(testcase:tc_jsonBasic_encdec_os_ucharstring) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_ucharstring.
+2020/Feb/20 17:51:47.164836 TESTCASE JsonBasicEncDecTest_os.ttcn:215(testcase:tc_jsonBasic_encdec_os_ucharstring) Test case tc_jsonBasic_encdec_os_ucharstring finished. Verdict: pass
+2020/Feb/20 17:51:47.164860 TESTCASE JsonBasicEncDecTest_os.ttcn:252(testcase:tc_jsonBasic_encdec_os_record) Test case tc_jsonBasic_encdec_os_record started.
+2020/Feb/20 17:51:47.164883 PARALLEL JsonBasicEncDecTest_os.ttcn:252(testcase:tc_jsonBasic_encdec_os_record) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_record.
+2020/Feb/20 17:51:47.164895 PARALLEL JsonBasicEncDecTest_os.ttcn:252(testcase:tc_jsonBasic_encdec_os_record) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.164908 USER JsonBasicEncDecTest_os.ttcn:274(testcase:tc_jsonBasic_encdec_os_record) expected:'7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.164987 DEBUG JsonBasicEncDecTest_os.ttcn:275(testcase:tc_jsonBasic_encdec_os_record) f_json_enc_r2os(): Encoding @JsonBasicTypes.R_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.165011 DEBUG JsonBasicEncDecTest_os.ttcn:275(testcase:tc_jsonBasic_encdec_os_record) f_json_enc_r2os(): Stream after encoding: '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.165036 USER JsonBasicEncDecTest_os.ttcn:276(testcase:tc_jsonBasic_encdec_os_record) '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.165115 USER JsonBasicEncDecTest_os.ttcn:277(testcase:tc_jsonBasic_encdec_os_record) "{\"i\":1,\"bs\":\"1\",\"cs\":\"1\",\"hs\":\"1\",\"os\":\"01\",\"ucs\":\"" & char(0, 0, 0, 1) & "\",\"e\":\"first\"}"
+2020/Feb/20 17:51:47.165131 VERDICTOP JsonBasicEncDecTest_os.ttcn:278(testcase:tc_jsonBasic_encdec_os_record) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.165143 DEBUG JsonBasicEncDecTest_os.ttcn:280(testcase:tc_jsonBasic_encdec_os_record) f_json_enc_r2os(): Encoding @JsonBasicTypes.R_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.165167 DEBUG JsonBasicEncDecTest_os.ttcn:280(testcase:tc_jsonBasic_encdec_os_record) f_json_enc_r2os(): Stream after encoding: '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.165197 DEBUG JsonBasicEncDecTest_os.ttcn:281(testcase:tc_jsonBasic_encdec_os_record) Warning: No UTF-8 Byte Order Mark(BOM) detected. It may result decoding errors
+2020/Feb/20 17:51:47.165193 USER JsonBasicEncDecTest_os.ttcn:281(testcase:tc_jsonBasic_encdec_os_record) "{\"i\":1,\"bs\":\"1\",\"cs\":\"1\",\"hs\":\"1\",\"os\":\"01\",\"ucs\":\"" & char(0, 0, 0, 1) & "\",\"e\":\"first\"}"
+2020/Feb/20 17:51:47.165225 VERDICTOP JsonBasicEncDecTest_os.ttcn:282(testcase:tc_jsonBasic_encdec_os_record) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.165237 DEBUG JsonBasicEncDecTest_os.ttcn:285(testcase:tc_jsonBasic_encdec_os_record) f_json_dec_os2r(): Stream before decoding: '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.165266 DEBUG JsonBasicEncDecTest_os.ttcn:285(testcase:tc_jsonBasic_encdec_os_record) f_json_dec_os2r(): Decoded @JsonBasicTypes.R_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.165285 VERDICTOP JsonBasicEncDecTest_os.ttcn:287(testcase:tc_jsonBasic_encdec_os_record) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.165298 PARALLEL JsonBasicEncDecTest_os.ttcn:287(testcase:tc_jsonBasic_encdec_os_record) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.165310 PARALLEL JsonBasicEncDecTest_os.ttcn:287(testcase:tc_jsonBasic_encdec_os_record) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_record.
+2020/Feb/20 17:51:47.165322 TESTCASE JsonBasicEncDecTest_os.ttcn:287(testcase:tc_jsonBasic_encdec_os_record) Test case tc_jsonBasic_encdec_os_record finished. Verdict: pass
+2020/Feb/20 17:51:47.165349 TESTCASE JsonBasicEncDecTest_os.ttcn:365(testcase:tc_jsonBasic_encdec_os_roi1) Test case tc_jsonBasic_encdec_os_roi1 started.
+2020/Feb/20 17:51:47.165372 PARALLEL JsonBasicEncDecTest_os.ttcn:365(testcase:tc_jsonBasic_encdec_os_roi1) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_roi1.
+2020/Feb/20 17:51:47.165384 PARALLEL JsonBasicEncDecTest_os.ttcn:365(testcase:tc_jsonBasic_encdec_os_roi1) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.165397 USER JsonBasicEncDecTest_os.ttcn:370(testcase:tc_jsonBasic_encdec_os_roi1) expected:'5B5D'O ("[]")
+2020/Feb/20 17:51:47.165414 DEBUG JsonBasicEncDecTest_os.ttcn:371(testcase:tc_jsonBasic_encdec_os_roi1) f_json_enc_roi2os(): Encoding @JsonBasicTypes.RoI_json: { }
+2020/Feb/20 17:51:47.165428 DEBUG JsonBasicEncDecTest_os.ttcn:371(testcase:tc_jsonBasic_encdec_os_roi1) f_json_enc_roi2os(): Stream after encoding: '5B5D'O ("[]")
+2020/Feb/20 17:51:47.165440 USER JsonBasicEncDecTest_os.ttcn:372(testcase:tc_jsonBasic_encdec_os_roi1) '5B5D'O ("[]")
+2020/Feb/20 17:51:47.165456 USER JsonBasicEncDecTest_os.ttcn:373(testcase:tc_jsonBasic_encdec_os_roi1) '5B5D'O ("[]")
+2020/Feb/20 17:51:47.165472 VERDICTOP JsonBasicEncDecTest_os.ttcn:374(testcase:tc_jsonBasic_encdec_os_roi1) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.165483 DEBUG JsonBasicEncDecTest_os.ttcn:376(testcase:tc_jsonBasic_encdec_os_roi1) f_json_enc_roi2os(): Encoding @JsonBasicTypes.RoI_json: { }
+2020/Feb/20 17:51:47.165495 DEBUG JsonBasicEncDecTest_os.ttcn:376(testcase:tc_jsonBasic_encdec_os_roi1) f_json_enc_roi2os(): Stream after encoding: '5B5D'O ("[]")
+2020/Feb/20 17:51:47.165507 USER JsonBasicEncDecTest_os.ttcn:377(testcase:tc_jsonBasic_encdec_os_roi1) '5B5D'O ("[]")
+2020/Feb/20 17:51:47.165524 VERDICTOP JsonBasicEncDecTest_os.ttcn:378(testcase:tc_jsonBasic_encdec_os_roi1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.165536 DEBUG JsonBasicEncDecTest_os.ttcn:383(testcase:tc_jsonBasic_encdec_os_roi1) f_json_dec_os2roi(): Stream before decoding: '5B5D'O ("[]")
+2020/Feb/20 17:51:47.165550 DEBUG JsonBasicEncDecTest_os.ttcn:383(testcase:tc_jsonBasic_encdec_os_roi1) f_json_dec_os2roi(): Decoded @JsonBasicTypes.RoI_json: { }
+2020/Feb/20 17:51:47.165561 VERDICTOP JsonBasicEncDecTest_os.ttcn:385(testcase:tc_jsonBasic_encdec_os_roi1) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.165573 PARALLEL JsonBasicEncDecTest_os.ttcn:385(testcase:tc_jsonBasic_encdec_os_roi1) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.165584 PARALLEL JsonBasicEncDecTest_os.ttcn:385(testcase:tc_jsonBasic_encdec_os_roi1) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_roi1.
+2020/Feb/20 17:51:47.165596 TESTCASE JsonBasicEncDecTest_os.ttcn:385(testcase:tc_jsonBasic_encdec_os_roi1) Test case tc_jsonBasic_encdec_os_roi1 finished. Verdict: pass
+2020/Feb/20 17:51:47.165621 TESTCASE JsonBasicEncDecTest_os.ttcn:391(testcase:tc_jsonBasic_encdec_os_roi2) Test case tc_jsonBasic_encdec_os_roi2 started.
+2020/Feb/20 17:51:47.165643 PARALLEL JsonBasicEncDecTest_os.ttcn:391(testcase:tc_jsonBasic_encdec_os_roi2) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_roi2.
+2020/Feb/20 17:51:47.165655 PARALLEL JsonBasicEncDecTest_os.ttcn:391(testcase:tc_jsonBasic_encdec_os_roi2) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.165668 USER JsonBasicEncDecTest_os.ttcn:396(testcase:tc_jsonBasic_encdec_os_roi2) expected:'5B3130305D'O ("[100]")
+2020/Feb/20 17:51:47.165689 DEBUG JsonBasicEncDecTest_os.ttcn:397(testcase:tc_jsonBasic_encdec_os_roi2) f_json_enc_roi2os(): Encoding @JsonBasicTypes.RoI_json: { 100 }
+2020/Feb/20 17:51:47.165703 DEBUG JsonBasicEncDecTest_os.ttcn:397(testcase:tc_jsonBasic_encdec_os_roi2) f_json_enc_roi2os(): Stream after encoding: '5B3130305D'O ("[100]")
+2020/Feb/20 17:51:47.165716 USER JsonBasicEncDecTest_os.ttcn:398(testcase:tc_jsonBasic_encdec_os_roi2) '5B3130305D'O ("[100]")
+2020/Feb/20 17:51:47.165736 USER JsonBasicEncDecTest_os.ttcn:399(testcase:tc_jsonBasic_encdec_os_roi2) '5B3130305D'O ("[100]")
+2020/Feb/20 17:51:47.165756 VERDICTOP JsonBasicEncDecTest_os.ttcn:400(testcase:tc_jsonBasic_encdec_os_roi2) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.165768 DEBUG JsonBasicEncDecTest_os.ttcn:402(testcase:tc_jsonBasic_encdec_os_roi2) f_json_enc_roi2os(): Encoding @JsonBasicTypes.RoI_json: { 100 }
+2020/Feb/20 17:51:47.165781 DEBUG JsonBasicEncDecTest_os.ttcn:402(testcase:tc_jsonBasic_encdec_os_roi2) f_json_enc_roi2os(): Stream after encoding: '5B3130305D'O ("[100]")
+2020/Feb/20 17:51:47.165794 USER JsonBasicEncDecTest_os.ttcn:403(testcase:tc_jsonBasic_encdec_os_roi2) '5B3130305D'O ("[100]")
+2020/Feb/20 17:51:47.165814 VERDICTOP JsonBasicEncDecTest_os.ttcn:404(testcase:tc_jsonBasic_encdec_os_roi2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.165826 DEBUG JsonBasicEncDecTest_os.ttcn:409(testcase:tc_jsonBasic_encdec_os_roi2) f_json_dec_os2roi(): Stream before decoding: '5B3130305D'O ("[100]")
+2020/Feb/20 17:51:47.165841 DEBUG JsonBasicEncDecTest_os.ttcn:409(testcase:tc_jsonBasic_encdec_os_roi2) f_json_dec_os2roi(): Decoded @JsonBasicTypes.RoI_json: { 100 }
+2020/Feb/20 17:51:47.165853 VERDICTOP JsonBasicEncDecTest_os.ttcn:411(testcase:tc_jsonBasic_encdec_os_roi2) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.165866 PARALLEL JsonBasicEncDecTest_os.ttcn:411(testcase:tc_jsonBasic_encdec_os_roi2) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.165878 PARALLEL JsonBasicEncDecTest_os.ttcn:411(testcase:tc_jsonBasic_encdec_os_roi2) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_roi2.
+2020/Feb/20 17:51:47.165892 TESTCASE JsonBasicEncDecTest_os.ttcn:411(testcase:tc_jsonBasic_encdec_os_roi2) Test case tc_jsonBasic_encdec_os_roi2 finished. Verdict: pass
+2020/Feb/20 17:51:47.165918 TESTCASE JsonBasicEncDecTest_os.ttcn:417(testcase:tc_jsonBasic_encdec_os_roi3) Test case tc_jsonBasic_encdec_os_roi3 started.
+2020/Feb/20 17:51:47.165940 PARALLEL JsonBasicEncDecTest_os.ttcn:417(testcase:tc_jsonBasic_encdec_os_roi3) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_roi3.
+2020/Feb/20 17:51:47.165952 PARALLEL JsonBasicEncDecTest_os.ttcn:417(testcase:tc_jsonBasic_encdec_os_roi3) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.165968 USER JsonBasicEncDecTest_os.ttcn:422(testcase:tc_jsonBasic_encdec_os_roi3) expected:'5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.166039 DEBUG JsonBasicEncDecTest_os.ttcn:423(testcase:tc_jsonBasic_encdec_os_roi3) f_json_enc_roi2os(): Encoding @JsonBasicTypes.RoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.166063 DEBUG JsonBasicEncDecTest_os.ttcn:423(testcase:tc_jsonBasic_encdec_os_roi3) f_json_enc_roi2os(): Stream after encoding: '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.166090 USER JsonBasicEncDecTest_os.ttcn:424(testcase:tc_jsonBasic_encdec_os_roi3) '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.166161 USER JsonBasicEncDecTest_os.ttcn:425(testcase:tc_jsonBasic_encdec_os_roi3) '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.166230 VERDICTOP JsonBasicEncDecTest_os.ttcn:426(testcase:tc_jsonBasic_encdec_os_roi3) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.166241 DEBUG JsonBasicEncDecTest_os.ttcn:428(testcase:tc_jsonBasic_encdec_os_roi3) f_json_enc_roi2os(): Encoding @JsonBasicTypes.RoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.166263 DEBUG JsonBasicEncDecTest_os.ttcn:428(testcase:tc_jsonBasic_encdec_os_roi3) f_json_enc_roi2os(): Stream after encoding: '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.166286 USER JsonBasicEncDecTest_os.ttcn:429(testcase:tc_jsonBasic_encdec_os_roi3) '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.166355 VERDICTOP JsonBasicEncDecTest_os.ttcn:430(testcase:tc_jsonBasic_encdec_os_roi3) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.166367 DEBUG JsonBasicEncDecTest_os.ttcn:435(testcase:tc_jsonBasic_encdec_os_roi3) f_json_dec_os2roi(): Stream before decoding: '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.166398 DEBUG JsonBasicEncDecTest_os.ttcn:435(testcase:tc_jsonBasic_encdec_os_roi3) f_json_dec_os2roi(): Decoded @JsonBasicTypes.RoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.166414 VERDICTOP JsonBasicEncDecTest_os.ttcn:437(testcase:tc_jsonBasic_encdec_os_roi3) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.166429 PARALLEL JsonBasicEncDecTest_os.ttcn:437(testcase:tc_jsonBasic_encdec_os_roi3) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.166441 PARALLEL JsonBasicEncDecTest_os.ttcn:437(testcase:tc_jsonBasic_encdec_os_roi3) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_roi3.
+2020/Feb/20 17:51:47.166453 TESTCASE JsonBasicEncDecTest_os.ttcn:437(testcase:tc_jsonBasic_encdec_os_roi3) Test case tc_jsonBasic_encdec_os_roi3 finished. Verdict: pass
+2020/Feb/20 17:51:47.166480 TESTCASE JsonBasicEncDecTest_os.ttcn:294(testcase:tc_jsonBasic_encdec_os_set) Test case tc_jsonBasic_encdec_os_set started.
+2020/Feb/20 17:51:47.166503 PARALLEL JsonBasicEncDecTest_os.ttcn:294(testcase:tc_jsonBasic_encdec_os_set) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_set.
+2020/Feb/20 17:51:47.166515 PARALLEL JsonBasicEncDecTest_os.ttcn:294(testcase:tc_jsonBasic_encdec_os_set) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.166529 USER JsonBasicEncDecTest_os.ttcn:315(testcase:tc_jsonBasic_encdec_os_set) expected:'7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.166608 DEBUG JsonBasicEncDecTest_os.ttcn:316(testcase:tc_jsonBasic_encdec_os_set) f_json_enc_s2os(): Encoding @JsonBasicTypes.S_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.166633 DEBUG JsonBasicEncDecTest_os.ttcn:316(testcase:tc_jsonBasic_encdec_os_set) f_json_enc_s2os(): Stream after encoding: '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.166659 USER JsonBasicEncDecTest_os.ttcn:317(testcase:tc_jsonBasic_encdec_os_set) '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.166738 VERDICTOP JsonBasicEncDecTest_os.ttcn:318(testcase:tc_jsonBasic_encdec_os_set) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.166749 DEBUG JsonBasicEncDecTest_os.ttcn:320(testcase:tc_jsonBasic_encdec_os_set) f_json_enc_s2os(): Encoding @JsonBasicTypes.S_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.166771 DEBUG JsonBasicEncDecTest_os.ttcn:320(testcase:tc_jsonBasic_encdec_os_set) f_json_enc_s2os(): Stream after encoding: '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.166796 USER JsonBasicEncDecTest_os.ttcn:321(testcase:tc_jsonBasic_encdec_os_set) '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.166875 VERDICTOP JsonBasicEncDecTest_os.ttcn:322(testcase:tc_jsonBasic_encdec_os_set) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.166887 DEBUG JsonBasicEncDecTest_os.ttcn:327(testcase:tc_jsonBasic_encdec_os_set) f_json_dec_os2s(): Stream before decoding: '7B2269223A312C226273223A2231222C226373223A2231222C226873223A2231222C226F73223A223031222C22756373223A2201222C2265223A226669727374227D'O
+2020/Feb/20 17:51:47.166916 DEBUG JsonBasicEncDecTest_os.ttcn:327(testcase:tc_jsonBasic_encdec_os_set) f_json_dec_os2s(): Decoded @JsonBasicTypes.S_json: { i := 1, bs := '1'B, cs := "1", hs := '1'H, os := '01'O, ucs := char(0, 0, 0, 1), e := first (0) }
+2020/Feb/20 17:51:47.166932 VERDICTOP JsonBasicEncDecTest_os.ttcn:329(testcase:tc_jsonBasic_encdec_os_set) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.166945 PARALLEL JsonBasicEncDecTest_os.ttcn:329(testcase:tc_jsonBasic_encdec_os_set) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.166957 PARALLEL JsonBasicEncDecTest_os.ttcn:329(testcase:tc_jsonBasic_encdec_os_set) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_set.
+2020/Feb/20 17:51:47.166969 TESTCASE JsonBasicEncDecTest_os.ttcn:329(testcase:tc_jsonBasic_encdec_os_set) Test case tc_jsonBasic_encdec_os_set finished. Verdict: pass
+2020/Feb/20 17:51:47.166994 TESTCASE JsonBasicEncDecTest_os.ttcn:444(testcase:tc_jsonBasic_encdec_os_soi) Test case tc_jsonBasic_encdec_os_soi started.
+2020/Feb/20 17:51:47.167017 PARALLEL JsonBasicEncDecTest_os.ttcn:444(testcase:tc_jsonBasic_encdec_os_soi) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_soi.
+2020/Feb/20 17:51:47.167031 PARALLEL JsonBasicEncDecTest_os.ttcn:444(testcase:tc_jsonBasic_encdec_os_soi) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.167046 USER JsonBasicEncDecTest_os.ttcn:449(testcase:tc_jsonBasic_encdec_os_soi) expected:'5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.167117 DEBUG JsonBasicEncDecTest_os.ttcn:450(testcase:tc_jsonBasic_encdec_os_soi) f_json_enc_soi2os(): Encoding @JsonBasicTypes.SoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.167141 DEBUG JsonBasicEncDecTest_os.ttcn:450(testcase:tc_jsonBasic_encdec_os_soi) f_json_enc_soi2os(): Stream after encoding: '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.167164 USER JsonBasicEncDecTest_os.ttcn:451(testcase:tc_jsonBasic_encdec_os_soi) '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.167236 VERDICTOP JsonBasicEncDecTest_os.ttcn:452(testcase:tc_jsonBasic_encdec_os_soi) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.167247 DEBUG JsonBasicEncDecTest_os.ttcn:454(testcase:tc_jsonBasic_encdec_os_soi) f_json_enc_soi2os(): Encoding @JsonBasicTypes.SoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.167269 DEBUG JsonBasicEncDecTest_os.ttcn:454(testcase:tc_jsonBasic_encdec_os_soi) f_json_enc_soi2os(): Stream after encoding: '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.167293 USER JsonBasicEncDecTest_os.ttcn:455(testcase:tc_jsonBasic_encdec_os_soi) '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.167364 VERDICTOP JsonBasicEncDecTest_os.ttcn:456(testcase:tc_jsonBasic_encdec_os_soi) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.167376 DEBUG JsonBasicEncDecTest_os.ttcn:461(testcase:tc_jsonBasic_encdec_os_soi) f_json_dec_os2soi(): Stream before decoding: '5B302C312C392C31302C3132333435363738392C2D312C2D313233343536373839303132335D'O ("[0,1,9,10,123456789,-1,-1234567890123]")
+2020/Feb/20 17:51:47.167407 DEBUG JsonBasicEncDecTest_os.ttcn:461(testcase:tc_jsonBasic_encdec_os_soi) f_json_dec_os2soi(): Decoded @JsonBasicTypes.SoI_json: { 0, 1, 9, 10, 123456789, -1, -1234567890123 }
+2020/Feb/20 17:51:47.167424 VERDICTOP JsonBasicEncDecTest_os.ttcn:463(testcase:tc_jsonBasic_encdec_os_soi) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.167438 PARALLEL JsonBasicEncDecTest_os.ttcn:463(testcase:tc_jsonBasic_encdec_os_soi) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.167450 PARALLEL JsonBasicEncDecTest_os.ttcn:463(testcase:tc_jsonBasic_encdec_os_soi) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_soi.
+2020/Feb/20 17:51:47.167462 TESTCASE JsonBasicEncDecTest_os.ttcn:463(testcase:tc_jsonBasic_encdec_os_soi) Test case tc_jsonBasic_encdec_os_soi finished. Verdict: pass
+2020/Feb/20 17:51:47.167487 TESTCASE JsonBasicEncDecTest_os.ttcn:469(testcase:tc_jsonBasic_encdec_os_union_const) Test case tc_jsonBasic_encdec_os_union_const started.
+2020/Feb/20 17:51:47.167509 PARALLEL JsonBasicEncDecTest_os.ttcn:469(testcase:tc_jsonBasic_encdec_os_union_const) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_union_const.
+2020/Feb/20 17:51:47.167521 PARALLEL JsonBasicEncDecTest_os.ttcn:469(testcase:tc_jsonBasic_encdec_os_union_const) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.167534 USER JsonBasicEncDecTest_os.ttcn:473(testcase:tc_jsonBasic_encdec_os_union_const) expected:'7B2269223A317D'O ("{\"i\":1}")
+2020/Feb/20 17:51:47.167560 DEBUG JsonBasicEncDecTest_os.ttcn:474(testcase:tc_jsonBasic_encdec_os_union_const) f_json_enc_u2os(): Encoding @JsonBasicTypes.U_json: { i := 1 }
+2020/Feb/20 17:51:47.167575 DEBUG JsonBasicEncDecTest_os.ttcn:474(testcase:tc_jsonBasic_encdec_os_union_const) f_json_enc_u2os(): Stream after encoding: '7B2269223A317D'O ("{\"i\":1}")
+2020/Feb/20 17:51:47.167588 USER JsonBasicEncDecTest_os.ttcn:475(testcase:tc_jsonBasic_encdec_os_union_const) '7B2269223A317D'O ("{\"i\":1}")
+2020/Feb/20 17:51:47.167612 USER JsonBasicEncDecTest_os.ttcn:476(testcase:tc_jsonBasic_encdec_os_union_const) "{\"i\":1}"
+2020/Feb/20 17:51:47.167624 VERDICTOP JsonBasicEncDecTest_os.ttcn:477(testcase:tc_jsonBasic_encdec_os_union_const) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.167635 PARALLEL JsonBasicEncDecTest_os.ttcn:477(testcase:tc_jsonBasic_encdec_os_union_const) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.167647 PARALLEL JsonBasicEncDecTest_os.ttcn:477(testcase:tc_jsonBasic_encdec_os_union_const) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_union_const.
+2020/Feb/20 17:51:47.167659 TESTCASE JsonBasicEncDecTest_os.ttcn:477(testcase:tc_jsonBasic_encdec_os_union_const) Test case tc_jsonBasic_encdec_os_union_const finished. Verdict: pass
+2020/Feb/20 17:51:47.167685 TESTCASE JsonBasicEncDecTest_os.ttcn:484(testcase:tc_jsonBasic_encdec_os_union) Test case tc_jsonBasic_encdec_os_union started.
+2020/Feb/20 17:51:47.167707 PARALLEL JsonBasicEncDecTest_os.ttcn:484(testcase:tc_jsonBasic_encdec_os_union) Initializing variables, timers and ports of component type JsonBasicEncDecTest_os.CT inside testcase tc_jsonBasic_encdec_os_union.
+2020/Feb/20 17:51:47.167720 PARALLEL JsonBasicEncDecTest_os.ttcn:484(testcase:tc_jsonBasic_encdec_os_union) Component type JsonBasicEncDecTest_os.CT was initialized.
+2020/Feb/20 17:51:47.167741 USER JsonBasicEncDecTest_os.ttcn:510(testcase:tc_jsonBasic_encdec_os_union) expected:'7B2269223A317D'O ("{\"i\":1}")
+2020/Feb/20 17:51:47.167767 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Encoding @JsonBasicTypes.U_json: { i := 1 }
+2020/Feb/20 17:51:47.167781 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Stream after encoding: '7B2269223A317D'O ("{\"i\":1}")
+2020/Feb/20 17:51:47.167794 USER JsonBasicEncDecTest_os.ttcn:512(testcase:tc_jsonBasic_encdec_os_union) '7B2269223A317D'O ("{\"i\":1}")
+2020/Feb/20 17:51:47.167817 USER JsonBasicEncDecTest_os.ttcn:513(testcase:tc_jsonBasic_encdec_os_union) "{\"i\":1}"
+2020/Feb/20 17:51:47.167829 VERDICTOP JsonBasicEncDecTest_os.ttcn:514(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): none -> pass
+2020/Feb/20 17:51:47.167840 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Stream before decoding: '7B2269223A317D'O ("{\"i\":1}")
+2020/Feb/20 17:51:47.167855 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Decoded @JsonBasicTypes.U_json: { i := 1 }
+2020/Feb/20 17:51:47.167867 VERDICTOP JsonBasicEncDecTest_os.ttcn:520(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.167879 USER JsonBasicEncDecTest_os.ttcn:510(testcase:tc_jsonBasic_encdec_os_union) expected:'7B226273223A2231227D'O ("{\"bs\":\"1\"}")
+2020/Feb/20 17:51:47.167908 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Encoding @JsonBasicTypes.U_json: { bs := '1'B }
+2020/Feb/20 17:51:47.167921 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Stream after encoding: '7B226273223A2231227D'O ("{\"bs\":\"1\"}")
+2020/Feb/20 17:51:47.167935 USER JsonBasicEncDecTest_os.ttcn:512(testcase:tc_jsonBasic_encdec_os_union) '7B226273223A2231227D'O ("{\"bs\":\"1\"}")
+2020/Feb/20 17:51:47.167965 USER JsonBasicEncDecTest_os.ttcn:513(testcase:tc_jsonBasic_encdec_os_union) "{\"bs\":\"1\"}"
+2020/Feb/20 17:51:47.167978 VERDICTOP JsonBasicEncDecTest_os.ttcn:514(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.167989 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Stream before decoding: '7B226273223A2231227D'O ("{\"bs\":\"1\"}")
+2020/Feb/20 17:51:47.168005 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Decoded @JsonBasicTypes.U_json: { bs := '1'B }
+2020/Feb/20 17:51:47.168016 VERDICTOP JsonBasicEncDecTest_os.ttcn:520(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.168027 USER JsonBasicEncDecTest_os.ttcn:510(testcase:tc_jsonBasic_encdec_os_union) expected:'7B226373223A2231227D'O ("{\"cs\":\"1\"}")
+2020/Feb/20 17:51:47.168056 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Encoding @JsonBasicTypes.U_json: { cs := "1" }
+2020/Feb/20 17:51:47.168070 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Stream after encoding: '7B226373223A2231227D'O ("{\"cs\":\"1\"}")
+2020/Feb/20 17:51:47.168084 USER JsonBasicEncDecTest_os.ttcn:512(testcase:tc_jsonBasic_encdec_os_union) '7B226373223A2231227D'O ("{\"cs\":\"1\"}")
+2020/Feb/20 17:51:47.168112 USER JsonBasicEncDecTest_os.ttcn:513(testcase:tc_jsonBasic_encdec_os_union) "{\"cs\":\"1\"}"
+2020/Feb/20 17:51:47.168123 VERDICTOP JsonBasicEncDecTest_os.ttcn:514(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.168135 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Stream before decoding: '7B226373223A2231227D'O ("{\"cs\":\"1\"}")
+2020/Feb/20 17:51:47.168150 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Decoded @JsonBasicTypes.U_json: { cs := "1" }
+2020/Feb/20 17:51:47.168161 VERDICTOP JsonBasicEncDecTest_os.ttcn:520(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.168173 USER JsonBasicEncDecTest_os.ttcn:510(testcase:tc_jsonBasic_encdec_os_union) expected:'7B226873223A2231227D'O ("{\"hs\":\"1\"}")
+2020/Feb/20 17:51:47.168201 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Encoding @JsonBasicTypes.U_json: { hs := '1'H }
+2020/Feb/20 17:51:47.168215 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Stream after encoding: '7B226873223A2231227D'O ("{\"hs\":\"1\"}")
+2020/Feb/20 17:51:47.168228 USER JsonBasicEncDecTest_os.ttcn:512(testcase:tc_jsonBasic_encdec_os_union) '7B226873223A2231227D'O ("{\"hs\":\"1\"}")
+2020/Feb/20 17:51:47.168257 USER JsonBasicEncDecTest_os.ttcn:513(testcase:tc_jsonBasic_encdec_os_union) "{\"hs\":\"1\"}"
+2020/Feb/20 17:51:47.168268 VERDICTOP JsonBasicEncDecTest_os.ttcn:514(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.168280 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Stream before decoding: '7B226873223A2231227D'O ("{\"hs\":\"1\"}")
+2020/Feb/20 17:51:47.168295 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Decoded @JsonBasicTypes.U_json: { hs := '1'H }
+2020/Feb/20 17:51:47.168306 VERDICTOP JsonBasicEncDecTest_os.ttcn:520(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.168317 USER JsonBasicEncDecTest_os.ttcn:510(testcase:tc_jsonBasic_encdec_os_union) expected:'7B226F73223A223031227D'O ("{\"os\":\"01\"}")
+2020/Feb/20 17:51:47.168348 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Encoding @JsonBasicTypes.U_json: { os := '01'O }
+2020/Feb/20 17:51:47.168362 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Stream after encoding: '7B226F73223A223031227D'O ("{\"os\":\"01\"}")
+2020/Feb/20 17:51:47.168377 USER JsonBasicEncDecTest_os.ttcn:512(testcase:tc_jsonBasic_encdec_os_union) '7B226F73223A223031227D'O ("{\"os\":\"01\"}")
+2020/Feb/20 17:51:47.168407 USER JsonBasicEncDecTest_os.ttcn:513(testcase:tc_jsonBasic_encdec_os_union) "{\"os\":\"01\"}"
+2020/Feb/20 17:51:47.168419 VERDICTOP JsonBasicEncDecTest_os.ttcn:514(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.168430 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Stream before decoding: '7B226F73223A223031227D'O ("{\"os\":\"01\"}")
+2020/Feb/20 17:51:47.168447 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Decoded @JsonBasicTypes.U_json: { os := '01'O }
+2020/Feb/20 17:51:47.168459 VERDICTOP JsonBasicEncDecTest_os.ttcn:520(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.168470 USER JsonBasicEncDecTest_os.ttcn:510(testcase:tc_jsonBasic_encdec_os_union) expected:'7B22756373223A2201227D'O
+2020/Feb/20 17:51:47.168494 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Encoding @JsonBasicTypes.U_json: { ucs := char(0, 0, 0, 1) }
+2020/Feb/20 17:51:47.168508 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Stream after encoding: '7B22756373223A2201227D'O
+2020/Feb/20 17:51:47.168521 USER JsonBasicEncDecTest_os.ttcn:512(testcase:tc_jsonBasic_encdec_os_union) '7B22756373223A2201227D'O
+2020/Feb/20 17:51:47.168544 USER JsonBasicEncDecTest_os.ttcn:513(testcase:tc_jsonBasic_encdec_os_union) "{\"ucs\":\"" & char(0, 0, 0, 1) & "\"}"
+2020/Feb/20 17:51:47.168557 VERDICTOP JsonBasicEncDecTest_os.ttcn:514(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.168568 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Stream before decoding: '7B22756373223A2201227D'O
+2020/Feb/20 17:51:47.168582 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Decoded @JsonBasicTypes.U_json: { ucs := char(0, 0, 0, 1) }
+2020/Feb/20 17:51:47.168595 VERDICTOP JsonBasicEncDecTest_os.ttcn:520(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.168606 USER JsonBasicEncDecTest_os.ttcn:510(testcase:tc_jsonBasic_encdec_os_union) expected:'7B2265223A226669727374227D'O ("{\"e\":\"first\"}")
+2020/Feb/20 17:51:47.168639 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Encoding @JsonBasicTypes.U_json: { e := first (0) }
+2020/Feb/20 17:51:47.168653 DEBUG JsonBasicEncDecTest_os.ttcn:511(testcase:tc_jsonBasic_encdec_os_union) f_json_enc_u2os(): Stream after encoding: '7B2265223A226669727374227D'O ("{\"e\":\"first\"}")
+2020/Feb/20 17:51:47.168668 USER JsonBasicEncDecTest_os.ttcn:512(testcase:tc_jsonBasic_encdec_os_union) '7B2265223A226669727374227D'O ("{\"e\":\"first\"}")
+2020/Feb/20 17:51:47.168700 USER JsonBasicEncDecTest_os.ttcn:513(testcase:tc_jsonBasic_encdec_os_union) "{\"e\":\"first\"}"
+2020/Feb/20 17:51:47.168712 VERDICTOP JsonBasicEncDecTest_os.ttcn:514(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.168723 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Stream before decoding: '7B2265223A226669727374227D'O ("{\"e\":\"first\"}")
+2020/Feb/20 17:51:47.168740 DEBUG JsonBasicEncDecTest_os.ttcn:518(testcase:tc_jsonBasic_encdec_os_union) f_json_dec_os2u(): Decoded @JsonBasicTypes.U_json: { e := first (0) }
+2020/Feb/20 17:51:47.168752 VERDICTOP JsonBasicEncDecTest_os.ttcn:520(testcase:tc_jsonBasic_encdec_os_union) setverdict(pass): pass -> pass, component reason not changed
+2020/Feb/20 17:51:47.168768 PARALLEL JsonBasicEncDecTest_os.ttcn:509(testcase:tc_jsonBasic_encdec_os_union) Terminating component type JsonBasicEncDecTest_os.CT.
+2020/Feb/20 17:51:47.168780 PARALLEL JsonBasicEncDecTest_os.ttcn:509(testcase:tc_jsonBasic_encdec_os_union) Component type JsonBasicEncDecTest_os.CT was shut down inside testcase tc_jsonBasic_encdec_os_union.
+2020/Feb/20 17:51:47.168792 TESTCASE JsonBasicEncDecTest_os.ttcn:509(testcase:tc_jsonBasic_encdec_os_union) Test case tc_jsonBasic_encdec_os_union finished. Verdict: pass
+2020/Feb/20 17:51:47.168815 STATISTICS JsonBasicEncDecTest_os.ttcn:553(controlpart:JsonBasicEncDecTest_os) Execution of control part in module JsonBasicEncDecTest_os finished.
+2020/Feb/20 17:51:47.168840 STATISTICS - Verdict statistics: 0 none (0.00 %), 51 pass (100.00 %), 0 inconc (0.00 %), 0 fail (0.00 %), 0 error (0.00 %).
+2020/Feb/20 17:51:47.168895 STATISTICS - Test execution summary: 51 test cases were executed. Overall verdict: pass
+2020/Feb/20 17:51:47.168914 EXECUTOR - TTCN-3 Test Executor finished in single mode.
