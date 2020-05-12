@@ -659,6 +659,7 @@ namespace Common {
     virtual void set_fullname(const string& p_fullname);
     /** Sets the internal pointer my_scope to \a p_scope. */
     virtual void set_my_scope(Scope *p_scope);
+    Scope* get_my_scope() { return my_scope; }
     /** Checks the type (including tags). */
     virtual void chk();
     
