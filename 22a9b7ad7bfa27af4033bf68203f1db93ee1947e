@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37a47430_f86e48ce",
+        "filename": "usrguide/releasenotes/releasenotes.adoc",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2020-05-28T06:20:42Z",
+      "side": 1,
+      "message": "licese-\u003elicense, We-\u003ewe",
+      "revId": "22a9b7ad7bfa27af4033bf68203f1db93ee1947e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
