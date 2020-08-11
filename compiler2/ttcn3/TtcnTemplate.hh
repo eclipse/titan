@@ -296,6 +296,8 @@ namespace Ttcn {
      * PERMUTATION_MATCH constructs are also counted. */
     Template *get_listitem_byIndex(size_t n) const;
 
+    void use_default_alternative(Type* p_union_type);
+    
     Template* get_template_refd_last(ReferenceChain *refch=0);
     Template* get_refd_sub_template(Ttcn::FieldOrArrayRefs *subrefs,
                                     bool usedInIsbound,

@@ -288,6 +288,7 @@ namespace Ttcn {
     bool refers_to_string_element() const { return refs_str_element; }
     void set_string_element_ref() { refs_str_element = true; }
     void clear_string_element_ref() { refs_str_element = false; }
+    void use_default_alternative(size_t p_idx, const Identifier& p_alt_name);
   };
 
   /**
@@ -409,6 +410,8 @@ namespace Ttcn {
     /** Lets the referenced assignment object know, that the reference is used
       * at least once (only relevant for formal parameters and external constants). */
     void ref_usage_found();
+    
+    void use_default_alternative(const Identifier& p_alt_name);
   private:
     /** Detects whether the first identifier in subrefs is a module id */
     void detect_modid();
