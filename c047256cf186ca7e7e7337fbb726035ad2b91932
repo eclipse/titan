@@ -22,6 +22,30 @@
       "revId": "c047256cf186ca7e7e7337fbb726035ad2b91932",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af0fba47_e5a1c309",
+        "filename": "regression_test/map_param/single_mode/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1007889
+      },
+      "writtenOn": "2020-11-02T15:36:31Z",
+      "side": 1,
+      "message": "It is the third form of ln (see man ln). Its form \"ln source target_dir\". In parallel mode the second form is used.",
+      "parentUuid": "b4b66416_257979cc",
+      "range": {
+        "startLine": 44,
+        "startChar": 12,
+        "endLine": 44,
+        "endChar": 14
+      },
+      "revId": "c047256cf186ca7e7e7337fbb726035ad2b91932",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
