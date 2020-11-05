@@ -2774,8 +2774,11 @@ void defPortClass(const port_def* pdef, output_struct* output)
       }
       src = mputstr(src, ")\n"
         "{\n"
-        "if (!is_started) TTCN_error(\"Port %s is not started but a "
-        "message has arrived on it.\", port_name);\n");
+        "if (!is_started) {\n"
+        "TTCN_warning(\"A message that arrived on port %s has been discarded, "
+        "because the port is not started.\", port_name);\n"
+        "return;\n"
+        "}\n");
       if (pdef->has_sliding) src = mputstr(src, "(void)slider;\n");
       if (is_simple) src = mputstr(src, "msg_tail_count++;\n");
       src = mputprintf(src, "if (TTCN_Logger::log_this_event("
@@ -2913,8 +2916,11 @@ void defPortClass(const port_def* pdef, output_struct* output)
           pdef->realtime ? "timestamp" : "FLOAT()");
       }
       src = mputstr(src,
-        "if (!is_started) TTCN_error(\"Port %s is not started but a "
-        "message has arrived on it.\", port_name);\n"
+        "if (!is_started) {\n"
+        "TTCN_warning(\"A message that arrived on port %s has been discarded, "
+        "because the port is not started.\", port_name);\n"
+        "return;\n"
+        "}\n"
         "msg_tail_count++;\n"
         "if (TTCN_Logger::log_this_event(TTCN_Logger::PORTEVENT_MQUEUE)) "
         "{\n"
@@ -2988,8 +2994,11 @@ void defPortClass(const port_def* pdef, output_struct* output)
     }
     src = mputstr(src, ")\n"
       "{\n"
-      "if (!is_started) TTCN_error(\"Port %s is not started but a call "
-      "has arrived on it.\", port_name);\n"
+      "if (!is_started) {\n"
+      "TTCN_warning(\"A call that arrived on port %s has been discarded, "
+        "because the port is not started.\", port_name);\n"
+      "return;\n"
+      "}\n"
       "proc_tail_count++;\n"
       "if (TTCN_Logger::log_this_event(TTCN_Logger::PORTEVENT_PQUEUE)) "
       "{\n"
@@ -3057,8 +3066,11 @@ void defPortClass(const port_def* pdef, output_struct* output)
     }
     src = mputstr(src, ")\n"
       "{\n"
-      "if (!is_started) TTCN_error(\"Port %s is not started but a reply "
-      "has arrived on it.\", port_name);\n"
+      "if (!is_started) {\n"
+      "TTCN_warning(\"A reply that arrived on port %s has been discarded, "
+        "because the port is not started.\", port_name);\n"
+      "return;\n"
+      "}\n"
       "proc_tail_count++;\n"
       "if (TTCN_Logger::log_this_event(TTCN_Logger::PORTEVENT_PQUEUE)) "
       "{\n"
@@ -3123,8 +3135,11 @@ void defPortClass(const port_def* pdef, output_struct* output)
     }
     src = mputstr(src, ")\n"
       "{\n"
-      "if (!is_started) TTCN_error(\"Port %s is not started but an "
-      "exception has arrived on it.\", port_name);\n"
+      "if (!is_started) {\n"
+      "TTCN_warning(\"An exception that arrived on port %s has been discarded, "
+        "because the port is not started.\", port_name);\n"
+      "return;\n"
+      "}\n"
       "proc_tail_count++;\n"
       "if (TTCN_Logger::log_this_event(TTCN_Logger::PORTEVENT_PQUEUE)) "
       "{\n"
