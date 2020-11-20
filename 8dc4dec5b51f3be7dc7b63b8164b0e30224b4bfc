@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4a5f5b3_1c11763c",
+        "filename": "regression_test/cfgFile/testport_parameters/PCOType.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1007853
+      },
+      "writtenOn": "2020-11-20T10:10:58Z",
+      "side": 1,
+      "message": "Please note that, this might be missleading.\nThe skeleton for this testport might have been generated in 2014 ... and later it was extended by hand.\nSo by now we should either leave 2014 as the generation date of th sekelton.\nOr (even better) write a proper header, that hadn written files usually have for this file too.",
+      "revId": "8dc4dec5b51f3be7dc7b63b8164b0e30224b4bfc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cab40011_5a5f1ab1",
+        "filename": "regression_test/portTranslation/NVP.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1007853
+      },
+      "writtenOn": "2020-11-20T10:10:58Z",
+      "side": 1,
+      "message": "I\u0027m not sure this is the best way, or if it is needed at all.\nIn 2017 we did have that kind of product numbers, and that is fine.\nBut if we would generate the same skeleton today, would it really have the same content?",
+      "revId": "8dc4dec5b51f3be7dc7b63b8164b0e30224b4bfc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
