@@ -53,7 +53,7 @@ compile: $(TTCN3_MODULES) $(ASN1_MODULES)
 	$(TTCN3_COMPILER) $(COMPILER_FLAGS) $^
 
 clean distclean:
-	$(RM) $(TARGET) $(GENERATED_HEADERS) $(GENERATED_SOURCES) $(OBJECTS) *.log Makefile.bak compile
+	$(RM) $(TARGET) $(GENERATED_HEADERS) $(GENERATED_SOURCES) $(OBJECTS) logs/*.log Makefile.bak compile result.txt
 
 dep: $(GENERATED_SOURCES)
 	makedepend $(CPPFLAGS) $(GENERATED_SOURCES)

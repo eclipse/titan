@@ -112,7 +112,7 @@ compile: $(TTCN3_MODULES) $(ASN1_MODULES)
 clean distclean:
 	-$(RM) $(TARGET) $(OBJECTS) $(GENERATED_HEADERS) \
 	$(GENERATED_SOURCES) compile $(DEPFILES) \
-	tags *.log
+	tags *.log result.txt
 
 dep: $(GENERATED_SOURCES) $(USER_SOURCES) ;
 
@@ -136,5 +136,7 @@ diag:
 #
 
 run: $(TARGET)
-	./$^
+	./$^ 2> result.txt
+	cat result.txt
+	grep "Overall verdict: pass" result.txt
 

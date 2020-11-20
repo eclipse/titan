@@ -52,7 +52,7 @@ compile: $(TTCN3_MODULES) $(ASN1_MODULES)
 
 clean distclean:
 	$(RM) $(TARGET) $(OBJECTS) $(GENERATED_HEADERS) \
-	$(GENERATED_SOURCES) compile *.log
+	$(GENERATED_SOURCES) compile *.log result.txt
 
 dep: $(GENERATED_SOURCES)
 	makedepend $(CPPFLAGS) $(USER_SOURCES) $(GENERATED_SOURCES)

@@ -56,7 +56,7 @@ compile: $(TTCN3_MODULES) $(ASN1_MODULES)
 	
 clean distclean:
 	-rm -rf $(TARGET) $(OBJECTS) $(GENERATED_HEADERS) \
-	$(GENERATED_SOURCES) *.log Makefile.bak compile logs
+	$(GENERATED_SOURCES) *.log Makefile.bak compile logs result.txt
 
 dep: $(GENERATED_SOURCES)
 	makedepend $(CPPFLAGS) $(GENERATED_SOURCES)

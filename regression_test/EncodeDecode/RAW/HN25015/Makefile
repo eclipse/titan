@@ -117,7 +117,7 @@ compile: $(TTCN3_MODULES) $(ASN1_MODULES)
 clean:
 	-$(RM) $(TARGET) $(OBJECTS) $(GENERATED_HEADERS) \
 	$(GENERATED_SOURCES) compile $(DEPFILES) \
-	tags *.log
+	tags *.log result.txt
 
 distclean: clean
 	-$(RM) $(DEPFILES)
@@ -130,8 +130,6 @@ ifeq ($(filter clean distclean check compile archive diag,$(MAKECMDGOALS)),)
 -include $(DEPFILES)
 endif
 endif
-
-
 
 diag:
 	$(TTCN3_COMPILER) -v 2>&1
@@ -147,4 +145,6 @@ diag:
 #
 
 run: $(TARGET) ./config.cfg
-	./$^
+	./$^ 2> result.txt
+	cat result.txt
+	grep "Overall verdict: pass" result.txt

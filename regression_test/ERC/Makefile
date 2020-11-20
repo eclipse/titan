@@ -52,7 +52,7 @@ $(PARALLEL_TARGET): $(GENERATED_SOURCES)
 
 clean distclean:
 	-rm -f $(SINGLE_TARGET) $(PARALLEL_TARGET) $(OBJECTS) $(GENERATED_HEADERS) \
-	$(GENERATED_SOURCES) *.log Makefile.bak
+	$(GENERATED_SOURCES) *.log Makefile.bak result.txt
 
 dep: $(GENERATED_SOURCES)
 	makedepend $(CPPFLAGS) $(GENERATED_SOURCES)
@@ -60,10 +60,14 @@ dep: $(GENERATED_SOURCES)
 run: run-single run-parallel
 
 run-single: $(SINGLE_TARGET) config.cfg
-	env env_test="variable" ./$^
+	env env_test="variable" ./$^ 2> result.txt
+	cat result.txt
+	grep "Overall verdict: pass" result.txt
 
 run-parallel: $(PARALLEL_TARGET) config.cfg
-	env env_test="variable" '$(TTCN3_DIR)/bin/ttcn3_start' $^
+	env env_test="variable" '$(TTCN3_DIR)/bin/ttcn3_start' $^ 1> result.txt
+	cat result.txt
+	grep "Overall verdict: pass" result.txt
 
 .NOTPARALLEL:
 
