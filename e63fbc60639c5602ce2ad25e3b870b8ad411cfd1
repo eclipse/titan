@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18b301df_75459900",
+        "filename": "compiler2/ttcn3/AST_ttcn3.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 3138,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2021-03-10T14:50:06Z",
+      "side": 1,
+      "message": "an \u0027strlen\u0027 would probably be simpler",
+      "range": {
+        "startLine": 3138,
+        "startChar": 38,
+        "endLine": 3138,
+        "endChar": 73
+      },
+      "revId": "e63fbc60639c5602ce2ad25e3b870b8ad411cfd1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d73a9dbc_16736a20",
+        "filename": "compiler2/ttcn3/AST_ttcn3.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 3166,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2021-03-10T14:50:06Z",
+      "side": 1,
+      "message": "there\u0027s no need to allocate extra memory for these strings\ntmp \u003d LEGACY_CRL_PRODUCT_NUMBER;\nor\ntmp \u003d \"UNKNOWN\"\nwould be enough",
+      "range": {
+        "startLine": 3152,
+        "startChar": 14,
+        "endLine": 3166,
+        "endChar": 15
+      },
+      "revId": "e63fbc60639c5602ce2ad25e3b870b8ad411cfd1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
