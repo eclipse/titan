@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8126ab8d_a01563af",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007689
+      },
+      "writtenOn": "2021-03-11T16:55:19Z",
+      "side": 1,
+      "message": "There are only whitespace changes.",
+      "revId": "029e359da92e8a61860c00e1c647d8af6f9f7920",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
