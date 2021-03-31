@@ -107,6 +107,7 @@ public:
    { return exc_m[p_typename]; }
 
   void chk(Type *p_signature);
+  void chk(Assignment* p_def);
   virtual void set_fullname(const string& p_fullname);
   virtual void set_my_scope(Scope *p_scope);
   virtual void dump(unsigned level) const;
